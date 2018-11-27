@@ -56,7 +56,7 @@ class Comm_Control extends Yaf_Controller_Abstract{
      * @param string $default
      * @return string
      */
-    protected function get($key, $default = ''){
+    public function get($key, $default = ''){
         $data = $this->getRequestObj()->getQuery($key);
         return isset($data) ? $this->getRequestObj()->getQuery($key) : $default;
     }
@@ -67,7 +67,7 @@ class Comm_Control extends Yaf_Controller_Abstract{
      * @param string $default
      * @return mixed|string
      */
-    protected function post($key, $default = ''){
+    public function post($key, $default = ''){
         $data = $this->getRequestObj()->getPost($key);
         return isset($data) ? $this->getRequestObj()->getPost($key) : $default;
     }
@@ -76,7 +76,7 @@ class Comm_Control extends Yaf_Controller_Abstract{
      * 接口成功返回
      * @param array $data
      */
-    protected function responseSuccess($data = array()){
+    public function responseSuccess($data = array()){
         ob_clean();
         echo json_encode(array(
             'status' => 200,  //待配置化
