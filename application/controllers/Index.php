@@ -6,10 +6,14 @@
  * Time: 11:52
  */
 
-class IndexController extends Yaf_Controller_Abstract{
+class IndexController extends Comm_Control {
+
+    public function checkParam(){
+
+    }
 
     public function indexAction(){
-        $this->getView()->assign('content','hello world');
+
     }
 
 
