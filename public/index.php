@@ -17,4 +17,4 @@ $app->getDispatcher()->catchException('true');
 
 $app->getDispatcher()->disableView();
 
-$app->bootstrap()->run();
+$app->run();

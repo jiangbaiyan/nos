@@ -9,6 +9,7 @@
 
 class Comm_Control extends Yaf_Controller_Abstract{
 
+
     /**
      * 请求参数
      *
@@ -32,15 +33,34 @@ class Comm_Control extends Yaf_Controller_Abstract{
 
 
     /**
+     * 初始化
+     */
+    protected function init(){
+        if ($this->needAuth){
+            $this->auth();//用户授权检测
+        }
+        $this->checkParam();//请求参数校验
+        $this->loadModel();//模型载入
+    }
+
+    private function auth(){
+        //验证token...
+    }
+
+    /**
      * 参数校验
      */
     protected function checkParam(){}
-
 
     /**
      * 业务逻辑
      */
     protected function indexAction(){}
+
+    /**
+     * 加载模型
+     */
+    protected function loadModel(){}
 
 
     /**
@@ -83,12 +103,11 @@ class Comm_Control extends Yaf_Controller_Abstract{
 
     /**
      * 接口成功返回
-     * @param array $data
      * @throws Exception_OperateFailed
      */
-    public function responseSuccess($data = array()){
+    public function responseSuccess(){
         $config = Comm_Config::get('response.SUCCESS');
-        $this->response($config['STATUS'], $config['MSG'], $data);
+        $this->response($config['STATUS'], $config['MSG'], $this->output);
     }
 
 }

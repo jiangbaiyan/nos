@@ -12,9 +12,4 @@ return array(
         'STATUS' => 200,
         'MSG'    => 'success'
     ),
-    'OPERATE_FAILED' => array(
-        'STATUS' => 402,
-        'MSG'    => '操作失败'
-    )
-
 );

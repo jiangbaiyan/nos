@@ -28,7 +28,7 @@ class Comm_Config{
         }else{
             $file = $key;
         }
-        $file = ROOT_PATH . '/config/' . $file . '.php';
+        $file = ROOT_PATH . '/config/' . ucfirst($file) . '.php';
         if (!file_exists($file)){
             throw new Exception_OperateFailed('配置文件不存在');
         }

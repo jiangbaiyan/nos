@@ -10,7 +10,7 @@
 class ErrorController extends Comm_Control{
 
     /**
-     * 异常处理
+     * 异常处理入口
      * @param $exception
      */
     public function errorAction($exception){
