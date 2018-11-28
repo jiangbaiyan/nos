@@ -13,7 +13,8 @@ class IndexController extends Comm_Control {
     }
 
     public function indexAction(){
-
+        $code = Comm_Config::get('response.SUCCESS.STATUS');
+        var_dump($code);
     }
 
 

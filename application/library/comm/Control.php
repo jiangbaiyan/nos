@@ -10,13 +10,6 @@
 class Comm_Control extends Yaf_Controller_Abstract{
 
     /**
-     * 请求对象
-     *
-     * @var Yaf_Request_Http
-     */
-    private static $request;
-
-    /**
      * 请求参数
      *
      * @var array
@@ -57,8 +50,8 @@ class Comm_Control extends Yaf_Controller_Abstract{
      * @return string
      */
     public function get($key, $default = ''){
-        $data = $this->getRequestObj()->getQuery($key);
-        return isset($data) ? $this->getRequestObj()->getQuery($key) : $default;
+        $data = $this->getRequest()->getQuery($key);
+        return isset($data) ? $data : $default;
     }
 
     /**
@@ -68,32 +61,34 @@ class Comm_Control extends Yaf_Controller_Abstract{
      * @return mixed|string
      */
     public function post($key, $default = ''){
-        $data = $this->getRequestObj()->getPost($key);
-        return isset($data) ? $this->getRequestObj()->getPost($key) : $default;
+        $data = $this->getRequest()->getPost($key);
+        return isset($data) ? $data : $default;
+    }
+
+    /**
+     * 普通返回
+     * @param $status
+     * @param $msg
+     * @param $data
+     */
+    public function response($status, $msg, $data = array()){
+        ob_clean();
+        echo json_encode(array(
+            'status' => $status,
+            'msg'    => $msg,
+            'data'   => $data
+        ));
+        exit;
     }
 
     /**
      * 接口成功返回
      * @param array $data
+     * @throws Exception_OperateFailed
      */
     public function responseSuccess($data = array()){
-        ob_clean();
-        echo json_encode(array(
-            'status' => 200,  //待配置化
-            'msg'    => 'success',
-            'data'   => $data
-        ));
+        $config = Comm_Config::get('response.SUCCESS');
+        $this->response($config['STATUS'], $config['MSG'], $data);
     }
 
-
-    /**
-     * 获取请求对象
-     * @return Yaf_Request_Abstract|Yaf_Request_Http
-     */
-    private function getRequestObj(){
-        if (!self::$request instanceof Yaf_Request_Abstract){
-            self::$request = $this->getRequest();
-        }
-        return self::$request;
-    }
 }
