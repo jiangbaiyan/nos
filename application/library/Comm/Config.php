@@ -11,6 +11,7 @@ namespace Comm;
 
 use Exception\OperateFailedException;
 use Exception\ParamValidateFailedException;
+use Yaf\Registry;
 
 class Config{
 
@@ -38,7 +39,12 @@ class Config{
         if (!file_exists($file)){
             throw new OperateFailedException('配置文件不存在');
         }
-        $config = include $file;
+        if (!Registry::has('config')){
+            $config = include $file;
+            Registry::set('config', $config);
+        } else{
+            $config = Registry::get('config');
+        }
         if (count($pathArr) == 2){
             $ret = isset($config[$pathArr[1]]) ? $config[$pathArr[1]] : $default;
         } else if (count($pathArr) == 3){
