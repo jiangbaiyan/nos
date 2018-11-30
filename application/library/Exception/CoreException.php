@@ -12,7 +12,7 @@ use Throwable;
 
 class CoreException extends \Exception{
 
-    public function __construct(string $message = "底层错误", int $code = 500, Throwable $previous = null)
+    public function __construct($message = "底层错误", $code = 500, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

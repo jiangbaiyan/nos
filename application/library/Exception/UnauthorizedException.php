@@ -13,7 +13,7 @@ use Throwable;
 
 class UnauthorizedException extends \Exception {
 
-    public function __construct(string $message = "未授权", int $code = 401, Throwable $previous = null)
+    public function __construct($message = "未授权", $code = 401, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

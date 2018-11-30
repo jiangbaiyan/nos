@@ -13,7 +13,7 @@ use Throwable;
 
 class ResourceNotFoundException extends \Exception{
 
-    public function __construct(string $message = "资源未找到", int $code = 404, Throwable $previous = null)
+    public function __construct($message = "资源未找到", $code = 404, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

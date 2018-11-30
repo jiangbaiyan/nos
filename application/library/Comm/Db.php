@@ -11,6 +11,7 @@ namespace Comm;
 
 use Exception\CoreException;
 use PDO;
+use Yaf\Registry;
 
 class Db{
 
@@ -19,12 +20,20 @@ class Db{
     /**
      * 构造方法，初始化句柄
      * Db constructor.
-     * @param $config
      * @param bool $isSlave
      * @throws CoreException
      */
-    public function __construct($config, $isSlave = true){
+    public function connect($isSlave = true){
         try{
+            if (Registry::has('db_read')){
+                $this->db = Registry::get('db_read');
+                return;
+            }
+            if (Registry::has('db_write')){
+                $this->db = Registry::get('db_write');
+                return;
+            }
+            $config = Registry::get('config');
             if ($isSlave){
                 $config = $config['db']['read'];
             } else{
@@ -37,6 +46,27 @@ class Db{
             throw new CoreException('db connect failed');
         }
     }
+
+
+    /**
+     * 查库
+     * @throws CoreException
+     */
+    public function fetch(){
+        $this->connect(true);
+        Registry::set('db_read', $this->db);
+    }
+
+    /**
+     * 更新库
+     * @throws CoreException
+     */
+    public function update(){
+        $this->connect(false);
+        Registry::set('db_write', $this->db);
+    }
+
+
 
 
 }
