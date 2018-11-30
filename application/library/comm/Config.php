@@ -7,7 +7,7 @@
  * Time: 10:55
  */
 
-class Comm_Config{
+class Config{
 
     /**
      * 获取指定配置项（格式:文件名.key1.key2）

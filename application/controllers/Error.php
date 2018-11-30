@@ -6,8 +6,10 @@
  * Date: 2018-11-28
  * Time: 11:21
  */
+use comm\Log;
 
-class ErrorController extends Comm_Control{
+class Error_Controller  extends Base_Controller
+{
 
     /**
      * 异常处理入口
@@ -22,7 +24,7 @@ class ErrorController extends Comm_Control{
         if ($_SERVER['HTTPS'] == 'on'){
             $scheme .= 's';
         }
-        Comm_Log::fatal(array(
+        Log::fatal(array(
             'status' => $code,
             'msg'    => $msg,
             'file'   => $file,

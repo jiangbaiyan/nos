@@ -1,5 +1,11 @@
 <?php
 /**
+ * Created by PhpStorm.
+ * User: guobutao001
+ * Date: 2018/11/30
+ * Time: 10:00
+ */
+/**
  * 控制器公共基类
  * Created by PhpStorm.
  * User: baiyan
@@ -7,9 +13,10 @@
  * Time: 17:21
  */
 
-namespace comm;
+use Yaf\Controller_Abstract;
+use Yaf\Registry;
 
-class Control extends Yaf_Controller_Abstract{
+class Base_Controller extends Controller_Abstract{
 
 
     /**

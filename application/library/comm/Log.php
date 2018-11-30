@@ -7,7 +7,8 @@
  * Time: 12:05
  */
 
-class Comm_Log{
+namespace comm;
+class Log{
 
     const
         LEVEL_FATAL = 0,

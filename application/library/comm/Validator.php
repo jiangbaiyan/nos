@@ -7,7 +7,8 @@
  * Time: 16:57
  */
 
-class Comm_Validator{
+namespace comm;
+class Validator{
 
     /**
      * 手机号验证
