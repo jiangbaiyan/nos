@@ -9,7 +9,7 @@
 
 use Comm\Validator;
 
-class Common_Sms_Controller extends Base_Controller {
+class Common_Sms_Controller extends BaseController {
 
     /**
      * @throws \Exception\ParamValidateFailedException

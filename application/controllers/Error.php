@@ -21,16 +21,12 @@ class ErrorController  extends BaseController
         $msg = $exception->getMessage();
         $file = $exception->getFile();
         $line = $exception->getLine();
-        $scheme = 'http';
-        if ($_SERVER['HTTPS'] == 'on'){
-            $scheme .= 's';
-        }
         Log::fatal(array(
             'status' => $code,
             'msg'    => $msg,
             'file'   => $file,
             'line'   => $line,
-            'url'    => $scheme . '://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+            'url'    => $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
             'method' => $_SERVER['REQUEST_METHOD'],
         ));
         $this->response($code,$msg);

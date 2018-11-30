@@ -7,10 +7,11 @@
  * Time: 15:37
  */
 
+
 use Comm\Validator;
 
 
-class Common_Sms_Controller extends BaseController {
+class Common_SmsController extends BaseController {
 
     /**
      * @throws \Exception\ParamValidateFailedException
