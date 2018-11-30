@@ -14,9 +14,9 @@
  */
 
 use Yaf\Controller_Abstract;
-use Yaf\Registry;
+use Comm\Config;
 
-class Base_Controller extends Controller_Abstract{
+class BaseController extends Controller_Abstract{
 
 
     /**
@@ -112,10 +112,11 @@ class Base_Controller extends Controller_Abstract{
 
     /**
      * 接口成功返回
-     * @throws Exception_OperateFailed
+     * @throws \Exception\OperateFailedException
+     * @throws \Exception\ParamValidateFailedException
      */
     public function responseSuccess(){
-        $config = Comm_Config::get('response.SUCCESS');
+        $config = Config::get('response.SUCCESS');
         $this->response($config['STATUS'], $config['MSG'], $this->output);
     }
 

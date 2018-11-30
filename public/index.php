@@ -7,9 +7,11 @@
  * Time: 19:29
  */
 
+use Yaf\Application;
+
 define('APP_PATH', dirname(__DIR__));
 define('ROOT_PATH',  APP_PATH . '/application');
-$app = new Yaf_Application(APP_PATH . '/config/application.ini');
+$app = new Application(APP_PATH . '/config/application.ini');
 $app->getDispatcher()->catchException('true');
 $app->getDispatcher()->disableView();
 $app->run();

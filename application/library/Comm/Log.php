@@ -7,7 +7,8 @@
  * Time: 12:05
  */
 
-namespace comm;
+namespace Comm;
+
 class Log{
 
     const

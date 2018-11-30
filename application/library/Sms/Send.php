@@ -7,19 +7,24 @@
  * Time: 15:27
  */
 
+namespace Sms;
+
+use Comm\Config;
+
 class Sms_Send{
 
     /**
      * 短信发送
      * @param $phone
      * @return bool|stdClass
-     * @throws Exception_OperateFailed
+     * @throws \exception\OperateFailedException
+     * @throws \exception\ParamValidateFailedException
      */
     public function sendSms($phone){
 
         $params = array ();
         $security = true;
-        $config = Comm_Config::get('sms.ali');
+        $config = Config::get('Sms.ali');
         $accessKeyId = $config['ACCESS_KEY_ID'];
         $accessKeySecret = $config['ACCESS_KEY_SECRET'];
         $params["PhoneNumbers"] = $phone;

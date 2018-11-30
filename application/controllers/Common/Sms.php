@@ -7,12 +7,13 @@
  * Time: 15:37
  */
 
-use comm\Validator as Validator;
+use Comm\Validator;
 
-class Common_Sms_Controller extends Base_Controller {
+
+class Common_Sms_Controller extends BaseController {
 
     /**
-     * @throws Exception_ParamValidateFailed
+     * @throws \Exception\ParamValidateFailedException
      */
     public function checkParam(){
         $this->params['phone'] = $this->get('phone');
@@ -21,7 +22,8 @@ class Common_Sms_Controller extends Base_Controller {
 
 
     /**
-     * @throws Exception_OperateFailed
+     * @throws \Exception\OperateFailedException
+     * @throws \Exception\ParamValidateFailedException
      */
     public function indexAction()
     {

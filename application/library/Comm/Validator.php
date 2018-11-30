@@ -7,17 +7,20 @@
  * Time: 16:57
  */
 
-namespace comm;
+namespace Comm;
+
+use Exception\ParamValidateFailedException;
+
 class Validator{
 
     /**
      * 手机号验证
      * @param $phone
-     * @throws Exception_ParamValidateFailed
+     * @throws ParamValidateFailedException
      */
     public static function phone($phone){
         if (empty($phone) || strlen($phone) != 11 || !preg_match('/1\d{10}/', $phone)){
-            throw new Exception_ParamValidateFailed('手机号格式不正确');
+            throw new ParamValidateFailedException('手机号格式不正确');
         }
     }
 

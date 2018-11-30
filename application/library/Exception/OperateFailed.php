@@ -7,7 +7,9 @@
  * Time: 11:33
  */
 
-class Exception_OperateFailed extends \Exception{
+namespace Exception;
+
+class OperateFailedException extends \Exception{
 
     public function __construct(string $message = "操作失败", int $code = 402, Throwable $previous = null)
     {

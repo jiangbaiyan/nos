@@ -6,9 +6,10 @@
  * Date: 2018-11-28
  * Time: 11:21
  */
-use comm\Log;
 
-class Error_Controller  extends Base_Controller
+use Comm\Log;
+
+class ErrorController  extends BaseController
 {
 
     /**

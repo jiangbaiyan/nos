@@ -7,7 +7,9 @@
  * Time: 17:43
  */
 
-class Exception_Unauthorized extends \Exception {
+namespace Exception;
+
+class UnauthorizedException extends \Exception {
 
     public function __construct(string $message = "未授权", int $code = 401, Throwable $previous = null)
     {

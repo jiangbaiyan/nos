@@ -7,6 +7,11 @@
  * Time: 10:55
  */
 
+namespace Comm;
+
+use Exception\OperateFailedException;
+use Exception\ParamValidateFailedException;
+
 class Config{
 
     /**
@@ -14,7 +19,8 @@ class Config{
      * @param $key
      * @param string $default
      * @return mixed|string
-     * @throws Exception_OperateFailed
+     * @throws OperateFailedException
+     * @throws ParamValidateFailedException
      */
     public static function get($key, $default = ''){
         $pathArr = array();
@@ -22,7 +28,7 @@ class Config{
             $pathArr = explode('.',$key);
             $len = count($pathArr);
             if ($len  > 3){
-                throw new Exception_OperateFailed('暂不支持二维以上配置数组的访问');
+                throw new ParamValidateFailedException('暂不支持二维以上配置数组的访问');
             }
             $file = $pathArr[0];
         }else{
@@ -30,7 +36,7 @@ class Config{
         }
         $file = ROOT_PATH . '/config/' . ucfirst($file) . '.php';
         if (!file_exists($file)){
-            throw new Exception_OperateFailed('配置文件不存在');
+            throw new OperateFailedException('配置文件不存在');
         }
         $config = include $file;
         if (count($pathArr) == 2){

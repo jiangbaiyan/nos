@@ -7,7 +7,9 @@
  * Time: 13:51
  */
 
-class Exception_ParamValidateFailed extends \Exception{
+namespace Exception;
+
+class ParamValidateFailedException extends \Exception{
 
     public function __construct(string $message = "参数不全或校验失败", int $code = 400, Throwable $previous = null)
     {
