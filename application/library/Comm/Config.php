@@ -41,9 +41,9 @@ class Config{
         }
         if (!Registry::has('config')){
             $config = include $file;
-            Registry::set('config', $config);
+            Registry::set($file, $config);
         } else{
-            $config = Registry::get('config');
+            $config = Registry::get($file);
         }
         if (count($pathArr) == 2){
             $ret = isset($config[$pathArr[1]]) ? $config[$pathArr[1]] : $default;
