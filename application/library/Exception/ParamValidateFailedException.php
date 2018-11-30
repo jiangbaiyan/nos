@@ -9,6 +9,8 @@
 
 namespace Exception;
 
+use Throwable;
+
 class ParamValidateFailedException extends \Exception{
 
     public function __construct(string $message = "参数不全或校验失败", int $code = 400, Throwable $previous = null)
