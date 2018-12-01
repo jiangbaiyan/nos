@@ -11,7 +11,7 @@
 use Comm\Validator;
 
 use Comm\Db;
-
+use Comm\Redis;
 
 class Common_TestController extends BaseController {
 
@@ -30,9 +30,15 @@ class Common_TestController extends BaseController {
 //        $sql = 'insert into test values (?, ?)';
 //        $res = Db::update($sql, array('2', 'baiyan'));
 
-        $sql2 = 'select * from test';
-        $this->output = Db::fetchAll($sql2);
-        $this->responseSuccess();
+//        $sql2 = 'select * from test';
+//        $this->output = Db::fetchAll($sql2);
+//        $this->responseSuccess();
+        $redis = new Comm\Redis();
+        $redis->connect();
+        $redis->set("a",3);
+        $a =$redis->get("a");
+        echo $a;
+        //$redis->connect();
     }
 
 }
