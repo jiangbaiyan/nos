@@ -111,9 +111,8 @@ class BaseController extends Controller_Abstract{
     }
 
     /**
-     * 接口成功返回
-     * @throws \Exception\OperateFailedException
-     * @throws \Exception\ParamValidateFailedException
+     * 接口成功返回keyi
+     * @throws \Exception\CoreException
      */
     public function responseSuccess(){
         $config = Config::get('response.SUCCESS');

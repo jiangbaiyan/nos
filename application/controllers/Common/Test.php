@@ -11,7 +11,7 @@
 use Comm\Validator;
 
 
-class Common_SmsController extends BaseController {
+class Common_TestController extends BaseController {
 
     /**
      * @throws \Exception\ParamValidateFailedException
@@ -23,8 +23,7 @@ class Common_SmsController extends BaseController {
 
 
     /**
-     * @throws \Exception\OperateFailedException
-     * @throws \Exception\ParamValidateFailedException
+     * @throws \Exception\CoreException
      */
     public function indexAction()
     {
