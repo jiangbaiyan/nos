@@ -15,7 +15,7 @@ use Yaf\Registry;
 
 class Db{
 
-    private $db;
+    private static $db;
 
     /**
      * 构造方法，初始化句柄
@@ -23,14 +23,14 @@ class Db{
      * @param bool $isSlave
      * @throws CoreException
      */
-    public function connect($isSlave = true){
+    private static function connect($isSlave = true){
         try{
             if (Registry::has('db_read')){
-                $this->db = Registry::get('db_read');
+                self::$db = Registry::get('db_read');
                 return;
             }
             if (Registry::has('db_write')){
-                $this->db = Registry::get('db_write');
+                self::$db = Registry::get('db_write');
                 return;
             }
             $config = Registry::get('config');
@@ -40,7 +40,7 @@ class Db{
                 $config = $config['db']['write'];
             }
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
-            $this->db = new PDO($dsn, $config['user'], $config['password']);
+            self::$db = new PDO($dsn, $config['user'], $config['password']);
         } catch (\Exception $e){
             Log::fatal($e->getMessage());
             throw new CoreException('db connect failed');
@@ -52,21 +52,22 @@ class Db{
      * 查库
      * @param $sql
      * @param array $bind
-     * @return void
+     * @return mixed
      * @throws CoreException
      */
-    public function fetchAll($sql, $bind = array()){
-        $this->doSql($sql, true, $bind);
+    public static function fetchAll($sql, $bind = array()){
+        return self::doSql($sql, true, $bind);
     }
 
     /**
      * 更新库
      * @param $sql
      * @param array $bind
+     * @return mixed
      * @throws CoreException
      */
-    public function update($sql, $bind = array()){
-        $this->doSql($sql, false, $bind);
+    public static function update($sql, $bind = array()){
+        return self::doSql($sql, false, $bind);
     }
 
     /**
@@ -77,14 +78,15 @@ class Db{
      * @return mixed
      * @throws CoreException
      */
-    private function doSql($sql, $isSlave = true, $bind = array()){
+    private static function doSql($sql, $isSlave = true, $bind = array()){
         try{
-            $this->connect($isSlave);
-            Registry::set('db_read', $this->db);
-            $handle = $this->db->prepare($sql);
+            self::connect($isSlave);
+            $str = $isSlave ? 'read' : 'write';
+            Registry::set('db_' . $str, self::$db);
+            $handle = self::$db->prepare($sql);
             $res = $handle->execute($bind);
             if (!$res){
-                throw new CoreException('db pdo execute failed');
+               throw new CoreException(json_encode($handle->errorInfo()));
             }
             if (!$isSlave){
                 return true;
@@ -92,7 +94,7 @@ class Db{
             $data = $handle->fetchAll(PDO::FETCH_ASSOC);
             return $data;
         } catch (\Exception $e){
-            Log::fatal($e->getMessage());
+            Log::fatal('pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|isSlave:' . $isSlave . '|bind:' . json_encode($bind));
             throw new CoreException('db query failed');
         }
     }

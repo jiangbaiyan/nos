@@ -10,15 +10,15 @@
 
 use Comm\Validator;
 
+use Comm\Db;
+
 
 class Common_TestController extends BaseController {
 
     /**
-     * @throws \Exception\ParamValidateFailedException
      */
     public function checkParam(){
-        $this->params['phone'] = $this->get('phone');
-        Validator::phone($this->params['phone']);
+        $this->params['name'] = $this->get('name');
     }
 
 
@@ -27,7 +27,11 @@ class Common_TestController extends BaseController {
      */
     public function indexAction()
     {
-        $this->output['phone'] = $this->params['phone'];
+//        $sql = 'insert into test values (?, ?)';
+//        $res = Db::update($sql, array('2', 'baiyan'));
+
+        $sql2 = 'select * from test';
+        $this->output = Db::fetchAll($sql2);
         $this->responseSuccess();
     }
 
