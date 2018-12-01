@@ -7,6 +7,7 @@
  */
 namespace  Comm;
 
+use Exception\RedisException;
 use Yaf\Registry;
 use Exception\CoreException;
 
@@ -45,25 +46,25 @@ class Redis
             $redis = new \Redis();
             $result = $redis->connect($this->host, $this->port, $this->timeout);
         if ($result === false) {
-            throw new CoreException("connect error!");
+            throw new RedisException(json_encode($redis->errorInfo()));
         }
         if (!empty($this->password)) {
             $result = $redis->auth($this->password);
             if ($result === flase) {
-                throw new CoreException("passwd error!");
+                throw new RedisException(json_encode($redis->errorInfo()));
             }
         }
         if (!empty($this->_database)) {
             $result = $redis->select($this->_database);
 
             if ($result === false) {
-                throw new CoreException("database select error!");
+                throw new RedisException(json_encode($redis->errorInfo()));
             }
         }
         $this->redis = $redis;
         }catch (\Exception $e){
             Log::fatal($e->getMessage());
-            throw new CoreException('redis connect failed');
+            throw new RedisException('redis connect failed');
         }
     }
 
