@@ -42,6 +42,10 @@ class Config{
             Registry::set($file, $config);
         } else{
             $config = Registry::get($file);
+            if (empty($config)){
+                $config = include $file;
+                Registry::set($file, $config);
+            }
         }
         if (count($pathArr) == 2){
             $ret = isset($config[$pathArr[1]]) ? $config[$pathArr[1]] : $default;
