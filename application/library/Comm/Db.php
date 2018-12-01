@@ -50,22 +50,52 @@ class Db{
 
     /**
      * 查库
+     * @param $sql
+     * @param array $bind
+     * @return void
      * @throws CoreException
      */
-    public function fetch(){
-        $this->connect(true);
-        Registry::set('db_read', $this->db);
+    public function fetchAll($sql, $bind = array()){
+        $this->doSql($sql, true, $bind);
     }
 
     /**
      * 更新库
+     * @param $sql
+     * @param array $bind
      * @throws CoreException
      */
-    public function update(){
-        $this->connect(false);
-        Registry::set('db_write', $this->db);
+    public function update($sql, $bind = array()){
+        $this->doSql($sql, false, $bind);
     }
 
+    /**
+     * 执行sql语句
+     * @param $sql
+     * @param bool $isSlave
+     * @param array $bind
+     * @return mixed
+     * @throws CoreException
+     */
+    private function doSql($sql, $isSlave = true, $bind = array()){
+        try{
+            $this->connect($isSlave);
+            Registry::set('db_read', $this->db);
+            $handle = $this->db->prepare($sql);
+            $res = $handle->execute($bind);
+            if (!$res){
+                throw new CoreException('db pdo execute failed');
+            }
+            if (!$isSlave){
+                return true;
+            }
+            $data = $handle->fetchAll(PDO::FETCH_ASSOC);
+            return $data;
+        } catch (\Exception $e){
+            Log::fatal($e->getMessage());
+            throw new CoreException('db query failed');
+        }
+    }
 
 
 

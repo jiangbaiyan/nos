@@ -9,8 +9,7 @@
 
 namespace Comm;
 
-use Exception\OperateFailedException;
-use Exception\ParamValidateFailedException;
+use Exception\CoreException;
 use Yaf\Registry;
 
 class Config{
@@ -20,8 +19,7 @@ class Config{
      * @param $key
      * @param string $default
      * @return mixed|string
-     * @throws OperateFailedException
-     * @throws ParamValidateFailedException
+     * @throws CoreException
      */
     public static function get($key, $default = ''){
         $pathArr = array();
@@ -29,7 +27,7 @@ class Config{
             $pathArr = explode('.',$key);
             $len = count($pathArr);
             if ($len  > 3){
-                throw new ParamValidateFailedException('暂不支持二维以上配置数组的访问');
+                throw new CoreException('暂不支持二维以上配置数组的访问');
             }
             $file = $pathArr[0];
         }else{
@@ -37,7 +35,7 @@ class Config{
         }
         $file = ROOT_PATH . '/config/' . ucfirst($file) . '.php';
         if (!file_exists($file)){
-            throw new OperateFailedException('配置文件不存在');
+            throw new CoreException('配置文件不存在');
         }
         if (!Registry::has('config')){
             $config = include $file;
