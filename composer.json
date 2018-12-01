@@ -1,0 +1,20 @@
+{
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  },
+  "config": {
+    "secure-http": false,
+    "preferred-install": "dist"
+  },
+  "require": {
+
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "find vendor/ -type d | grep .git | xargs rm -rf"
+    ]
+  }
+}
