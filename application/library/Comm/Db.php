@@ -17,30 +17,32 @@ class Db{
 
     private static $db;
 
+    private static $node;
+
+    const DB_NODE_MASTER_KEY = 'write';//主库
+
+    const DB_NODE_SLAVE_KEY  = 'read';//从库
+
+
     /**
      * 构造方法，初始化句柄
      * Db constructor.
-     * @param bool $isSlave
      * @throws CoreException
      */
-    private static function connect($isSlave = true){
+    private static function connect(){
         try{
-            if (Registry::has('db_read')){
-                self::$db = Registry::get('db_read');
-                return;
-            }
-            if (Registry::has('db_write')){
-                self::$db = Registry::get('db_write');
-                return;
+            $key = 'db_' . self::$node;
+            if (Registry::has($key)){
+                self::$db = Registry::get($key);
+                if (!empty(self::$db)){
+                    return;
+                }
             }
             $config = Registry::get('config');
-            if ($isSlave){
-                $config = $config['db']['read'];
-            } else{
-                $config = $config['db']['write'];
-            }
+            $config = $config['db'][self::$node];
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
             self::$db = new PDO($dsn, $config['user'], $config['password']);
+            Registry::set($key, self::$db);
         } catch (\Exception $e){
             Log::fatal($e->getMessage());
             throw new CoreException('db connect failed');
@@ -56,42 +58,41 @@ class Db{
      * @throws CoreException
      */
     public static function fetchAll($sql, $bind = array()){
-        return self::doSql($sql, true, $bind);
+        self::$node = self::DB_NODE_SLAVE_KEY;
+        return self::doSql($sql, $bind);
     }
 
     /**
-     * 更新库
+     * 增删改库
      * @param $sql
      * @param array $bind
      * @return mixed
      * @throws CoreException
      */
     public static function update($sql, $bind = array()){
-        return self::doSql($sql, false, $bind);
+        self::$node = self::DB_NODE_MASTER_KEY;
+        return self::doSql($sql, $bind);
     }
 
     /**
      * 执行sql语句
      * @param $sql
-     * @param bool $isSlave
      * @param array $bind
      * @return mixed
      * @throws CoreException
      */
-    private static function doSql($sql, $isSlave = true, $bind = array()){
+    private static function doSql($sql, $bind = array()){
         try{
-            self::connect($isSlave);
-            $str = $isSlave ? 'read' : 'write';
-            Registry::set('db_' . $str, self::$db);
+            self::connect();
             $handle = self::$db->prepare($sql);
             $res = $handle->execute($bind);
             if (!$res){
                throw new CoreException(json_encode($handle->errorInfo()));
             }
-            if (!$isSlave){
+            if (self::$node == self::DB_NODE_MASTER_KEY){//增删改
                 return true;
             }
-            $data = $handle->fetchAll(PDO::FETCH_ASSOC);
+            $data = $handle->fetchAll(PDO::FETCH_ASSOC);//查
             return $data;
         } catch (\Exception $e){
             Log::fatal('pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|isSlave:' . $isSlave . '|bind:' . json_encode($bind));
