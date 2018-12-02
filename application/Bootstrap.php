@@ -30,7 +30,7 @@ class Bootstrap extends Bootstrap_Abstract
     public function _initLoader(Dispatcher $dispatcher)
     {
         //加载composer
-        //include_once ROOT_PATH . '/vendor/autoload.php';
+        //include_once APP_PATH . '/vendor/autoload.php';
     }
 
 }
