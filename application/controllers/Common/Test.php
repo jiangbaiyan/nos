@@ -34,7 +34,6 @@ class Common_TestController extends BaseController {
 //        $this->output = Db::fetchAll($sql2);
 //        $this->responseSuccess();
         $redis = new Comm\Redis();
-        $redis->connect();
         $redis->set("a",3);
         $a =$redis->get("a");
         echo $a;
