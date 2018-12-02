@@ -81,7 +81,7 @@ class Response{
      * @return string
      */
     public static function apiResponseResourceNotFound($msg = ''){
-        self::apiResponse(self::CODE_NOT_FOUND,$msg ? $msg : self::MSG_RESOURCE_NOT_FOUND);
+        self::apiResponse(self::CODE_RESOURCE_NOT_FOUND,$msg ? $msg : self::MSG_RESOURCE_NOT_FOUND);
     }
 
     /**
