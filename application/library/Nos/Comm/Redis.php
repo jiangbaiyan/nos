@@ -5,22 +5,17 @@
  * Date: 2018/12/1
  * Time: 14:00
  */
-namespace  Comm;
+namespace  Nos\Comm;
 
-use Exception\RedisException;
+use Nos\Exception\CoreException;
 use Yaf\Registry;
 
 
 class Redis
 {
-    private  static  $redis;
+    private static $redis;
     private static $key = "redis";
     private static $enable = false;
-    private static $host;
-    private static $port;
-    private static $timeout;
-    private static $password;
-    private static $database;
 
     public function __construct()
     {
@@ -33,43 +28,44 @@ class Redis
         self::$redis->close();
     }
 
- public static function  connect(){
+    public static function  connect(){
         try {
             $config = Registry::get("config");
-            self::$host = !empty($config[self::$key]['host']) ? $config[self::$key]['host'] : null;
-            self::$port = !empty($config[self::$key]['port']) ? $config[self::$key]['port'] : null;
-            self::$password = !empty([self::$key]['password']) ? $config[self::$key]['password'] : null;
-            self::$timeout = !empty($config[self::$key]['$timeout']) ? $config[self::$key]['$timeout'] : 0;
-            self::$database = !empty($config[self::$key]['database']) ? $config[self::$key]['database'] : 0;
+            $host = !empty($config[self::$key]['host']) ? $config[self::$key]['host'] : null;
+            $port = !empty($config[self::$key]['port']) ? $config[self::$key]['port'] : null;
+            $password = !empty([self::$key]['password']) ? $config[self::$key]['password'] : null;
+            $timeout = !empty($config[self::$key]['$timeout']) ? $config[self::$key]['$timeout'] : 0;
+            $database = !empty($config[self::$key]['database']) ? $config[self::$key]['database'] : 0;
             self::$enable = true;
             $redis = new \Redis();
-            $result = $redis->connect(self::$host,self::$port, self::$timeout);
+            $result = $redis->connect($host, $port, $timeout);
         if ($result === false) {
-            throw new RedisException(json_encode($redis->errorInfo()));
+            throw new CoreException(json_encode($redis->errorInfo()));
         }
-        if (!empty(self::$password)) {
-            $result = $redis->auth(self::$password);
+        if (!empty($password)) {
+            $result = $redis->auth($password);
             if ($result === false) {
-                throw new RedisException(json_encode($redis->errorInfo()));
+                throw new CoreException(json_encode($redis->errorInfo()));
             }
         }
-        if (!empty(self::$database)) {
-            $result = $redis->select(self::$database);
+        if (!empty($database)) {
+            $result = $redis->select($database);
 
             if ($result === false) {
-                throw new RedisException(json_encode($redis->errorInfo()));
+                throw new CoreException(json_encode($redis->errorInfo()));
             }
         }
             self::$redis = $redis;
         }catch (\Exception $e){
             Log::fatal($e->getMessage());
-            throw new RedisException('redis connect failed');
+            throw new CoreException('redis connect failed');
         }
     }
 
     public  static function getRedis(){
         return self::$redis;
     }
+
     /**
      * 写缓存
      */
@@ -81,6 +77,7 @@ class Redis
        }
        return $ret;
     }
+
     /**
      * 读缓存，可读一个或多个key
      */
@@ -88,12 +85,14 @@ class Redis
         $func = is_array($key) ? 'mGet' : 'get';
         return self::$redis->{$func}($key);
     }
+
     /**
      * 条件形式设置缓存，如果 key 不存时就设置，存在时设置失败
      */
     public static function setnx($key,$value){
         return self::$redis->setnx($key,$value);
     }
+
     /**
      * 删除key
      * 缓存KEY，支持单个健:"key1" 或多个健:array('key1','key2')
@@ -101,6 +100,7 @@ class Redis
     public static function del($key){
         return self::$redis->delete($key);
     }
+
     /**
      * 值加加操作,类似 ++$i ,如果 key 不存在时自动设置为 0 后进行加加操作
      *
@@ -115,6 +115,7 @@ class Redis
             return self::$redis->incrBy($key,$default);
         }
     }
+
     /**
      * 值减减操作,类似 --$i ,如果 key 不存在时自动设置为 0 后进行减减操作
      *
@@ -141,6 +142,7 @@ class Redis
     {
         return self::$redis->lpush($key, $value);
     }
+
     /**
      *    rpush
      */
@@ -156,6 +158,7 @@ class Redis
     {
         return self::$redis->lpop($key);
     }
+
     /**
      * lrange
      */
@@ -172,6 +175,7 @@ class Redis
         }
         return self::$redis->hset($name, $key, $value);
     }
+
     /**
      *    get hash opeation
      */
@@ -189,6 +193,7 @@ class Redis
         }
         return self::$redis->hgetAll($name);
     }
+
     /**
      *    delete hash opeation
      */
@@ -200,6 +205,5 @@ class Redis
         }
         return self::$redis->del($name);
     }
-
 
 }

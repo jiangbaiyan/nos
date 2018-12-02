@@ -7,7 +7,7 @@
  * Time: 11:21
  */
 
-use Comm\Log;
+use Nos\Comm\Log;
 
 class ErrorController  extends BaseController
 {

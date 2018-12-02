@@ -7,13 +7,14 @@
  * Time: 17:45
  */
 
-namespace Exception;
+namespace Nos\Exception;
 
+use Nos\Http\Response;
 use Throwable;
 
 class ResourceNotFoundException extends \Exception{
 
-    public function __construct($message = "资源未找到", $code = 404, Throwable $previous = null)
+    public function __construct($message = Response::MSG_RESOURCE_NOT_FOUND, $code = Response::CODE_RESOURCE_NOT_FOUND, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

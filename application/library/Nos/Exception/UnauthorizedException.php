@@ -7,13 +7,14 @@
  * Time: 17:43
  */
 
-namespace Exception;
+namespace Nos\Exception;
 
+use Nos\Http\Response;
 use Throwable;
 
 class UnauthorizedException extends \Exception {
 
-    public function __construct($message = "未授权", $code = 401, Throwable $previous = null)
+    public function __construct($message = Response::MSG_UNAUTHORIZED, $code = Response::CODE_UNAUTHORIZED, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

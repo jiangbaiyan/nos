@@ -14,7 +14,7 @@
  */
 
 use Yaf\Controller_Abstract;
-use Comm\Config;
+use Nos\Comm\Config;
 
 class BaseController extends Controller_Abstract{
 
@@ -94,29 +94,14 @@ class BaseController extends Controller_Abstract{
         return isset($data) ? $data : $default;
     }
 
-    /**
-     * 普通返回
-     * @param $status
-     * @param $msg
-     * @param $data
-     */
-    public function response($status, $msg, $data = array()){
-        ob_clean();
-        echo json_encode(array(
-            'status' => $status,
-            'msg'    => $msg,
-            'data'   => $data
-        ));
-        exit;
-    }
+
 
     /**
      * 接口成功返回keyi
      * @throws \Exception\CoreException
      */
     public function responseSuccess(){
-        $config = Config::get('response.SUCCESS');
-        $this->response($config['STATUS'], $config['MSG'], $this->output);
+        Response::apiResponse($config['STATUS'], $config['MSG'], $this->output);
     }
 
 }

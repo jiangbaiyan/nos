@@ -7,9 +7,9 @@
  * Time: 16:32
  */
 
-namespace Comm;
+namespace Nos\Comm;
 
-use Exception\CoreException;
+use Nos\Exception\CoreException;
 use PDO;
 use Yaf\Registry;
 
@@ -89,17 +89,15 @@ class Db{
             if (!$res){
                throw new CoreException(json_encode($handle->errorInfo()));
             }
-            if (self::$node == self::DB_NODE_MASTER_KEY){//增删改
+            if (self::$node == self::DB_NODE_MASTER_KEY){
                 return true;
             }
-            $data = $handle->fetchAll(PDO::FETCH_ASSOC);//查
+            $data = $handle->fetchAll(PDO::FETCH_ASSOC);
             return $data;
         } catch (\Exception $e){
-            Log::fatal('pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|isSlave:' . $isSlave . '|bind:' . json_encode($bind));
+            Log::fatal('pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . self::$node . '|bind:' . json_encode($bind));
             throw new CoreException('db query failed');
         }
     }
-
-
 
 }

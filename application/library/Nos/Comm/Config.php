@@ -7,9 +7,9 @@
  * Time: 10:55
  */
 
-namespace Comm;
+namespace Nos\Comm;
 
-use Exception\CoreException;
+use Nos\Exception\CoreException;
 use Yaf\Registry;
 
 class Config{

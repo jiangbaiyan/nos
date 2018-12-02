@@ -7,13 +7,14 @@
  * Time: 13:51
  */
 
-namespace Exception;
+namespace Nos\Exception;
 
+use Nos\Http\Response;
 use Throwable;
 
 class ParamValidateFailedException extends \Exception{
 
-    public function __construct($message = "参数不全或校验失败", $code = 400, Throwable $previous = null)
+    public function __construct($message = Response::MSG_PARAM_ERROR, $code = Response::CODE_PARAM_ERROR, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

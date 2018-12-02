@@ -8,25 +8,23 @@
  */
 
 
-use Comm\Validator;
-
-use Comm\Db;
-use Comm\Redis;
+use Nos\Comm\Validator;
+use Nos\Comm\Db;
+use Nos\Comm\Redis;
 
 class Common_TestController extends BaseController {
 
-    /**
-     */
     public function checkParam(){
         $this->params['name'] = $this->get('name');
     }
 
 
-    /**
-     * @throws \Exception\CoreException
-     */
     public function indexAction()
     {
+        $page = $this->get('page', 1);
+        $data = \Nos\Comm\Page::paginate(41, $page, 10);
+        $this->output = $data;
+        $this->responseSuccess();
 //        $sql = 'insert into test values (?, ?)';
 //        $res = Db::update($sql, array('2', 'baiyan'));
 
