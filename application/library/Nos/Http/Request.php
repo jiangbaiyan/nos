@@ -40,8 +40,7 @@ class Request extends Http{
      * @return string
      */
     public static function param($key, $default = ''){
-        $obj = self::getRequestInstance();
-        $data = $obj->getQuery($key);
+        $data = self::getRequestInstance()->getQuery($key);
         return isset($data) ? $data : $default;
     }
 
@@ -52,8 +51,7 @@ class Request extends Http{
      * @return mixed|string
      */
     public static function form($key, $default = ''){
-        $obj = self::getRequestInstance();
-        $data = $obj->getPost($key);
+        $data = self::getRequestInstance()->getPost($key);
         return isset($data) ? $data : $default;
     }
 
