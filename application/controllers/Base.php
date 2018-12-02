@@ -94,14 +94,4 @@ class BaseController extends Controller_Abstract{
         return isset($data) ? $data : $default;
     }
 
-
-
-    /**
-     * 接口成功返回keyi
-     * @throws \Exception\CoreException
-     */
-    public function responseSuccess(){
-        Response::apiResponse($config['STATUS'], $config['MSG'], $this->output);
-    }
-
 }

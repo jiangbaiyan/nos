@@ -24,7 +24,7 @@ class Common_TestController extends BaseController {
         $page = $this->get('page', 1);
         $data = \Nos\Comm\Page::paginate(41, $page, 10);
         $this->output = $data;
-        $this->responseSuccess();
+        \Nos\Http\Response::apiResponseSuccess($this->output);
 //        $sql = 'insert into test values (?, ?)';
 //        $res = Db::update($sql, array('2', 'baiyan'));
 
