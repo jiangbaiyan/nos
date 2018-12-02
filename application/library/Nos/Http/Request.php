@@ -11,9 +11,51 @@ namespace Nos\Http;
 
 use Nos\Comm\Log;
 use Nos\Exception\OperateFailedException;
+use Yaf\Request\Http;
 
-class Request{
+class Request extends Http{
 
+
+    /**
+     * 请求实例
+     * @var Http
+     */
+    private static $request;
+
+    /**
+     * 单例获取请求实例，避免请求期间重复实例化
+     * @return Http
+     */
+    private static function getRequestInstance(){
+        if (!self::$request instanceof Http){
+            self::$request = new parent();
+        }
+        return self::$request;
+    }
+
+    /**
+     * 获取GET参数
+     * @param $key
+     * @param string $default
+     * @return string
+     */
+    public static function param($key, $default = ''){
+        $obj = self::getRequestInstance();
+        $data = $obj->getQuery($key);
+        return isset($data) ? $data : $default;
+    }
+
+    /**
+     * 获取POST参数
+     * @param $key
+     * @param string $default
+     * @return mixed|string
+     */
+    public static function form($key, $default = ''){
+        $obj = self::getRequestInstance();
+        $data = $obj->getPost($key);
+        return isset($data) ? $data : $default;
+    }
 
     /**
      * 获取完整URL

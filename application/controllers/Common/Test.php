@@ -11,6 +11,9 @@
 use Nos\Comm\Validator;
 use Nos\Comm\Db;
 use Nos\Comm\Redis;
+use Nos\Http\Request;
+use Nos\Http\Response;
+use Nos\Comm\Page;
 
 class Common_TestController extends BaseController {
 
@@ -21,20 +24,21 @@ class Common_TestController extends BaseController {
 
     public function indexAction()
     {
-        $page = $this->get('page', 1);
-        $data = \Nos\Comm\Page::paginate(41, $page, 10);
+        $page = Request::param('page');
+        $data = Page::paginate(41, $page, 10);
         $this->output = $data;
-        \Nos\Http\Response::apiResponseSuccess($this->output);
+        Response::apiResponseSuccess($this->output);
+
 //        $sql = 'insert into test values (?, ?)';
 //        $res = Db::update($sql, array('2', 'baiyan'));
 
 //        $sql2 = 'select * from test';
 //        $this->output = Db::fetchAll($sql2);
 //        $this->responseSuccess();
-        $redis = new Comm\Redis();
-        $redis->set("a",3);
-        $a =$redis->get("a");
-        echo $a;
+//        $redis = new Comm\Redis();
+//        $redis->set("a",3);
+//        $a =$redis->get("a");
+//        echo $a;
         //$redis->connect();
     }
 

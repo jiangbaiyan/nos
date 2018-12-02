@@ -72,26 +72,4 @@ class BaseController extends Controller_Abstract{
     protected function loadModel(){}
 
 
-    /**
-     * 获取GET参数
-     * @param $key
-     * @param string $default
-     * @return string
-     */
-    public function get($key, $default = ''){
-        $data = $this->getRequest()->getQuery($key);
-        return isset($data) ? $data : $default;
-    }
-
-    /**
-     * 获取POST参数
-     * @param $key
-     * @param string $default
-     * @return mixed|string
-     */
-    public function post($key, $default = ''){
-        $data = $this->getRequest()->getPost($key);
-        return isset($data) ? $data : $default;
-    }
-
 }
