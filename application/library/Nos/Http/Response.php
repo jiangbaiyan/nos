@@ -71,7 +71,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiResponseSuccess($data = [],$msg = ''){
+    public static function apiSuccess($data = [],$msg = ''){
         self::apiResponse(self::CODE_SUCCESS,$msg ? $msg :self::MSG_SUCCESS,$data);
     }
 
@@ -80,7 +80,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiResponseResourceNotFound($msg = ''){
+    public static function apiResourceNotFound($msg = ''){
         self::apiResponse(self::CODE_RESOURCE_NOT_FOUND,$msg ? $msg : self::MSG_RESOURCE_NOT_FOUND);
     }
 
@@ -89,7 +89,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiResponseParamValidateFailed($msg = ''){
+    public static function apiParamValidateFailed($msg = ''){
         self::apiResponse(self::CODE_PARAM_ERROR,$msg ? $msg :self::MSG_PARAM_ERROR);
     }
 
@@ -98,7 +98,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiResponseOperateFailed($msg = ''){
+    public static function apiOperateFailed($msg = ''){
         self::apiResponse(self::CODE_OPERATE_FAILED,$msg ? $msg :self::MSG_OPERATE_FAILED);
     }
 
@@ -107,7 +107,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiResponseUnauthorized($msg = ''){
+    public static function apiUnauthorized($msg = ''){
         self::apiResponse(self::CODE_UNAUTHORIZED,$msg ? $msg :self::MSG_UNAUTHORIZED);
     }
 
@@ -116,7 +116,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiResponsePermissionDenied($msg = ''){
+    public static function apiPermissionDenied($msg = ''){
         self::apiResponse(self::CODE_PERMISSION_DENIED,$msg ? $msg :self::MSG_PERMISSION_DENIED);
     }
 
