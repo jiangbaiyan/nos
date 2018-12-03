@@ -5,7 +5,8 @@
  * Date: 2018/12/1
  * Time: 14:00
  */
-namespace  Nos\Comm;
+
+namespace Nos\Comm;
 
 use Nos\Exception\CoreException;
 use Yaf\Registry;
@@ -24,13 +25,20 @@ class Redis
 
     public function __destruct()
     {
-        // TODO: Implement __destruct() method.
         self::$redis->close();
     }
 
-    public static function  connect(){
+    public static function connect()
+    {
         try {
             $config = Registry::get("config");
+            if (Registry::has('redis')) {
+                $redis = Registry::get('redis');
+                if (!empty($redis)) {
+                    self::$redis = $redis;
+                    return;
+                }
+            }
             $host = !empty($config[self::$key]['host']) ? $config[self::$key]['host'] : null;
             $port = !empty($config[self::$key]['port']) ? $config[self::$key]['port'] : null;
             $password = !empty([self::$key]['password']) ? $config[self::$key]['password'] : null;
@@ -39,49 +47,53 @@ class Redis
             self::$enable = true;
             $redis = new \Redis();
             $result = $redis->connect($host, $port, $timeout);
-        if ($result === false) {
-            throw new CoreException(json_encode($redis->errorInfo()));
-        }
-        if (!empty($password)) {
-            $result = $redis->auth($password);
             if ($result === false) {
                 throw new CoreException(json_encode($redis->errorInfo()));
             }
-        }
-        if (!empty($database)) {
-            $result = $redis->select($database);
+            if (!empty($password)) {
+                $result = $redis->auth($password);
+                if ($result === false) {
+                    throw new CoreException(json_encode($redis->errorInfo()));
+                }
+            }
+            if (!empty($database)) {
+                $result = $redis->select($database);
 
-            if ($result === false) {
-                throw new CoreException(json_encode($redis->errorInfo()));
+                if ($result === false) {
+                    throw new CoreException(json_encode($redis->errorInfo()));
+                }
             }
-        }
             self::$redis = $redis;
-        }catch (\Exception $e){
+            Registry::set('redis', self::$redis);
+        } catch (\Exception $e) {
             Log::fatal($e->getMessage());
             throw new CoreException('redis connect failed');
         }
     }
 
-    public  static function getRedis(){
+    public static function getRedis()
+    {
         return self::$redis;
     }
 
     /**
      * 写缓存
      */
-    public static function set($key,$value,$expire = 0){
-       if($expire == 0){
-           $ret = self::$redis->set($key,$value);
-       }else{
-           $ret = self::$redis->set($key,$value,$expire);
-       }
-       return $ret;
+    public static function set($key, $value, $expire = 0)
+    {
+        if ($expire == 0) {
+            $ret = self::$redis->set($key, $value);
+        } else {
+            $ret = self::$redis->set($key, $value, $expire);
+        }
+        return $ret;
     }
 
     /**
      * 读缓存，可读一个或多个key
      */
-    public static function get($key){
+    public static function get($key)
+    {
         $func = is_array($key) ? 'mGet' : 'get';
         return self::$redis->{$func}($key);
     }
@@ -89,15 +101,17 @@ class Redis
     /**
      * 条件形式设置缓存，如果 key 不存时就设置，存在时设置失败
      */
-    public static function setnx($key,$value){
-        return self::$redis->setnx($key,$value);
+    public static function setnx($key, $value)
+    {
+        return self::$redis->setnx($key, $value);
     }
 
     /**
      * 删除key
      * 缓存KEY，支持单个健:"key1" 或多个健:array('key1','key2')
      */
-    public static function del($key){
+    public static function del($key)
+    {
         return self::$redis->delete($key);
     }
 
@@ -108,11 +122,12 @@ class Redis
      * @param int $default 操作时的默认值
      * @return int　操作后的值
      */
-    public static function incr($key,$default =1){
-        if($default == 1){
+    public static function incr($key, $default = 1)
+    {
+        if ($default == 1) {
             return self::$redis->incr($key);
-        }else{
-            return self::$redis->incrBy($key,$default);
+        } else {
+            return self::$redis->incrBy($key, $default);
         }
     }
 
@@ -125,12 +140,9 @@ class Redis
      */
     public static function decr($key, $default = 1)
     {
-        if ($default == 1)
-        {
+        if ($default == 1) {
             return self::$redis->decr($key);
-        }
-        else
-        {
+        } else {
             return self::$redis->decrBy($key, $default);
         }
     }
@@ -169,8 +181,7 @@ class Redis
 
     public static function hset($name, $key, $value)
     {
-        if (is_array($value))
-        {
+        if (is_array($value)) {
             $value = json_encode($value);
         }
         return self::$redis->hset($name, $key, $value);
@@ -181,12 +192,10 @@ class Redis
      */
     public static function hget($name, $key = null)
     {
-        if ($key)
-        {
+        if ($key) {
             $data = self::$redis->hget($name, $key);
             $value = json_decode($data, true);
-            if (is_null($value))
-            {
+            if (is_null($value)) {
                 $value = $data;
             }
             return $value;
@@ -199,8 +208,7 @@ class Redis
      */
     public static function hdel($name, $key = null)
     {
-        if ($key)
-        {
+        if ($key) {
             return self::$redis->hdel($name, $key);
         }
         return self::$redis->del($name);

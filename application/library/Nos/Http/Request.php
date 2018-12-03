@@ -86,7 +86,11 @@ class Request extends Http{
      * @return bool|string
      * @throws OperateFailedException
      */
-    public static function send($type,$url,$params = null,$retry = 3,$timeout = 20){
+    public static function send($type, $url, $params = array(), $retry = 3, $timeout = 20){
+        if (!is_array($params)){
+            Log::fatal('curl|illegal_request_params|params:' . json_encode($params));
+            throw new OperateFailedException('请求参数格式不合法');
+        }
         $ch = curl_init($url);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
@@ -99,7 +103,9 @@ class Request extends Http{
             curl_setopt($ch,CURLOPT_POST,true);
             if (!empty($params['json'])){
                 curl_setopt($ch,CURLOPT_POSTFIELDS,$params['json']);
-            } else if (!empty($params) && is_array($params)){
+            } else if (!empty($params['form'])) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params['form']);
+            } else{
                 curl_setopt($ch,CURLOPT_POSTFIELDS,http_build_query($params));
             }
         }
