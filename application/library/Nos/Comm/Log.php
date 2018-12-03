@@ -11,11 +11,9 @@ namespace Nos\Comm;
 
 class Log{
 
-    const
-        LEVEL_FATAL = 0,
-        LEVEL_NOTICE = 1;
-
-    const PREFIX = 'yake_';
+    const LEVEL_FATAL = 0;
+    const LEVEL_NOTICE = 1;
+    const PREFIX = 'nos_';
 
     /**
      * 写日志
@@ -38,7 +36,11 @@ class Log{
                 $str = '[' . $time . ']' . '[' . 'FATAL' . ']'. $msg . PHP_EOL;
                 break;
         }
-        file_put_contents($path, $str, FILE_APPEND);
+        $handle = fopen($path, 'w');
+        flock($handle, LOCK_EX|LOCK_NB);
+        fwrite($handle, $str);
+        flock($handle, LOCK_UN);
+        fclose($handle);
     }
 
     /**
