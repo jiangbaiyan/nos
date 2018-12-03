@@ -80,7 +80,7 @@ class Request extends Http{
      * 发送Http请求
      * @param $type
      * @param $url
-     * @param null $params
+     * @param array $params
      * @param int $retry
      * @param int $timeout
      * @return bool|string

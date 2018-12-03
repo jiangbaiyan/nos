@@ -1,7 +1,7 @@
 
 <?php
 /**
- * 短信配置
+ * 配置示例
  * Created by PhpStorm.
  * User: baiyan
  * Date: 2018-11-28

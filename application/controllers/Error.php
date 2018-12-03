@@ -8,6 +8,7 @@
  */
 
 use Nos\Comm\Log;
+use Nos\Http\Response;
 
 class ErrorController  extends BaseController
 {
@@ -29,7 +30,7 @@ class ErrorController  extends BaseController
             'url'    => $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
             'method' => $_SERVER['REQUEST_METHOD'],
         ));
-        $this->response($code,$msg);
+        Response::apiResponse($code, $msg);
     }
 
 }
