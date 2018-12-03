@@ -6,7 +6,16 @@
  * Time: 11:55
  */
 
-class Test{
+namespace Common;
 
+use Nos\Comm\Db;
+
+class TestModel{
+
+    public function getData(){
+        $sql = 'select * from test';
+        $data = Db::fetchAll($sql);
+        return $data;
+    }
 
 }

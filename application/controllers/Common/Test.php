@@ -8,24 +8,20 @@
  */
 
 
-use Nos\Comm\Validator;
-use Nos\Comm\Db;
-use Nos\Comm\Redis;
 use Nos\Http\Request;
 use Nos\Http\Response;
-use Nos\Comm\Page;
 
 class Common_TestController extends BaseController {
 
     public function checkParam(){
-        $this->params['name'] = $this->get('name');
+        $this->params['name'] = Request::param('name');
     }
 
 
     public function indexAction()
     {
-        $page = Request::param('page');
-        $data = Page::paginate(41, $page, 10);
+        $testModel = new Common\TestModel();
+        $data = $testModel->getData();
         $this->output = $data;
         Response::apiResponseSuccess($this->output);
 
