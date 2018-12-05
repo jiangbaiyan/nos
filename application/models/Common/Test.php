@@ -18,7 +18,7 @@ class TestModel{
      */
     public function getData(){
         $sql = 'select * from test where id = ?';
-        $data = Db::fetchAll($sql, 1);
+        $data = Db::fetchAll($sql, array(2));
         return $data;
     }
 
