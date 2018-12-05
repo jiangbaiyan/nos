@@ -1,9 +1,10 @@
 # Nos—基于Yaf，专注于接口开发的框架
 ## 目前处于起步阶段，后续会继续维护并加入新特性
 ## 安装
- - 直接git clone即可
+ - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
  - 在使用前请确保安装了yaf、pdo、redis、curl扩展
  - 详情请参阅：http://php.net/manual/en/book.yaf.php
+ - 配置nginx等服务器rewrite到public/index.php入口文件即可
 ## Controller层使用
 ### 路由：http://localhost/common/test
 #### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
