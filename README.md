@@ -1,8 +1,9 @@
-# Nos—基于Yaf的专注于接口开发的框架，请大家多多指教
+# Nos—基于Yaf，专注于接口开发的框架
 ## 目前处于起步阶段，后续会继续维护并加入新特性
 ## 安装
- - 直接git clone此项目即可
+ - 直接git clone即可
  - 在使用前请确保安装了yaf、pdo、redis、curl扩展
+ - 详情请参阅：http://php.net/manual/en/book.yaf.php
 ## Controller层使用
 ### 路由：http://localhost/common/test
 #### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
