@@ -2,7 +2,7 @@
 ## 目前处于起步阶段，后续会继续维护并加入新特性
 ## 安装
  - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
- - 在使用前请确保安装了yaf、pdo、redis、curl扩展
+ - 在使用前请确保安装了yaf、pdo、redis、curl等PHP扩展
  - 详情请参阅：http://php.net/manual/en/book.yaf.php
  - 配置nginx等服务器rewrite到public/index.php入口文件即可
 ## Controller层使用
@@ -46,7 +46,7 @@ class Common_TestController extends BaseController {
 }
 ```
 ## Model层使用
-注意：类名必须为文件名Model，如果有目录必须加上namespace
+注意：类名必须为：文件名Model，如果有目录必须加上namespace
 ```php
 <?php
 
