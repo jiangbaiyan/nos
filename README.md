@@ -57,8 +57,8 @@ use Nos\Comm\Db;
 class TestModel{
 
     public function getData(){
-        $sql = 'select * from test';
-        $data = Db::fetchAll($sql);
+        $sql = 'select * from test where id = ?';
+        $data = Db::fetchAll($sql, array(2));
         return $data;
     }
 
