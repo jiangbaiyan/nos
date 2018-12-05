@@ -25,7 +25,7 @@ class Db{
 
 
     /**
-     * 构造方法，初始化句柄
+     * 初始化数据库连接
      * Db constructor.
      * @throws CoreException
      */
@@ -83,8 +83,7 @@ class Db{
      */
     private static function doSql($sql, $bind = array()){
         if (!is_array($bind)){
-            Log::fatal('pdo_do_sql_wrong_bind' . '|bind:' . json_encode($bind));
-            throw new CoreException('绑定参数类型错误');
+            throw new CoreException('pdo_do_sql_wrong_bind' . '|bind:' . json_encode($bind));
         }
         try{
             self::connect();
