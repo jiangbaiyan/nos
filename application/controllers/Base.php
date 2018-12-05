@@ -52,7 +52,7 @@ class BaseController extends Controller_Abstract{
     }
 
     private function auth(){
-        //验证token...
+        //用户授权验证，可以引入jwt等库
     }
 
     /**

@@ -13,10 +13,12 @@ use Nos\Http\Response;
 
 class Common_TestController extends BaseController {
 
+    public $needAuth = false;
+
     private $testModel;
 
     public function checkParam(){
-        $this->params['name'] = Request::param('name');
+        $this->params['phone'] = Request::param('phone');
     }
 
     protected function loadModel()
