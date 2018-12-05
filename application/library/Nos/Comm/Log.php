@@ -36,7 +36,7 @@ class Log{
                 $str = '[' . $time . ']' . '[' . 'FATAL' . ']'. $msg . PHP_EOL;
                 break;
         }
-        $handle = fopen($path, 'w');
+        $handle = fopen($path, 'a');
         flock($handle, LOCK_EX|LOCK_NB);
         fwrite($handle, $str);
         flock($handle, LOCK_UN);

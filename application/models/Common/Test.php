@@ -12,9 +12,13 @@ use Nos\Comm\Db;
 
 class TestModel{
 
+    /**
+     * @return mixed
+     * @throws \Nos\Exception\CoreException
+     */
     public function getData(){
-        $sql = 'select * from test';
-        $data = Db::fetchAll($sql);
+        $sql = 'select * from test where id = ?';
+        $data = Db::fetchAll($sql, 1);
         return $data;
     }
 
