@@ -11,6 +11,7 @@ namespace Nos\Http;
 
 use Nos\Comm\Log;
 use Nos\Exception\OperateFailedException;
+use Yaf\Registry;
 use Yaf\Request\Http;
 
 class Request extends Http{
@@ -60,7 +61,8 @@ class Request extends Http{
      * @return string
      */
     public static function getFullUrl(){
-        return 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $schema = Registry::get('config')['schema'];
+        return $schema . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 
     /**

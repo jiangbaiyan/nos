@@ -22,7 +22,7 @@ class Log{
      */
     private static function writeLog(int $level, $msg){
         $fileName = self::PREFIX . date('Y-m-d') . '.log';//按天划分
-        $path = APP_PATH . '/log/' . $fileName;
+        $path = APP_PATH . '/logs/' . $fileName;
         $time = date('Y-m-d H:i:s');
         if (!is_string($msg)){
             $msg = json_encode($msg);

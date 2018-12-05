@@ -25,12 +25,11 @@ class Bootstrap extends Bootstrap_Abstract
 
     /**
      * 初始化composer autoload
-     * @param Dispatcher $dispatcher
      */
-    public function _initLoader(Dispatcher $dispatcher)
+    public function _initLoader()
     {
         //加载composer
-        //include_once APP_PATH . '/vendor/autoload.php';
+        include_once APP_PATH . '/vendor/autoload.php';
     }
 
 }

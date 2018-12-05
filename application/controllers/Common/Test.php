@@ -28,7 +28,7 @@ class Common_TestController extends BaseController {
     {
         $data = $this->testModel->getData();
         $this->output = $data;
-        Response::apiResponseSuccess($this->output);
+        Response::apiSuccess($this->output);
     }
 
 }
