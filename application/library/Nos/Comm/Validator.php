@@ -19,7 +19,7 @@ class Validator{
      * @throws ParamValidateFailedException
      */
     public static function phone($v){
-        if (empty($v) || strlen($v) != 11 || !preg_match('/^[1][3,4,5,7,8][0-9]{9}$/;
+        if (empty($v) || strlen($v) != 11 || !preg_match('/^[1][3,4,5,7,8][0-9]{9}$/
 ', $v)){
             throw new ParamValidateFailedException('手机号格式不正确');
         }
