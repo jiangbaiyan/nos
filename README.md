@@ -1,7 +1,15 @@
 # Nos—基于Yaf，专注于接口开发的高性能框架
-## 控制器使用示例
+## 安装
+ - 直接git clone此项目即可
+ - 在使用前请确保安装了yaf、pdo、redis、curl扩展
+## Controller层使用
 ### 路由：http://localhost/common/test
-#### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController，具体流程可参考BaseController
+#### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
+### 控制器方法执行流程
+ - 判断$needAuth是否为true，若为true，执行auth()方法：接口认证
+ - 执行checkParam()：请求参数校验
+ - 执行loadModel()：加载模型
+ - 执行indexAction()：执行业务逻辑
 ```php
 <?php
 
@@ -34,7 +42,7 @@ class Common_TestController extends BaseController {
 
 }
 ```
-## model层使用示例：
+## Model层使用
 注意：类名必须为文件名Model，如果有目录必须加上namespace
 ```php
 <?php
