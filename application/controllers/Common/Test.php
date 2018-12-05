@@ -21,7 +21,7 @@ class Common_TestController extends BaseController {
         $this->params['phone'] = Request::param('phone');
     }
 
-    protected function loadModel()
+    public function loadModel()
     {
         $this->testModel = new \Common\TestModel();
     }
