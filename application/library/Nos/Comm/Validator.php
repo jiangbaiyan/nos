@@ -43,7 +43,7 @@ class Validator{
      */
     public static function idCard($v){
         if (empty($v) || !preg_match('/(^([\d]{15}|[\d]{18}|[\d]{17}x)$)/', $v)){
-            throw new ParamValidateFailedException('邮箱格式不正确');
+            throw new ParamValidateFailedException('身份证格式不正确');
         }
     }
 
