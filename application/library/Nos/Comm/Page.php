@@ -39,7 +39,7 @@ class Page{
         $pattern = '/page=\d+/';
         $firstPageUrl = preg_replace($pattern, 'page=1', $baseUrl);
         $lastPageUrl = preg_replace($pattern, 'page=' . $totalPage, $baseUrl);
-        $nextPageUrl =  $curPage == $totalPage ? "" : preg_replace($pattern, 'page=' .($curPage + 1), $baseUrl);
+        $nextPageUrl =  $curPage == $totalPage ? '' : preg_replace($pattern, 'page=' .($curPage + 1), $baseUrl);
         $prevPageUrl =  $curPage ==  1 ? '' : preg_replace($pattern, 'page=' .($curPage - 1), $baseUrl);
 
         return array(
