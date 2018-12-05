@@ -24,8 +24,8 @@ class Common_TestController extends BaseController {
     private $testModel;
 
     public function checkParam(){
-        $this->params['phone'] = Request::param('phone');
         Validator::phone($this->params['phone']);
+        $this->params['phone'] = Request::param('phone');
     }
 
     protected function loadModel()
