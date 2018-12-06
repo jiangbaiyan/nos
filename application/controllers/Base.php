@@ -44,9 +44,7 @@ class BaseController extends Controller_Abstract{
      * 初始化
      */
     protected function init(){
-        if ($this->needAuth){
-            $this->auth();//用户授权检测
-        }
+        $this->needAuth && $this->auth();
         $this->checkParam();//请求参数校验
         $this->loadModel();//模型载入
     }
