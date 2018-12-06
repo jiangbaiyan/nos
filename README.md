@@ -99,3 +99,18 @@ class TestModel{
 ## composer
  - 如果需要引入库，请直接编辑composer,json
  - 执行composer update即可，框架会自动引入
+## Db
+ - 常规的连接方法,调用connect即可实现
+ - 对于数据库的操作分为查和改，分别调用fecthall和uodate，传参为所执行的语句即可实现
+ - 单独的执行sql语句的方法doSql,简单纯粹的去执行sql语句
+ - 以上方法第二个传参均为bind值,方法内已实现PDO,调用即可
+## Redis
+ - redis的连接方法同Db类似
+ - redis类中已经封装了基本的Redis操作，其中拥有功能类似但涉及单一和批量处理的均封装为一个方法，类似于：get和mget,incr和incrby,hget和hgetAll等;
+# 接下来的事  
+  - 增加数据库连接缓冲池
+  - 封装线程处理
+  - ....
+# 题外话
+  欢迎大家提出问题,也渴望大家能提出好的建议，新人驾到，望各位多多指教
+    
