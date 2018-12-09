@@ -35,25 +35,39 @@ class Request extends Http{
     }
 
     /**
-     * 获取GET参数
+     * 获取单个GET参数
      * @param $key
      * @param string $default
      * @return string
      */
-    public static function param($key, $default = ''){
-        $data = self::getRequestInstance()->getQuery($key);
-        return isset($data) ? $data : $default;
+    public static function param($key, $default = null){
+        return self::getRequestInstance()->getQuery($key, $default);
     }
 
     /**
-     * 获取POST参数
+     * 获取单个POST参数
      * @param $key
      * @param string $default
      * @return mixed|string
      */
-    public static function form($key, $default = ''){
-        $data = self::getRequestInstance()->getPost($key);
-        return isset($data) ? $data : $default;
+    public static function form($key, $default = null){
+        return self::getRequestInstance()->getPost($key, $default);
+    }
+
+    /**
+     * 获取所有请求参数，自动判断请求类型
+     * @return mixed
+     * @throws OperateFailedException
+     */
+    public static function all(){
+        $obj = self::getRequestInstance();
+        if ($obj->isGet()){
+            return self::getRequestInstance()->getQuery();
+        } else if ($obj->isPost()){
+            return self::getRequestInstance()->getPost();
+        } else{
+            throw new OperateFailedException('invalid request method');
+        }
     }
 
     /**
