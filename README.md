@@ -26,8 +26,8 @@
 ## 安装
  - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
  - 在使用前请确保安装了yaf、pdo、redis、curl等PHP扩展
- - 详情请参阅：http://php.net/manual/en/book.yaf.php
- - 配置nginx等服务器rewrite到public/index.php入口文件即可
+ - yaf框架文档请参阅：http://php.net/manual/en/book.yaf.php
+ - 配置nginx等服务器rewrite到/public/index.php入口文件即可
 ## Controller层使用
 ### 路由：http://localhost/common/test
 #### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
@@ -91,19 +91,19 @@ class TestModel{
 
 }
 ```
+## 异常处理
+ - 框架内部定义了6种异常，分别对应不同的默认状态码和提示信息
+ - 抛出异常后，框架会自动路由到Error.php
+ - Error.php会做两件事：写日志、返回json
+ - 异常返回的json内容依赖抛异常时的状态码和提示信息
 ## 业务配置
- - 所有和业务场景有关的配置均写在application/config目录下
+ - 所有和业务场景有关的配置均写在/application/config目录下
  - 调用Nos\Comm\Config::get($key)去获取配置信息
  - 注意参数名的格式：(文件名.key1.key2）目前只支持到二维数组
  - 全局配置请写到application.ini中即可
-## 异常处理
- - 框架内部定义了6种异常，分别对应不同的默认状态码和提示信息
- - 抛出异常之后，框架会自动路由到Error.php
- - Error.php会做两个动作：写日志、返回json
- - 返回的json依据抛异常时的状态码和提示信息
 ## composer
- - 如果需要引入库，请直接编辑composer,json
- - 执行composer update即可，框架会自动引入
+ - 如果需要引入库，请直接编辑composer.json
+ - 然后执行composer update即可
 ## 接下来的计划  
   - 整合swoole部分优良特性
   - 添加连接池
@@ -111,5 +111,5 @@ class TestModel{
   - 多进程离线脚本处理
   - ...
 ## 题外话
-  欢迎大家提出问题，也渴望大家能提出好的建议，新人初来驾到，望各位多多指教
+  欢迎大家提出问题，也渴望大家能提出好的建议；新人初来驾到，望各位多多指教
     

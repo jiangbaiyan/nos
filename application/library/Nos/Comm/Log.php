@@ -11,8 +11,13 @@ namespace Nos\Comm;
 
 class Log{
 
+    /*
+     * 日志级别由高到低
+     */
     const LEVEL_FATAL = 0;
     const LEVEL_NOTICE = 1;
+    const LEVEL_DEBUG = 2;
+
     const PREFIX = 'nos_';
 
     /**
@@ -34,6 +39,9 @@ class Log{
                 break;
             case self::LEVEL_FATAL:
                 $str = '[' . $time . ']' . '[' . 'FATAL' . ']'. $msg . PHP_EOL;
+                break;
+            case self::LEVEL_DEBUG:
+                $str = '[' . $time . ']' . '[' . 'DEBUG' . ']'. $msg . PHP_EOL;
                 break;
         }
         $handle = fopen($path, 'a');
@@ -57,6 +65,14 @@ class Log{
      */
     public static function notice($msg){
         self::writeLog(self::LEVEL_NOTICE, $msg);
+    }
+
+    /**
+     * 调试日志
+     * @param $msg
+     */
+    public static function debug($msg){
+        self::writeLog(self::LEVEL_DEBUG, $msg);
     }
 
 }
