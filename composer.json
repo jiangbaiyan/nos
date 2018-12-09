@@ -1,7 +1,7 @@
 {
   "name": "jiangbaiyan/nos",
   "type": "project",
-  "description": "The nos Framework, base on yaf, by jiangbaiyan && guobutao.",
+  "description": "A PHP framework focused on API development based on Yaf by jiangbaiyan && guobutao",
   "repositories": {
     "packagist": {
       "type": "composer",
