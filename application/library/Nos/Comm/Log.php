@@ -14,36 +14,25 @@ class Log{
     /*
      * 日志级别由高到低
      */
-    const LEVEL_FATAL = 0;
-    const LEVEL_NOTICE = 1;
-    const LEVEL_DEBUG = 2;
+    const LEVEL_FATAL  = 'FATAL';
+    const LEVEL_NOTICE = 'NOTICE';
+    const LEVEL_DEBUG  = 'DEBUG';
 
     const PREFIX = 'nos_';
 
     /**
      * 写日志
-     * @param int $level
+     * @param $level
      * @param $msg
      */
-    private static function writeLog(int $level, $msg){
+    private static function writeLog($level, $msg){
         $fileName = self::PREFIX . date('Y-m-d') . '.log';//按天划分
         $path = APP_PATH . '/logs/' . $fileName;
         $time = date('Y-m-d H:i:s');
         if (!is_string($msg)){
             $msg = json_encode($msg);
         }
-        $str = '';
-        switch ($level){
-            case self::LEVEL_NOTICE:
-                $str = '[' . $time . ']' . '[' . 'NOTICE' . ']'. $msg . PHP_EOL;
-                break;
-            case self::LEVEL_FATAL:
-                $str = '[' . $time . ']' . '[' . 'FATAL' . ']'. $msg . PHP_EOL;
-                break;
-            case self::LEVEL_DEBUG:
-                $str = '[' . $time . ']' . '[' . 'DEBUG' . ']'. $msg . PHP_EOL;
-                break;
-        }
+        $str = '[' . $time . ']' . "[{$level}]". $msg . PHP_EOL;
         $handle = fopen($path, 'a');
         flock($handle, LOCK_EX|LOCK_NB);
         fwrite($handle, $str);
