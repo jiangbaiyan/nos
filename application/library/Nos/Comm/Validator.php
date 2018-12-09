@@ -19,7 +19,6 @@ class Validator{
      * @param $params
      * @param $rules
      * @throws CoreException
-     * @throws ParamValidateFailedException
      */
     public static function make($params, $rules){
         if (!is_array($params) || !is_array($rules)){
@@ -27,7 +26,9 @@ class Validator{
             throw new CoreException('请求参数格式或校验规则不合法');
         }
         foreach ($rules as $k => $v){
-            self::required($params[$k]);
+            if (!isset($params[$k]) && strpos($v, 'required') === false){
+                continue;
+            }
             $arr = explode('|', $v);
             foreach ($arr as $item){
                 if (empty($item)){
