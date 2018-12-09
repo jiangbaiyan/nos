@@ -10,6 +10,7 @@
 
 use Nos\Http\Request;
 use Nos\Http\Response;
+use Nos\Comm\Validator;
 
 class Common_TestController extends BaseController {
 
@@ -18,7 +19,13 @@ class Common_TestController extends BaseController {
     private $testModel;
 
     public function checkParam(){
-        $this->params['phone'] = Request::param('phone');
+        $params = Request::all();//获取全部参数
+        Validator::make($params, array(
+            'id'    => 'required',
+            'phone' => 'phone|required',
+        ));
+        $this->params['phone'] = Request::get('phone');//获取get参数
+        $this->params['name']  = Request::post('name');//获取post参数
     }
 
     public function loadModel()
@@ -28,8 +35,7 @@ class Common_TestController extends BaseController {
 
     public function indexAction()
     {
-        $data = $this->testModel->getData();
-        $this->output = $data;
+        $this->output['data'] = $this->testModel->getData();
         Response::apiSuccess($this->output);
     }
 

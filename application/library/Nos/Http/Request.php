@@ -14,7 +14,7 @@ use Nos\Exception\OperateFailedException;
 use Yaf\Registry;
 use Yaf\Request\Http;
 
-class Request extends Http{
+class Request{
 
 
     /**
@@ -29,7 +29,7 @@ class Request extends Http{
      */
     private static function getRequestInstance(){
         if (!self::$request instanceof Http){
-            self::$request = new parent();
+            self::$request = new Http();
         }
         return self::$request;
     }
@@ -40,7 +40,7 @@ class Request extends Http{
      * @param string $default
      * @return string
      */
-    public static function param($key, $default = null){
+    public static function get($key, $default = null){
         return self::getRequestInstance()->getQuery($key, $default);
     }
 
@@ -50,14 +50,13 @@ class Request extends Http{
      * @param string $default
      * @return mixed|string
      */
-    public static function form($key, $default = null){
+    public static function post($key, $default = null){
         return self::getRequestInstance()->getPost($key, $default);
     }
 
     /**
      * 获取所有请求参数，自动判断请求类型
      * @return mixed
-     * @throws OperateFailedException
      */
     public static function all(){
         $obj = self::getRequestInstance();
@@ -66,7 +65,7 @@ class Request extends Http{
         } else if ($obj->isPost()){
             return self::getRequestInstance()->getPost();
         } else{
-            throw new OperateFailedException('invalid request method');
+            return false;
         }
     }
 

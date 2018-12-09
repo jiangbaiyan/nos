@@ -24,7 +24,9 @@
     "preferred-install": "dist"
   },
   "require": {
-
+    "ext-curl": "*",
+    "ext-pdo": "*",
+    "ext-json": "*"
   },
   "scripts": {
     "post-autoload-dump": [

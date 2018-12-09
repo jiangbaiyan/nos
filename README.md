@@ -1,6 +1,7 @@
 # Nos—基于Yaf，专注于接口开发的框架
 ### 目前处于起步阶段，后续会继续维护并加入新特性
 ### 只在纯净的yaf框架基础上封装了接口开发常用的类库
+### 贴近Laravel语法，容易上手
 ### 适用于中小型接口开发业务场景
  - 所有类库全部为静态方法
  - 基本类库
@@ -45,12 +46,17 @@ use Nos\Comm\Validator;
 class Common_TestController extends BaseController {
 
     public $needAuth = false;
-    
+
     private $testModel;
 
     public function checkParam(){
-        Validator::phone($this->params['phone']);
-        $this->params['phone'] = Request::param('phone');
+        $params = Request::all();//获取全部参数
+        Validator::make($params, array(
+            'id'    => 'required',
+            'phone' => 'phone|required',
+        ));
+        $this->params['phone'] = Request::get('phone');//获取get参数
+        $this->params['name']  = Request::post('name');//获取post参数
     }
 
     public function loadModel()
@@ -60,8 +66,7 @@ class Common_TestController extends BaseController {
 
     public function indexAction()
     {
-        $data = $this->testModel->getData();
-        $this->output = $data;
+        $this->output['data'] = $this->testModel->getData();
         Response::apiSuccess($this->output);
     }
 
