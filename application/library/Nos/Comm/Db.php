@@ -55,8 +55,7 @@ class Db{
      * @throws CoreException
      */
     public static function fetchAll($sql, $bind = array()){
-        self::$node = self::DB_NODE_SLAVE_KEY;
-        return self::doSql($sql, $bind);
+        return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bind);
     }
 
     /**
@@ -67,23 +66,27 @@ class Db{
      * @throws CoreException
      */
     public static function update($sql, $bind = array()){
-        self::$node = self::DB_NODE_MASTER_KEY;
-        return self::doSql($sql, $bind);
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }
 
     /**
      * 执行sql语句
+     * @param $node
      * @param $sql
      * @param array $bind
      * @return mixed
      * @throws CoreException
      */
-    private static function doSql($sql, $bind = array()){
+    private static function doSql($node, $sql, $bind = array()){
         if (!is_array($bind)){
             throw new CoreException('pdo_do_sql_wrong_bind' . '|bind:' . json_encode($bind));
         }
         try{
-            self::connect();
+            $oldNode  = self::$node;//获取上次连接节点
+            self::$node = $node;    //赋值此次连接节点
+            if ($node != $oldNode){ //如果这次节点和上次的不同，说明不是连的同一个数据库，需要重新连接，否则直接复用上次的句柄
+                self::connect();
+            }
             $handle = self::$db->prepare($sql);
             $res = $handle->execute($bind);
             if (!$res){
