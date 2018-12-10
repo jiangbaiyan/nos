@@ -18,16 +18,6 @@ class Redis
 
     private static $config;
 
-    public function __construct()
-    {
-        self::connect();
-    }
-
-    public function __destruct()
-    {
-        self::$redis->close();
-    }
-
     public static function connect()
     {
         try {
@@ -59,6 +49,7 @@ class Redis
                 }
             }
             self::$redis = $redis;
+            return self::$redis;
         } catch (\Exception $e) {
             Log::fatal($e->getMessage());
             throw new CoreException('redis connect failed');
@@ -75,6 +66,9 @@ class Redis
      */
     public static function set($key, $value, $expire = 0)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         if ($expire == 0) {
             $ret = self::$redis->set($key, $value);
         } else {
@@ -88,6 +82,9 @@ class Redis
      */
     public static function get($key)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         $func = is_array($key) ? 'mGet' : 'get';
         return self::$redis->{$func}($key);
     }
@@ -97,6 +94,9 @@ class Redis
      */
     public static function setnx($key, $value)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         return self::$redis->setnx($key, $value);
     }
 
@@ -106,6 +106,9 @@ class Redis
      */
     public static function del($key)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         return self::$redis->delete($key);
     }
 
@@ -118,6 +121,9 @@ class Redis
      */
     public static function incr($key, $default = 1)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         if ($default == 1) {
             return self::$redis->incr($key);
         } else {
@@ -134,6 +140,9 @@ class Redis
      */
     public static function decr($key, $default = 1)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         if ($default == 1) {
             return self::$redis->decr($key);
         } else {
@@ -146,6 +155,9 @@ class Redis
      */
     public static function lpush($key, $value)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         return self::$redis->lpush($key, $value);
     }
 
@@ -154,6 +166,9 @@ class Redis
      */
     public static function rpush($key, $value)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         return self::$redis->rpush($key, $value);
     }
 
@@ -162,6 +177,9 @@ class Redis
      */
     public static function lpop($key)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         return self::$redis->lpop($key);
     }
 
@@ -170,11 +188,17 @@ class Redis
      */
     public static function lrange($key, $start, $end)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         return self::$redis->lrange($key, $start, $end);
     }
 
     public static function hset($name, $key, $value)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         if (is_array($value)) {
             $value = json_encode($value);
         }
@@ -186,6 +210,9 @@ class Redis
      */
     public static function hget($name, $key = null)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         if ($key) {
             $data = self::$redis->hget($name, $key);
             $value = json_decode($data, true);
@@ -202,6 +229,9 @@ class Redis
      */
     public static function hdel($name, $key = null)
     {
+        if(!isset(self::$redis)){
+            self::$redis = self::connect();
+        }
         if ($key) {
             return self::$redis->hdel($name, $key);
         }
