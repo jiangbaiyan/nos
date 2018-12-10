@@ -50,7 +50,7 @@ class Redis
             }
             self::$redis = $redis;
         } catch (\Exception $e) {
-            Log::fatal($e->getMessage());
+            Log::fatal('redis|connect_failed|msg:' . $e->getMessage());
             throw new CoreException('redis connect failed');
         }
     }

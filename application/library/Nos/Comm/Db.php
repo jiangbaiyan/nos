@@ -41,7 +41,7 @@ class Db{
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
             self::$db = new PDO($dsn, $config['user'], $config['password']);
         } catch (\Exception $e){
-            Log::fatal($e->getMessage());
+            Log::fatal('db|connect_failed|msg:' . $e->getMessage());
             throw new CoreException('db connect failed');
         }
     }
@@ -98,7 +98,7 @@ class Db{
             $data = $handle->fetchAll(PDO::FETCH_ASSOC);
             return $data;
         } catch (\Exception $e){
-            Log::fatal('pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . self::$node . '|bind:' . json_encode($bind));
+            Log::fatal('db|pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . self::$node . '|bind:' . json_encode($bind));
             throw new CoreException('db query failed');
         }
     }
