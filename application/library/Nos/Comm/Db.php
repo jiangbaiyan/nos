@@ -11,13 +11,15 @@ namespace Nos\Comm;
 
 use Nos\Exception\CoreException;
 use PDO;
-use Yaf\Registry;
+use Yaf\Config\Ini;
 
 class Db{
 
     private static $db;
 
     private static $node;
+
+    private static $config;
 
     const DB_NODE_MASTER_KEY = 'write';//主库
 
@@ -31,18 +33,13 @@ class Db{
      */
     private static function connect(){
         try{
-            $key = 'db_' . self::$node;
-            if (Registry::has($key)){
-                self::$db = Registry::get($key);
-                if (!empty(self::$db)){
-                    return;
-                }
+            if (empty(self::$config)){
+                $config = new Ini(APP_PATH . '/config/db.ini', ini_get('yaf.environ'));
+                self::$config = $config->toArray();
             }
-            $config = Registry::get('config');
-            $config = $config['db'][self::$node];
+            $config = self::$config[self::$node];
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
             self::$db = new PDO($dsn, $config['user'], $config['password']);
-            Registry::set($key, self::$db);
         } catch (\Exception $e){
             Log::fatal($e->getMessage());
             throw new CoreException('db connect failed');

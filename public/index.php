@@ -11,8 +11,8 @@ use Yaf\Application;
 
 define('APP_PATH', dirname(__DIR__));
 define('ROOT_PATH',  APP_PATH . '/application');
-ini_set('yaf.environ', 'dev');
 $app = new Application(APP_PATH . '/config/application.ini');
 $app->getDispatcher()->catchException('true');
 $app->getDispatcher()->disableView();
-$app->bootstrap()->run();
+include_once APP_PATH . '/vendor/autoload.php';
+$app->run();

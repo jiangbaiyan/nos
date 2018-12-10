@@ -9,14 +9,14 @@
 namespace Nos\Comm;
 
 use Nos\Exception\CoreException;
-use Yaf\Registry;
+use Yaf\Config\Ini;
 
 
 class Redis
 {
     private static $redis;
-    private static $key = "redis";
-    private static $enable = false;
+
+    private static $config;
 
     public function __construct()
     {
@@ -31,20 +31,15 @@ class Redis
     public static function connect()
     {
         try {
-            $config = Registry::get("config");
-            if (Registry::has('redis')) {
-                $redis = Registry::get('redis');
-                if (!empty($redis)) {
-                    self::$redis = $redis;
-                    return;
-                }
+            if (empty(self::$config)){
+                $config = new Ini(APP_PATH . '/config/redis.ini', ini_get('yaf.environ'));
+                self::$config = $config->toArray();
             }
-            $host = !empty($config[self::$key]['host']) ? $config[self::$key]['host'] : null;
-            $port = !empty($config[self::$key]['port']) ? $config[self::$key]['port'] : null;
-            $password = !empty([self::$key]['password']) ? $config[self::$key]['password'] : null;
-            $timeout = !empty($config[self::$key]['$timeout']) ? $config[self::$key]['$timeout'] : 0;
-            $database = !empty($config[self::$key]['database']) ? $config[self::$key]['database'] : 0;
-            self::$enable = true;
+            $host = self::$config['host'];
+            $port = self::$config['port'];
+            $password = self::$config['password'];
+            $timeout = self::$config['timeout'];
+            $database = self::$config['database'];
             $redis = new \Redis();
             $result = $redis->connect($host, $port, $timeout);
             if ($result === false) {
@@ -64,7 +59,6 @@ class Redis
                 }
             }
             self::$redis = $redis;
-            Registry::set('redis', self::$redis);
         } catch (\Exception $e) {
             Log::fatal($e->getMessage());
             throw new CoreException('redis connect failed');
