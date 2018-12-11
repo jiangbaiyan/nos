@@ -9,8 +9,9 @@
 
 use Nos\Comm\Log;
 use Nos\Http\Response;
+use Yaf\Controller_Abstract;
 
-class ErrorController extends \Yaf\Controller_Abstract {
+class ErrorController extends Controller_Abstract {
 
     /**
      * 异常处理入口
