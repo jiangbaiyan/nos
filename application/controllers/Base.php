@@ -43,13 +43,13 @@ class BaseController extends Controller_Abstract{
     /**
      * 初始化
      */
-    protected function init(){
+    private function init(){
         $this->needAuth && $this->auth();
         $this->checkParam();//请求参数校验
         $this->loadModel();//模型载入
     }
 
-    private function auth(){
+    protected function auth(){
         //用户授权验证，可以引入jwt等库
     }
 

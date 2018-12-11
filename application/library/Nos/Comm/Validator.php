@@ -39,7 +39,7 @@ class Validator{
                     Log::fatal('validator|rule_not_defined|rule:' . $item);
                     throw new CoreException('校验规则未定义');
                 }
-                call_user_func(array(__CLASS__, $item), $params[$k]);
+                @call_user_func(array(__CLASS__, $item), $params[$k]);
             }
         }
     }
