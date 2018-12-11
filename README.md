@@ -30,8 +30,8 @@
 ## Controller层使用
 ### 路由：http://localhost/common/test
 #### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
-#### 控制器方法执行流程
- - 判断$needAuth是否为true，若为true，执行auth()方法：接口认证
+#### 控制器执行流程
+ - 若$needAuth，执行auth()：接口认证
  - 执行checkParam()：请求参数校验
  - 执行loadModel()：加载模型
  - 执行indexAction()：执行业务逻辑
@@ -105,6 +105,7 @@ class TestModel{
  - 然后执行composer update即可
 ## 接下来的计划  
   - 整合swoole部分优良特性
+  - 接口文档自动生成
   - 添加连接池
   - 数据库迁移
   - 多进程离线脚本处理

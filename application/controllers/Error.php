@@ -10,8 +10,7 @@
 use Nos\Comm\Log;
 use Nos\Http\Response;
 
-class ErrorController  extends BaseController
-{
+class ErrorController{
 
     /**
      * 异常处理入口
