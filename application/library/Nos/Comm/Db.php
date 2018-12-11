@@ -79,7 +79,7 @@ class Db{
      */
     private static function doSql($node, $sql, $bind = array()){
         if (!is_array($bind)){
-            throw new CoreException('pdo_do_sql_wrong_bind' . '|bind:' . json_encode($bind));
+            $bind = array($bind);
         }
         try{
             $oldNode  = self::$node;//获取上次连接节点
