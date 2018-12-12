@@ -27,6 +27,7 @@
  - 在使用前请确保安装了yaf、pdo、redis、curl等PHP扩展
  - yaf框架文档请参阅：http://php.net/manual/en/book.yaf.php
  - 配置nginx等服务器rewrite到/public/index.php入口文件即可
+ - 请赋予logs目录足够的权限，否则无法正常写入日志
 ## Controller层使用
 ### 控制器执行流程
  - 若$needAuth，执行auth()：接口认证
