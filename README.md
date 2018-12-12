@@ -34,10 +34,10 @@
  - 执行loadModel()：加载模型
  - 执行indexAction()：执行业务逻辑
 ### 命名规范
-#### 路由：http://localhost/common/getCode
-#### 文件：controllers/common/getCode.php
-#### 类名：Common_GetCodeController
-#### 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
+ - 路由：http://localhost/common/getCode
+ - 目录：controllers/common/getCode.php
+ - 类名：Common_GetCodeController
+ - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
 ```php
 <?php
 
@@ -75,7 +75,8 @@ class Common_GetCodeController extends BaseController {
 }
 ```
 ## Model层使用
-注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace
+ - 注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace
+ - 目录：models/Common/Test.php
 ```php
 <?php
 
