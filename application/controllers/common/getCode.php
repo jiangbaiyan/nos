@@ -12,7 +12,7 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
 
-class Common_TestController extends BaseController {
+class Common_GetCodeController extends BaseController {
 
     public $needAuth = false;
 

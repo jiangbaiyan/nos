@@ -28,13 +28,16 @@
  - yaf框架文档请参阅：http://php.net/manual/en/book.yaf.php
  - 配置nginx等服务器rewrite到/public/index.php入口文件即可
 ## Controller层使用
-### 路由：http://localhost/common/test
-#### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
-#### 控制器执行流程
+### 控制器执行流程
  - 若$needAuth，执行auth()：接口认证
  - 执行checkParam()：请求参数校验
  - 执行loadModel()：加载模型
  - 执行indexAction()：执行业务逻辑
+### 命名规范
+#### 路由：http://localhost/common/getCode
+#### 文件：controllers/common/getCode.php
+#### 类名：Common_GetCodeController
+#### 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
 ```php
 <?php
 
@@ -42,9 +45,9 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
 
-class Common_TestController extends BaseController {
+class Common_GetCodeController extends BaseController {
 
-    public $needAuth = false;
+    public $needAuth = true;
 
     private $testModel;
 
@@ -68,11 +71,11 @@ class Common_TestController extends BaseController {
         $this->output['data'] = $this->testModel->getData();
         Response::apiSuccess($this->output);
     }
-
+    
 }
 ```
 ## Model层使用
-注意：类名必须为：文件名Model，如果有目录必须加上namespace
+注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace
 ```php
 <?php
 
@@ -82,6 +85,10 @@ use Nos\Comm\Db;
 
 class TestModel{
 
+    /**
+     * @return mixed
+     * @throws \Nos\Exception\CoreException
+     */
     public function getData(){
         $sql = 'select * from test where id = ?';
         $data = Db::fetchAll($sql, array(2));
