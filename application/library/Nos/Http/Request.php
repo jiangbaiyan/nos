@@ -124,7 +124,7 @@ class Request{
                 }
             }
             if ($i == $retry){
-                Log::fatal('curl|send_request_error|url:' . $url . '|type:' . $type . '|params:0 . ' .$params . '|retry:' . $retry . '|curl_error:' . json_encode(curl_error($ch)));
+                Log::fatal('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' .$postData . '|retry:' . $retry . '|curl_error:' . json_encode(curl_error($ch)));
                 throw new OperateFailedException('发送请求失败，请重试');
             }
         }
