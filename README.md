@@ -59,7 +59,6 @@ class Common_GetCodeController extends BaseController {
      */
     public $user;
     
-    
     /*
      * 模型
      */
