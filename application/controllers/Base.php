@@ -55,7 +55,7 @@ class BaseController extends Controller_Abstract{
     }
 
     /**
-     * 用户授权并返回当前用户对象，自动载入到loadModel()方法
+     * 用户授权并返回当前用户对象，自动载入到控制器$user变量中
      * @return object
      */
     protected function auth(){}
