@@ -44,7 +44,6 @@ class BaseController extends Controller_Abstract{
      */
     protected $needAuth = true;//是否需要校验
 
-
     /**
      * 初始化
      */
