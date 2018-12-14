@@ -17,6 +17,11 @@ use Yaf\Controller_Abstract;
 
 class BaseController extends Controller_Abstract{
 
+    /**
+     * 当前登录用户
+     * @var null
+     */
+    protected $user = null;
 
     /**
      * 请求参数
@@ -44,14 +49,16 @@ class BaseController extends Controller_Abstract{
      * 初始化
      */
     private function init(){
-        $this->needAuth && $this->auth();
+        $this->needAuth && $this->user = $this->auth();
         $this->checkParam();//请求参数校验
         $this->loadModel();//模型载入
     }
 
-    protected function auth(){
-        //用户授权验证，可以引入jwt等库
-    }
+    /**
+     * 用户授权并返回当前用户对象，自动载入到loadModel()方法
+     * @return object
+     */
+    protected function auth(){}
 
     /**
      * 参数校验

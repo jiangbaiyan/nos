@@ -34,6 +34,32 @@ class Request{
         return self::$request;
     }
 
+
+    /**
+     * 获取请求头
+     * @param $key
+     * @param null $default
+     * @return array|false|mixed|null
+     */
+    public static function header($key = null, $default = null){
+        $headers = array();
+        if (!function_exists('getallheaders')) {
+            function getallheaders() {
+                foreach ($_SERVER as $name => $value) {
+                    if (substr($name, 0, 5) == 'HTTP_') {
+                        $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+                    }
+                }
+            }
+        } else{
+            $headers = getallheaders();
+        }
+        if (empty($key)){
+            return $headers;
+        }
+        return isset($headers[$key]) ? $headers[$key] : $default;
+    }
+
     /**
      * 获取单个GET参数
      * @param $key
