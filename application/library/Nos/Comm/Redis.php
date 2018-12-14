@@ -172,6 +172,17 @@ class Redis
     }
 
     /**
+     *    rpush
+     */
+    public static function rpop($key)
+    {
+        if(!isset(self::$redis)){
+            self::connect();
+        }
+        return self::$redis->rpop($key);
+    }
+
+    /**
      *    add lpop
      */
     public static function lpop($key)
