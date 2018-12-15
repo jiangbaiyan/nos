@@ -37,7 +37,7 @@ class Config{
         if (!file_exists($file)){
             throw new CoreException('配置文件不存在');
         }
-        if (!Registry::has('config')){
+        if (!Registry::has($file)){
             $config = include $file;
             Registry::set($file, $config);
         } else{
