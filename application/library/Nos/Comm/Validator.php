@@ -90,12 +90,23 @@ class Validator{
     }
 
     /**
+     * 判断日期时间格式是否合法
+     * @param $dateString
+     * @throws ParamValidateFailedException
+     */
+    private static function dateTime( $dateString ) {
+        if (strtotime( date('Y-m-d H:i:s', strtotime($dateString)) ) != strtotime( $dateString )){
+            throw new ParamValidateFailedException('非法的日期格式');
+        }
+    }
+
+    /**
      * 判断日期格式是否合法
      * @param $dateString
      * @throws ParamValidateFailedException
      */
-    private static function date( $dateString ) {
-        if (strtotime( date('Y-m-d', strtotime($dateString)) ) !== strtotime( $dateString )){
+    private static function date($dateString){
+        if (strtotime( date('Y-m-d', strtotime($dateString)) ) != strtotime( $dateString )){
             throw new ParamValidateFailedException('非法的日期格式');
         }
     }
