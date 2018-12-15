@@ -54,13 +54,13 @@ class Page{
     }
 
     /**
-     * 获取查询数据库的limit两个参数
+     * 获取分页查询偏移量
      * @param $curPage
      * @param $pageSize
-     * @return array
+     * @return float|int
      */
     public static function getLimitData($curPage, $pageSize){
         $offset = empty($curPage) ? 0 : ($curPage - 1) * $pageSize;
-        return array($offset, $pageSize);
+        return $offset;
     }
 }

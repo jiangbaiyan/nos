@@ -28,7 +28,6 @@ class ErrorController extends BaseController {
             'line'   => $line,
             'url'    => $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
             'method' => $_SERVER['REQUEST_METHOD'],
-            'user'   => $this->user
         ));
         Response::apiResponse($code, $msg);
     }
