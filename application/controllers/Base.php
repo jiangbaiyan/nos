@@ -69,6 +69,7 @@ class BaseController extends Controller_Abstract{
     protected function loadModel(){}
 
     public static function getConfig(){
+
         $module = strstr(get_called_class(), '_', true);
 
         $key = strtolower(preg_replace("/^{$module}_(.*)Controller$/", '$1', get_called_class()));
