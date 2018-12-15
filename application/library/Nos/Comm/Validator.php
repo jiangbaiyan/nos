@@ -23,7 +23,7 @@ class Validator{
     public static function make($params, $rules){
         if (!is_array($params) || !is_array($rules)){
             Log::fatal('validator|illegal_params_or_rules|params:' . json_encode($params) . '|rules:' . json_encode($rules));
-            throw new CoreException('请求参数格式或校验规则不合法');
+            throw new CoreException('params or rules not illegal');
         }
         foreach ($rules as $k => $v){
             if (!isset($params[$k]) && strpos($v, 'required') === false){
@@ -33,11 +33,11 @@ class Validator{
             foreach ($arr as $item){
                 if (empty($item)){
                     Log::fatal('validator|rule_is_empty');
-                    throw new CoreException('校验规则不能为空');
+                    throw new CoreException('validate rule empty');
                 }
                 if (!method_exists(__CLASS__, $item)){
                     Log::fatal('validator|rule_not_defined|rule:' . $item);
-                    throw new CoreException('校验规则未定义');
+                    throw new CoreException('undefined validate rule');
                 }
                 @call_user_func(array(__CLASS__, $item), $params[$k]);
             }
