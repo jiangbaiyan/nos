@@ -42,7 +42,7 @@ class BaseController extends Controller_Abstract{
      *
      * @var bool
      */
-    protected $needAuth = true;//是否需要校验
+    protected $needAuth;//是否需要校验
 
     /**
      * 初始化
