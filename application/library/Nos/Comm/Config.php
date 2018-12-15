@@ -27,7 +27,7 @@ class Config{
             $pathArr = explode('.',$key);
             $len = count($pathArr);
             if ($len  > 3){
-                throw new CoreException('暂不支持二维以上配置数组的访问');
+                throw new CoreException('config key over max len');
             }
             $file = $pathArr[0];
         }else{
@@ -35,9 +35,9 @@ class Config{
         }
         $file = ROOT_PATH . '/config/' . ucfirst($file) . '.php';
         if (!file_exists($file)){
-            throw new CoreException('配置文件不存在');
+            throw new CoreException('config file not exists');
         }
-        if (!Registry::has('config')){
+        if (!Registry::has($file)){
             $config = include $file;
             Registry::set($file, $config);
         } else{

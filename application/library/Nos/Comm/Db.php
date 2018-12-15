@@ -79,7 +79,7 @@ class Db{
      */
     private static function doSql($node, $sql, $bind = array()){
         if (!is_array($bind)){
-            throw new CoreException('pdo_do_sql_wrong_bind' . '|bind:' . json_encode($bind));
+            $bind = array($bind);
         }
         try{
             $oldNode  = self::$node;//获取上次连接节点
@@ -90,17 +90,19 @@ class Db{
             $handle = self::$db->prepare($sql);
             $res = $handle->execute($bind);
             if (!$res){
-               throw new CoreException(json_encode($handle->errorInfo()));
+                throw new CoreException(json_encode($handle->errorInfo()));
             }
+            $count = $handle->rowcount();
             if (self::$node == self::DB_NODE_MASTER_KEY){
-                return true;
+                return $count;
             }
-            $data = $handle->fetchAll(PDO::FETCH_ASSOC);
-            return $data;
+            if (!$count){
+                return array();
+            }
+            return $handle->fetchAll(PDO::FETCH_ASSOC);
         } catch (\Exception $e){
             Log::fatal('db|pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . self::$node . '|bind:' . json_encode($bind));
             throw new CoreException('db query failed');
         }
     }
-
 }

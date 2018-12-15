@@ -27,14 +27,18 @@
  - 在使用前请确保安装了yaf、pdo、redis、curl等PHP扩展
  - yaf框架文档请参阅：http://php.net/manual/en/book.yaf.php
  - 配置nginx等服务器rewrite到/public/index.php入口文件即可
+ - 请赋予logs目录足够的权限，否则无法正常写入日志
 ## Controller层使用
-### 路由：http://localhost/common/test
-#### 注意：类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
-#### 控制器方法执行流程
- - 判断$needAuth是否为true，若为true，执行auth()方法：接口认证
+### 控制器执行流程
+ - 若$needAuth，执行auth()：接口认证
  - 执行checkParam()：请求参数校验
  - 执行loadModel()：加载模型
  - 执行indexAction()：执行业务逻辑
+### 命名规范
+ - 路由：http://localhost/common/getCode
+ - 目录：controllers/common/getCode.php
+ - 类名：Common_GetCodeController
+ - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
 ```php
 <?php
 
@@ -42,15 +46,29 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
 
-class Common_TestController extends BaseController {
+class Common_GetCodeController extends BaseController {
 
-    public $needAuth = false;
+    /**
+     * 是否需要登录授权
+     * @var bool 
+     */
+    public $needAuth = true;
 
+    /*
+     * 当前登录用户
+     */
+    public $user;
+    
+    /*
+     * 模型
+     */
     private $testModel;
 
+    /*
+     * 参数校验
+     */
     public function checkParam(){
-        $params = Request::all();//获取全部参数
-        Validator::make($params, array(
+        Validator::make($this->params = Request::all(), array(
             'id'    => 'required',
             'phone' => 'phone|required',
         ));
@@ -58,11 +76,17 @@ class Common_TestController extends BaseController {
         $this->params['name']  = Request::post('name');//获取post参数
     }
 
+    /**
+     * 加载模型
+     */
     public function loadModel()
     {
         $this->testModel = new \Common\TestModel();
     }
 
+    /**
+     * 业务逻辑
+     */
     public function indexAction()
     {
         $this->output['data'] = $this->testModel->getData();
@@ -72,7 +96,8 @@ class Common_TestController extends BaseController {
 }
 ```
 ## Model层使用
-注意：类名必须为：文件名Model，如果有目录必须加上namespace
+ - 注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace
+ - 目录：models/Common/Test.php
 ```php
 <?php
 
@@ -82,6 +107,10 @@ use Nos\Comm\Db;
 
 class TestModel{
 
+    /**
+     * @return mixed
+     * @throws \Nos\Exception\CoreException
+     */
     public function getData(){
         $sql = 'select * from test where id = ?';
         $data = Db::fetchAll($sql, array(2));
@@ -105,6 +134,7 @@ class TestModel{
  - 然后执行composer update即可
 ## 接下来的计划  
   - 整合swoole部分优良特性
+  - 接口文档自动生成
   - 添加连接池
   - 数据库迁移
   - 多进程离线脚本处理
