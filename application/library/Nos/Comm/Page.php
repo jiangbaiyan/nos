@@ -21,6 +21,9 @@ class Page{
      * @return array
      */
     public static function paginate($count, $curPage, $pageSize){
+        !is_int($count) && $count = intval($count);
+        !is_int($curPage) && $curPage = intval($curPage);
+        !is_int($pageSize) && $pageSize = intval($pageSize);
         $baseUrl = Request::getFullUrl();
         if (strpos($baseUrl, 'page=') === false){
             if (strpos($baseUrl, '?') === false){
@@ -60,6 +63,8 @@ class Page{
      * @return float|int
      */
     public static function getLimitData($curPage, $pageSize){
+        !is_int($curPage) && $curPage = intval($curPage);
+        !is_int($pageSize) && $pageSize = intval($pageSize);
         $offset = empty($curPage) ? 0 : ($curPage - 1) * $pageSize;
         return $offset;
     }
