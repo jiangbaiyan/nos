@@ -94,7 +94,7 @@ class Validator{
      * @param $dateString
      * @throws ParamValidateFailedException
      */
-    private static function dateTime( $dateString ) {
+    private static function dateTime($dateString) {
         if (strtotime( date('Y-m-d H:i:s', strtotime($dateString)) ) != strtotime( $dateString )){
             throw new ParamValidateFailedException('非法的日期格式');
         }

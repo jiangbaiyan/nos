@@ -11,7 +11,7 @@ namespace Nos\Http;
 
 use Nos\Comm\Log;
 use Nos\Exception\OperateFailedException;
-use Yaf\Registry;
+use Yaf\Config\Ini;
 use Yaf\Request\Http;
 
 class Request{
@@ -24,6 +24,12 @@ class Request{
     private static $request;
 
     /**
+     * 请求协议
+     * @var
+     */
+    private static $schema;
+
+    /**
      * 单例获取请求实例，避免请求期间重复实例化
      * @return Http
      */
@@ -34,6 +40,25 @@ class Request{
         return self::$request;
     }
 
+    /**
+     * 获取单个GET参数
+     * @param $key
+     * @param string $default
+     * @return string
+     */
+    public static function get($key, $default = null){
+        return self::getRequestInstance()->getQuery($key, $default);
+    }
+
+    /**
+     * 获取单个POST参数
+     * @param $key
+     * @param string $default
+     * @return mixed|string
+     */
+    public static function post($key, $default = null){
+        return self::getRequestInstance()->getPost($key, $default);
+    }
 
     /**
      * 获取请求头
@@ -61,26 +86,6 @@ class Request{
     }
 
     /**
-     * 获取单个GET参数
-     * @param $key
-     * @param string $default
-     * @return string
-     */
-    public static function get($key, $default = null){
-        return self::getRequestInstance()->getQuery($key, $default);
-    }
-
-    /**
-     * 获取单个POST参数
-     * @param $key
-     * @param string $default
-     * @return mixed|string
-     */
-    public static function post($key, $default = null){
-        return self::getRequestInstance()->getPost($key, $default);
-    }
-
-    /**
      * 获取所有请求参数，自动判断请求类型
      * @return mixed
      */
@@ -100,8 +105,13 @@ class Request{
      * @return string
      */
     public static function getFullUrl(){
-        $schema = Registry::get('config')['schema'];
-        return $schema . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $schema = self::$schema;
+        if (!isset($schema)){
+            $config = new Ini(APP_PATH . '/config/application.ini', ini_get('yaf.environ'));
+            $config = $config->toArray();
+            self::$schema = $config['schema'];
+        }
+        return self::$schema . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 
     /**

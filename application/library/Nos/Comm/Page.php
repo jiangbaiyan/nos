@@ -21,6 +21,9 @@ class Page{
      * @return array
      */
     public static function paginate($count, $curPage, $pageSize){
+        !is_int($count) && $count = intval($count);
+        !is_int($curPage) && $curPage = intval($curPage);
+        !is_int($pageSize) && $pageSize = intval($pageSize);
         $baseUrl = Request::getFullUrl();
         if (strpos($baseUrl, 'page=') === false){
             if (strpos($baseUrl, '?') === false){
@@ -54,13 +57,15 @@ class Page{
     }
 
     /**
-     * 获取查询数据库的limit两个参数
+     * 获取分页查询偏移量
      * @param $curPage
      * @param $pageSize
-     * @return array
+     * @return float|int
      */
     public static function getLimitData($curPage, $pageSize){
+        !is_int($curPage) && $curPage = intval($curPage);
+        !is_int($pageSize) && $pageSize = intval($pageSize);
         $offset = empty($curPage) ? 0 : ($curPage - 1) * $pageSize;
-        return array($offset, $pageSize);
+        return $offset;
     }
 }

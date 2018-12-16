@@ -15,7 +15,7 @@
 
 use Yaf\Controller_Abstract;
 
-class BaseController extends Controller_Abstract{
+abstract class BaseController extends Controller_Abstract{
 
     /**
      * 当前登录用户
@@ -62,12 +62,12 @@ class BaseController extends Controller_Abstract{
     /**
      * 参数校验
      */
-    protected function checkParam(){}
+    abstract protected function checkParam();
 
     /**
      * 业务逻辑
      */
-    protected function indexAction(){}
+    abstract protected function indexAction();
 
     /**
      * 加载模型
