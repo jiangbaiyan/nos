@@ -128,7 +128,7 @@ class TestModel extends \BaseModel {
  - 调用Nos\Comm\Config::get($key)去获取配置信息
  - 注意参数名的格式：(文件名.key1.key2）目前只支持到二维数组
  - 全局配置请写到application.ini中即可
-## composer
+## 依赖引入
  - 如果需要引入库，请直接编辑composer.json
  - 然后执行composer update即可
 ## 接下来的计划  
