@@ -1,5 +1,6 @@
 <?php
-/**模型基类
+/**
+ * 模型基类
  * Created by PhpStorm.
  * User: baiyan
  * Date: 2018-12-17
