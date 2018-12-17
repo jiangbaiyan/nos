@@ -9,7 +9,7 @@
     }
   },
   "keywords": ["api","nos","yaf"],
-  "homepage": "https://gitee.com/jiangbaiyan/helper",
+  "homepage": "https://github.com/jiangbaiyan/nos",
   "license": "MIT",
   "authors": [
     {
@@ -24,9 +24,7 @@
     "preferred-install": "dist"
   },
   "require": {
-    "ext-curl": "*",
-    "ext-pdo": "*",
-    "ext-json": "*"
+
   },
   "scripts": {
     "post-autoload-dump": [
