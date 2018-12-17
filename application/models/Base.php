@@ -28,6 +28,7 @@ class BaseModel{
      * @throws \Nos\Exception\CoreException
      */
     public function create($data){
+        !is_array($data) && $bind = array($data);
         $keys = array_keys($data);
         $vals = array_values($data);
         $paras = array_fill(0, count($keys),'?');
@@ -50,6 +51,7 @@ class BaseModel{
      * @throws CoreException
      */
     public function delete($isSoft = false, $ext = '', $bind = array()){
+        !is_array($bind) && $bind = array($bind);
         if ($isSoft){
             $time = date('Y-m-d H:i:s');
             $this->update(array(
@@ -75,6 +77,7 @@ class BaseModel{
      * @throws CoreException
      */
     public function getList($select = array(), $ext = '', $bind = array()){
+        !is_array($bind) && $bind = array($bind);
         if (!is_array($select)){
             $fields = $select;
         } else if (empty($select)){
@@ -98,6 +101,7 @@ class BaseModel{
      * @throws CoreException
      */
     public function getTotal($ext = '', $bind = array()){
+        !is_array($bind) && $bind = array($bind);
         $sql = "select count(*) as count from {$this->table} " . $ext;
         $data = Db::fetchAll($sql, $bind);
         return isset($data[0]['count']) ? $data[0]['count'] : array();
@@ -126,9 +130,8 @@ class BaseModel{
      * @throws OperateFailedException
      */
     public function update($data, $ext = '', $bind = array(), $autoTime = true){
-        if (!is_array($bind)){
-            $bind = array($bind);
-        }
+        !is_array($bind) && $bind = array($bind);
+        !is_array($data) && $data = array($data);
         if ($autoTime){
             $now = date('Y-m-d H:i:s');
             $data = array_merge($data, array(
