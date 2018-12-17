@@ -8,6 +8,7 @@
  */
 
 use Nos\Comm\Log;
+use Nos\Http\Request;
 use Nos\Http\Response;
 use Yaf\Controller_Abstract;
 
@@ -29,6 +30,7 @@ class ErrorController extends Controller_Abstract {
             'line'   => $line,
             'url'    => $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
             'method' => $_SERVER['REQUEST_METHOD'],
+            'params' => Request::all()
         ));
         Response::apiResponse($code, $msg);
     }

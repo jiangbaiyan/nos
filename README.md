@@ -2,6 +2,7 @@
 ### 目前处于起步阶段，后续会继续维护并加入新特性
 ### 在纯净的yaf框架基础上封装了接口开发常用的类库
 ### 适用于中小型接口开发业务场景
+### 示例项目：https://github.com/jiangbaiyan/bangnos
  - 所有类库全部为静态方法
  - 基本类库
    - 业务配置操作类
@@ -38,7 +39,7 @@
  - 路由：http://localhost/common/getCode
  - 目录：controllers/common/getCode.php
  - 类名：Common_GetCodeController
- - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
+ - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController并实现相应抽象方法
 ```php
 <?php
 
@@ -96,16 +97,14 @@ class Common_GetCodeController extends BaseController {
 }
 ```
 ## Model层使用
- - 注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace
+ - 注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace，可继承BaseModel
  - 目录：models/Common/Test.php
 ```php
 <?php
 
 namespace Common;
 
-use Nos\Comm\Db;
-
-class TestModel{
+class TestModel extends \BaseModel {
 
     /**
      * @return mixed
@@ -113,7 +112,7 @@ class TestModel{
      */
     public function getData(){
         $sql = 'select * from test where id = ?';
-        $data = Db::fetchAll($sql, array(2));
+        $data = $this->getList($sql, array(2));
         return $data;
     }
 
