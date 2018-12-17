@@ -46,16 +46,17 @@ class BaseModel{
      * @param bool $isSoft
      * @param string $ext
      * @param array $bind
+     * @param string $deleteColumn
      * @return mixed
-     * @throws OperateFailedException
      * @throws CoreException
+     * @throws OperateFailedException
      */
-    public function delete($isSoft = false, $ext = '', $bind = array()){
+    public function delete($isSoft = false, $ext = '', $bind = array(), $deleteColumn = 'deleted_at'){
         !is_array($bind) && $bind = array($bind);
         if ($isSoft){
             $time = date('Y-m-d H:i:s');
             $this->update(array(
-                'deleted_at' => $time,
+                $deleteColumn => $time,
             ), $ext, $bind);
         } else{
             $sql = "delete from {$this->table} " . $ext;
@@ -125,17 +126,18 @@ class BaseModel{
      * @param string $ext
      * @param array $bind
      * @param bool $autoTime
+     * @param string $updateColumn
      * @return mixed
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public function update($data, $ext = '', $bind = array(), $autoTime = true){
+    public function update($data, $ext = '', $bind = array(), $autoTime = true, $updateColumn = 'updated_at'){
         !is_array($bind) && $bind = array($bind);
         !is_array($data) && $data = array($data);
         if ($autoTime){
             $now = date('Y-m-d H:i:s');
             $data = array_merge($data, array(
-                'updated_at' => $now
+                $updateColumn => $now
             ));
         }
         $keys = array_keys($data);
