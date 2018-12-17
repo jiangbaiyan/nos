@@ -8,9 +8,7 @@
 
 namespace Common;
 
-use Nos\Comm\Db;
-
-class TestModel{
+class TestModel extends \BaseModel {
 
     /**
      * @return mixed
@@ -18,7 +16,7 @@ class TestModel{
      */
     public function getData(){
         $sql = 'select * from test where id = ?';
-        $data = Db::fetchAll($sql, array(2));
+        $data = $this->getList($sql, array(2));
         return $data;
     }
 

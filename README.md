@@ -39,7 +39,7 @@
  - 路由：http://localhost/common/getCode
  - 目录：controllers/common/getCode.php
  - 类名：Common_GetCodeController
- - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController
+ - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController并实现相应抽象方法
 ```php
 <?php
 
@@ -97,16 +97,14 @@ class Common_GetCodeController extends BaseController {
 }
 ```
 ## Model层使用
- - 注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace
+ - 注意：目录和文件名必须大写。类名必须为：文件名Model，如果有上级目录必须加上namespace，可继承BaseModel
  - 目录：models/Common/Test.php
 ```php
 <?php
 
 namespace Common;
 
-use Nos\Comm\Db;
-
-class TestModel{
+class TestModel extends \BaseModel {
 
     /**
      * @return mixed
@@ -114,7 +112,7 @@ class TestModel{
      */
     public function getData(){
         $sql = 'select * from test where id = ?';
-        $data = Db::fetchAll($sql, array(2));
+        $data = $this->getList($sql, array(2));
         return $data;
     }
 
