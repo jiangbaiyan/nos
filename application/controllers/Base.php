@@ -14,7 +14,7 @@
  */
 
 use Yaf\Controller_Abstract;
-
+use Nos\Comm\Config;
 abstract class BaseController extends Controller_Abstract{
 
     /**
@@ -74,5 +74,16 @@ abstract class BaseController extends Controller_Abstract{
      */
     protected function loadModel(){}
 
+    public static function getConfig(){
 
+        $module = strstr(get_called_class(), '_', true);
+
+        $key = strtolower(preg_replace("/^{$module}_(.*)Controller$/", '$1', get_called_class()));
+
+        $configKey = strtolower("{$module}.{$key}");
+
+        $config = Config::get($configKey);//Config::get($configKey);
+
+        return $config;
+    }
 }

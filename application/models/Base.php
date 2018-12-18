@@ -89,9 +89,39 @@ class BaseModel{
         if ($fields == '*'){
             $sql = "select * from {$this->table} " . $ext;
         } else{
-            $sql = "select `{$fields}` from {$this->table} " . $ext;
+            $sql = "select  '{$fields}' from {$this->table} " . $ext;
         }
         return Db::fetchAll($sql, $bind);
+    }
+
+    /**
+     * @param array $select
+     * @param string $ext
+     * @param array $bind
+     * @return mixed
+     * @throws CoreException
+     *
+     */
+    public function getListAndCount($select = array(), $ext = '', $bind = array()){
+        !is_array($bind) && $bind = array($bind);
+        if (!is_array($select)){
+            $fields = $select;
+        } else if (empty($select)){
+            $fields = '*';
+        } else{
+            $fields = implode('`, `', $select);
+        }
+        if ($fields == '*'){
+            $sql = "select SQL_CALC_FOUND_ROWS * from {$this->table} " . $ext;
+        } else{
+            $sql = "select SQL_CALC_FOUND_ROWS  `{$fields}` from {$this->table} " . $ext;
+        }
+        $data = Db::fetchAll($sql, $bind);
+        $count = Db::fetchAll("SELECT FOUND_ROWS()");
+        $count = $count[0]['FOUND_ROWS()'];
+        return array("data" => $data,
+            "count" => $count,
+            );
     }
 
     /**
