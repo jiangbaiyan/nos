@@ -89,7 +89,7 @@ class BaseModel{
         if ($fields == '*'){
             $sql = "select * from {$this->table} " . $ext;
         } else{
-            $sql = "select  '{$fields}' from {$this->table} " . $ext;
+            $sql = "select  `{$fields}` from {$this->table} " . $ext;
         }
         return Db::fetchAll($sql, $bind);
     }
