@@ -33,12 +33,12 @@ class Common_GetCodeController extends BaseController {
      * 参数校验
      */
     public function checkParam(){
-//        Validator::make($this->params = Request::all(), array(
-//            'id'    => 'required',
-//            'phone' => 'phone|required',
-//        ));
-//        $this->params['phone'] = Request::get('phone');//获取get参数
-//        $this->params['name']  = Request::post('name');//获取post参数
+        Validator::make($this->params = Request::all(), array(
+            'id'    => 'required',
+            'phone' => 'phone|required',
+        ));
+        $this->params['phone'] = Request::get('phone');//获取get参数
+        $this->params['name']  = Request::post('name');//获取post参数
     }
 
     /**
@@ -54,8 +54,8 @@ class Common_GetCodeController extends BaseController {
      */
     public function indexAction()
     {
-       // $this->output['data'] = $this->testModel->getData();
-        //Response::apiSuccess($this->output);
+        $this->output['data'] = $this->testModel->getData();
+        Response::apiSuccess($this->output);
     }
 
 }
