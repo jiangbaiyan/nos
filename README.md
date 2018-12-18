@@ -27,7 +27,7 @@
  - 在php.ini中添加配置项：yaf.use_namespace=1;
  - 赋予logs目录读写权限
  - 配置nginx等服务器rewrite到/public/index.php入口文件即可
-```
+``` nginx
 server {
   listen ****;
   server_name  domain.com;
