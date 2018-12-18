@@ -95,6 +95,7 @@ class BaseModel{
     }
 
     /**
+     * 获取记录数据和分页总数
      * @param array $select
      * @param string $ext
      * @param array $bind
@@ -119,9 +120,10 @@ class BaseModel{
         $data = Db::fetchAll($sql, $bind);
         $count = Db::fetchAll("SELECT FOUND_ROWS()");
         $count = $count[0]['FOUND_ROWS()'];
-        return array("data" => $data,
-            "count" => $count,
-            );
+        return array(
+            'data' => $data,
+            'count' => $count,
+        );
     }
 
     /**

@@ -14,11 +14,11 @@ class TestModel extends \BaseModel {
      * @return mixed
      * @throws \Nos\Exception\CoreException
      */
-    protected $table = "test";
     public function getData(){
-     
-        $sql = '*';
-        $data = $this->getListAndCount($sql, "where name= ? limit 0,1",array(' '));
+        $select = array('id', 'name');
+        $ext = 'where id = ?';
+        $bind = array(2);
+        $data = $this->getList($select, $ext, $bind);
         return $data;
     }
 

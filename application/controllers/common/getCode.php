@@ -7,13 +7,12 @@
  * Time: 15:37
  */
 
-
 use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
-use Common\TestModel;
 
 class Common_GetCodeController extends BaseController {
+
     /**
      * 是否需要登录授权
      * @var bool
@@ -25,7 +24,6 @@ class Common_GetCodeController extends BaseController {
      */
     public $user;
 
-
     /*
      * 模型
      */
@@ -35,12 +33,12 @@ class Common_GetCodeController extends BaseController {
      * 参数校验
      */
     public function checkParam(){
-//        Validator::make($this->params = Request::all(), array(
-//            'id'    => 'required',
-//            'phone' => 'phone|required',
-//        ));
-//        $this->params['phone'] = Request::get('phone');//获取get参数
-//        $this->params['name']  = Request::post('name');//获取post参数
+        Validator::make($this->params = Request::all(), array(
+            'id'    => 'required',
+            'phone' => 'phone|required',
+        ));
+        $this->params['phone'] = Request::get('phone');//获取get参数
+        $this->params['name']  = Request::post('name');//获取post参数
     }
 
     /**
@@ -48,21 +46,16 @@ class Common_GetCodeController extends BaseController {
      */
     public function loadModel()
     {
-        //$this->output['data'] = $this->testModel->getData();
-        //Response::apiSuccess($this->output);
-        self::getConfig();
-        //$res = self::getConfig();
-        //var_dump($res);
+        $this->testModel = new \Common\TestModel();
     }
+
     /**
      * 业务逻辑
      */
     public function indexAction()
     {
-        $this->testModel = new TestModel();
-        $res  = $this->testModel->getData();
-        var_dump($res);
-        //Response::apiSuccess($this->output);
+        $this->output['data'] = $this->testModel->getData();
+        Response::apiSuccess($this->output);
     }
 
 }
