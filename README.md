@@ -104,6 +104,8 @@ namespace Common;
 
 class TestModel extends \BaseModel {
 
+    public $table = 'test';
+    
     /**
      * @return mixed
      * @throws \Nos\Exception\CoreException
