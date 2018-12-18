@@ -10,6 +10,9 @@ namespace Common;
 
 class TestModel extends \BaseModel {
 
+    /*
+     * 表名
+     */
     public $table = 'test';
 
     /**
