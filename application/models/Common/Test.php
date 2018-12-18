@@ -16,6 +16,7 @@ class TestModel extends \BaseModel {
      */
     protected $table = "test";
     public function getData(){
+     
         $sql = '*';
         $data = $this->getListAndCount($sql, "where name= ? limit 0,1",array(' '));
         return $data;

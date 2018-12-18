@@ -1,5 +1,4 @@
 # Nos—基于Yaf && 专注于接口开发的PHP框架
-### 目前处于起步阶段，后续会继续维护并加入新特性
 ### 在纯净的yaf框架基础上封装了接口开发常用的类库
 ### 适用于中小型接口开发业务场景
 ### 示例项目：https://github.com/jiangbaiyan/bangnos
@@ -111,8 +110,10 @@ class TestModel extends \BaseModel {
      * @throws \Nos\Exception\CoreException
      */
     public function getData(){
-        $sql = 'select * from test where id = ?';
-        $data = $this->getList($sql, array(2));
+        $select = array('id', 'name');
+        $ext = 'where id = ?';
+        $bind = array(2);
+        $data = $this->getList($select, $ext, $bind);
         return $data;
     }
 
