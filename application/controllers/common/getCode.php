@@ -11,7 +11,7 @@
 use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
-
+use Common\TestModel;
 
 class Common_GetCodeController extends BaseController {
     /**
@@ -50,15 +50,18 @@ class Common_GetCodeController extends BaseController {
     {
         //$this->output['data'] = $this->testModel->getData();
         //Response::apiSuccess($this->output);
-        $res = self::getConfig();
-        var_dump($res);
+        self::getConfig();
+        //$res = self::getConfig();
+        //var_dump($res);
     }
     /**
      * 业务逻辑
      */
     public function indexAction()
     {
-        //$this->output['data'] = $this->testModel->getData();
+        $this->testModel = new TestModel();
+        $res  = $this->testModel->getData();
+        var_dump($res);
         //Response::apiSuccess($this->output);
     }
 

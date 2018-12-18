@@ -14,7 +14,7 @@
  */
 
 use Yaf\Controller_Abstract;
-
+use Nos\Comm\Config;
 abstract class BaseController extends Controller_Abstract{
 
     /**

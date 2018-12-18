@@ -14,9 +14,10 @@ class TestModel extends \BaseModel {
      * @return mixed
      * @throws \Nos\Exception\CoreException
      */
+    protected $table = "test";
     public function getData(){
-        $sql = 'select * from test where id = ?';
-        $data = $this->getList($sql, array(2));
+        $sql = '*';
+        $data = $this->getListAndCount($sql, "where name= ? limit 0,1",array(' '));
         return $data;
     }
 
