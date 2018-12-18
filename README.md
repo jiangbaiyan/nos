@@ -110,8 +110,10 @@ class TestModel extends \BaseModel {
      * @throws \Nos\Exception\CoreException
      */
     public function getData(){
-        $sql = 'select * from test where id = ?';
-        $data = $this->getList($sql, array(2));
+        $select = array('id', 'name');
+        $ext = 'where id = ?';
+        $bind = array(2);
+        $data = $this->getList($select, $ext, $bind);
         return $data;
     }
 
