@@ -23,6 +23,7 @@
 ## 安装
  - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
  - 在使用前请确保安装了yaf、pdo、redis、curl等PHP扩展
+ - 最好在PHP7环境下使用，本框架全程在PHP7环境下测试通过
  - yaf框架文档请参阅：http://php.net/manual/en/book.yaf.php
  - 配置nginx等服务器rewrite到/public/index.php入口文件即可
  - 请赋予logs目录足够的权限，否则无法正常写入日志
