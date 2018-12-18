@@ -22,11 +22,23 @@
    - 返回json响应
 ## 安装
  - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
+ - 确保PHP版本>=7.0，本框架全程在PHP7环境下测试通过
  - 在使用前请确保安装了yaf、pdo、redis、curl等PHP扩展
- - 最好在PHP7环境下使用，本框架全程在PHP7环境下测试通过
- - yaf框架文档请参阅：http://php.net/manual/en/book.yaf.php
+ - 在php.ini中添加配置项：yaf.use_namespace=1;
+ - 赋予logs目录读写权限
  - 配置nginx等服务器rewrite到/public/index.php入口文件即可
- - 请赋予logs目录足够的权限，否则无法正常写入日志
+```
+server {
+  listen ****;
+  server_name  domain.com;
+  root   document_root;
+  index  index.php index.html index.htm;
+
+  if (!-e $request_filename) {
+    rewrite ^/(.*)  /index.php/$1 last;
+  }
+}
+```
 ## Controller层使用
 ### 控制器执行流程
  - 若$needAuth，执行auth()：接口认证
