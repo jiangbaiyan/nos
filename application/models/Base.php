@@ -163,7 +163,7 @@ class BaseModel{
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public function update($data, $ext = '', $bind = array(), $autoTime = true, $updateColumn = 'updated_at'){
+    public function update($data, $ext = '', $bind = array(), $autoTime = false, $updateColumn = 'updated_at'){
         !is_array($bind) && $bind = array($bind);
         !is_array($data) && $data = array($data);
         if ($autoTime){
