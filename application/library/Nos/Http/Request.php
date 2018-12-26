@@ -149,7 +149,7 @@ class Request{
         $type = strtoupper($type);
         if ($type == 'POST'){
             curl_setopt($ch,CURLOPT_POST, true);
-            curl_setopt($ch,CURLOPT_POSTFIELDS, http_build_query($postData));
+            curl_setopt($ch,CURLOPT_POSTFIELDS, $postData);
         }
         $res = curl_exec($ch);
         if (empty($res)){
