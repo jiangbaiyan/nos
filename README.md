@@ -32,6 +32,7 @@
  - 安装swoole、yaf、pdo、redis、curl扩展
  - 在php.ini中添加配置项：yaf.use_namespace=1;
  - 赋予logs目录读写权限
+ - 确保8811端口没有被占用
  - 启动框架:
 ```
    cd server
