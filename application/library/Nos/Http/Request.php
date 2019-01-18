@@ -12,16 +12,8 @@ namespace Nos\Http;
 use Nos\Comm\Log;
 use Nos\Exception\OperateFailedException;
 use Yaf\Config\Ini;
-use Yaf\Request\Http;
 
 class Request{
-
-
-    /**
-     * 请求实例
-     * @var Http
-     */
-    private static $request;
 
     /**
      * 请求协议
@@ -29,16 +21,6 @@ class Request{
      */
     private static $schema;
 
-    /**
-     * 单例获取请求实例，避免请求期间重复实例化
-     * @return Http
-     */
-    private static function getRequestInstance(){
-        if (!self::$request instanceof Http){
-            self::$request = new Http();
-        }
-        return self::$request;
-    }
 
     /**
      * 获取单个GET参数
@@ -47,7 +29,7 @@ class Request{
      * @return string
      */
     public static function get($key, $default = null){
-        return self::getRequestInstance()->getQuery($key, $default);
+        return isset($_GET[$key]) ? $_GET[$key] : $default;
     }
 
     /**
@@ -57,7 +39,7 @@ class Request{
      * @return mixed|string
      */
     public static function post($key, $default = null){
-        return self::getRequestInstance()->getPost($key, $default);
+        return isset($_POST[$key]) ? $_POST[$key] : $default;
     }
 
     /**
@@ -90,13 +72,13 @@ class Request{
      * @return mixed
      */
     public static function all(){
-        $obj = self::getRequestInstance();
-        if ($obj->isGet()){
-            return self::getRequestInstance()->getQuery();
-        } else if ($obj->isPost()){
-            return self::getRequestInstance()->getPost();
+        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+        if ($method == 'GET'){
+            return $_GET;
+        } else if ($method == 'POST'){
+            return $_POST;
         } else{
-            return false;
+            return array();
         }
     }
 

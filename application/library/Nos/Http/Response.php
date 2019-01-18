@@ -56,14 +56,12 @@ class Response{
      * @param $data
      */
     public static function apiResponse($status, $msg, $data = array()){
-        ob_clean();
-        header('Content-Type:application/json; charset=utf-8');
+        ob_start();
         echo json_encode(array(
             'status' => $status,
             'msg'    => $msg,
             'data'   => $data
         ));
-        exit;
     }
 
     /**
@@ -119,6 +117,14 @@ class Response{
      */
     public static function apiPermissionDenied($msg = ''){
         self::apiResponse(self::CODE_PERMISSION_DENIED,$msg ? $msg :self::MSG_PERMISSION_DENIED);
+    }
+
+    /**
+     * 框架底层错误
+     * @param string $msg
+     */
+    public static function apiCoreError($msg = ''){
+        self::apiResponse(self::CODE_CORE_ERROR, $msg ? $msg : self::MSG_CORE_ERROR);
     }
 
 }
