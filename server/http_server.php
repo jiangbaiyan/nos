@@ -21,8 +21,9 @@ class HttpServer {
     public function __construct(){
         $http = new swoole_http_server('0.0.0.0', 8811);
         $http->set(array(
-            'enable_static_handler' => true,
-            'document_root' => dirname(__DIR__) . '/public/static',
+            'max_request' => 10000,
+            'dispatch_mode' => 1,
+            'daemonize' => 1,
             'worker_num' => 16
         ));
         $http->on('workerStart' , array( $this , 'onWorkerStart'));
