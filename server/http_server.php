@@ -39,6 +39,7 @@ class HttpServer {
     }
 
     public function onRequest($request, $response){
+        $_SERVER = array();
         if (isset($request->server)){
             foreach ($request->server as $k => $v){
                 $_SERVER[strtoupper($k)] = $v;
@@ -48,11 +49,13 @@ class HttpServer {
             $response->status(404);
             return;
         }
+        $_GET = array();
         if (isset($request->get)){
             foreach ($request->get as $k => $v){
                 $_GET[$k] = $v;
             }
         }
+        $_POST = array();
         if (isset($request->post)){
             foreach ($request->post as $k => $v){
                 $_POST[$k] = $v;
