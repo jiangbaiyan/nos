@@ -14,6 +14,9 @@ use Yaf\Request\Http;
 
 class HttpServer {
 
+    const HOST = '0.0.0.0';
+    const PORT = 8811;
+
     public static $instance;
 
     private $dispatcher;
@@ -21,7 +24,7 @@ class HttpServer {
     public $app;
 
     public function __construct(){
-        $http = new swoole_http_server('0.0.0.0', 8811);
+        $http = new swoole_http_server(self::HOST, self::PORT);
         $http->set(array(
             'max_request' => 10000,
             'dispatch_mode' => 1,
@@ -65,6 +68,12 @@ class HttpServer {
         if (isset($request->post)){
             foreach ($request->post as $k => $v){
                 $_POST[$k] = $v;
+            }
+        }
+        $_FILES = array();
+        if (isset($request->files)){
+            foreach ($request->files as $k => $v){
+                $_FILES[$k] = $v;
             }
         }
         $response->header('Content-Type', 'application/json', false);
