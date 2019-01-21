@@ -40,10 +40,10 @@ class HttpServer {
         define('APP_PATH', dirname(__DIR__));
         define('ROOT_PATH',  APP_PATH . '/application');
         $this->app = new Application(APP_PATH . '/config/application.ini');
-        $dispatcher = $this->app->getDispatcher();
-        $dispatcher->registerPlugin(new RoutePlugin());
-        $dispatcher->catchException('true');
-        $dispatcher->disableView();
+        $this->dispatcher = $this->app->getDispatcher();
+        $this->dispatcher->registerPlugin(new RoutePlugin());
+        $this->dispatcher->catchException('true');
+        $this->dispatcher->disableView();
         include APP_PATH . '/vendor/autoload.php';
     }
 
