@@ -16,6 +16,8 @@ class HttpServer {
 
     public static $instance;
 
+    private $dispatcher;
+
     public $app;
 
     public function __construct(){
@@ -35,7 +37,11 @@ class HttpServer {
         define('APP_PATH', dirname(__DIR__));
         define('ROOT_PATH',  APP_PATH . '/application');
         $this->app = new Application(APP_PATH . '/config/application.ini');
-        include_once APP_PATH . '/vendor/autoload.php';
+        $dispatcher = $this->app->getDispatcher();
+        $dispatcher->registerPlugin(new RoutePlugin());
+        $dispatcher->catchException('true');
+        $dispatcher->disableView();
+        include APP_PATH . '/vendor/autoload.php';
     }
 
     public function onRequest($request, $response){
@@ -64,11 +70,7 @@ class HttpServer {
         $response->header('Content-Type', 'application/json', false);
         try{
             $requestObj = new Http($_SERVER['REQUEST_URI']);
-            $dispatcher = $this->app->getDispatcher();
-            $dispatcher->registerPlugin(new RoutePlugin());
-            $dispatcher->catchException('true');
-            $dispatcher->disableView();
-            $dispatcher->dispatch($requestObj);
+            $this->dispatcher->dispatch($requestObj);
             $result = ob_get_contents();
             ob_end_clean();
             $response->end($result);
