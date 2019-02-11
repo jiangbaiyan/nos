@@ -61,6 +61,16 @@ class Request{
     }
 
     /**
+     * 获取文件
+     * @param $key
+     * @param null $default
+     * @return array|mixed
+     */
+    public static function file($key, $default = null){
+        return self::getRequestInstance()->getFiles($key, $default);
+    }
+
+    /**
      * 获取请求头
      * @param $key
      * @param null $default
@@ -161,13 +171,13 @@ class Request{
                     }
                 }
                 if ($i == $retry){
-                    Log::error('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' .json_encode($postData) . '|retry:' . $retry . '|curl_error:' . json_encode(curl_error($ch)));
+                    Log::fatal('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' .json_encode($postData) . '|retry:' . $retry . '|curl_error:' . json_encode(curl_error($ch)));
                     throw new OperateFailedException();
                 }
             }
             curl_close($ch);
         } catch (\Exception $e) {
-            Log::error('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' . json_encode($postData) . '|retry:' . $retry . '|curl_exception:' . json_encode($e->getMessage()) . '|curl_error:' . json_encode(curl_error($ch)));
+            Log::fatal('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' . json_encode($postData) . '|retry:' . $retry . '|curl_exception:' . json_encode($e->getMessage()) . '|curl_error:' . json_encode(curl_error($ch)));
             throw new OperateFailedException();
         }
         return $res;
