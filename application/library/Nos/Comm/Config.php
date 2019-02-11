@@ -27,7 +27,7 @@ class Config{
             $pathArr = explode('.',$key);
             $len = count($pathArr);
             if ($len  > 3){
-                Log::notice('config|key over max len|len:' . $len);
+                Log::fatal('config|key over max len|len:' . $len);
                 throw new CoreException();
             }
             $file = $pathArr[0];
@@ -36,7 +36,7 @@ class Config{
         }
         $file = ROOT_PATH . '/config/' . ucfirst($file) . '.php';
         if (!file_exists($file)){
-            Log::notice('config|file_not_exists|path:' . $file);
+            Log::fatal('config|file_not_exists|path:' . $file);
             throw new CoreException();
         }
         if (!Registry::has($file)){
