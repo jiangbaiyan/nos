@@ -10,7 +10,7 @@
 namespace Nos\Http;
 
 use Nos\Comm\Log;
-use Nos\Exception\OperateFailedException;
+use Nos\Exception\CoreException;
 use Yaf\Config\Ini;
 use Yaf\Request\Http;
 
@@ -146,7 +146,7 @@ class Request{
      * @param int $retry
      * @param int $timeout
      * @return bool|string
-     * @throws OperateFailedException
+     * @throws CoreException
      */
     public static function send($type, $url, $postData = array(), $options = array(), $retry = 3, $timeout = 20){
         try {
@@ -172,13 +172,13 @@ class Request{
                 }
                 if ($i == $retry){
                     Log::fatal('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' .json_encode($postData) . '|retry:' . $retry . '|curl_error:' . json_encode(curl_error($ch)));
-                    throw new OperateFailedException();
+                    throw new CoreException();
                 }
             }
             curl_close($ch);
         } catch (\Exception $e) {
             Log::fatal('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' . json_encode($postData) . '|retry:' . $retry . '|curl_exception:' . json_encode($e->getMessage()) . '|curl_error:' . json_encode(curl_error($ch)));
-            throw new OperateFailedException();
+            throw new CoreException();
         }
         return $res;
     }

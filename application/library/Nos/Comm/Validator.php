@@ -23,7 +23,7 @@ class Validator{
     public static function make($params, $rules){
         if (!is_array($params) || !is_array($rules)){
             Log::fatal('validator|illegal_params_or_rules|params:' . json_encode($params) . '|rules:' . json_encode($rules));
-            throw new CoreException('params or rules not illegal');
+            throw new CoreException();
         }
         foreach ($rules as $k => $v){
             if (!isset($params[$k]) && strpos($v, 'required') === false){
@@ -33,11 +33,11 @@ class Validator{
             foreach ($arr as $item){
                 if (empty($item)){
                     Log::fatal('validator|rule_is_empty');
-                    throw new CoreException('validate rule empty');
+                    throw new CoreException();
                 }
                 if (!method_exists(__CLASS__, $item)){
                     Log::fatal('validator|rule_not_defined|rule:' . $item);
-                    throw new CoreException('undefined validate rule');
+                    throw new CoreException();
                 }
                 @call_user_func(array(__CLASS__, $item), $params[$k]);
             }
@@ -52,7 +52,7 @@ class Validator{
     private static function phone($v){
         if (strlen($v) != 11 || !preg_match('/^[1][3,4,5,7,8][0-9]{9}$/
 ', $v)){
-            throw new ParamValidateFailedException('手机号格式不正确');
+            throw new ParamValidateFailedException();
         }
     }
 
@@ -63,7 +63,7 @@ class Validator{
      */
     private static function email($v){
         if (!preg_match('/^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,4}$/', $v)){
-            throw new ParamValidateFailedException('邮箱格式不正确');
+            throw new ParamValidateFailedException();
         }
     }
 
@@ -74,7 +74,7 @@ class Validator{
      */
     private static function idCard($v){
         if (!preg_match('/(^([\d]{15}|[\d]{18}|[\d]{17}x)$)/', $v)){
-            throw new ParamValidateFailedException('身份证格式不正确');
+            throw new ParamValidateFailedException();
         }
     }
 
@@ -85,7 +85,7 @@ class Validator{
      */
     private static function required($v){
         if (!isset($v)){
-            throw new ParamValidateFailedException('参数缺失');
+            throw new ParamValidateFailedException();
         }
     }
 
@@ -96,7 +96,7 @@ class Validator{
      */
     private static function dateTime($dateString) {
         if (strtotime( date('Y-m-d H:i:s', strtotime($dateString)) ) != strtotime( $dateString )){
-            throw new ParamValidateFailedException('非法的日期格式');
+            throw new ParamValidateFailedException();
         }
     }
 
@@ -107,7 +107,7 @@ class Validator{
      */
     private static function date($dateString){
         if (strtotime( date('Y-m-d', strtotime($dateString)) ) != strtotime( $dateString )){
-            throw new ParamValidateFailedException('非法的日期格式');
+            throw new ParamValidateFailedException();
         }
     }
 }

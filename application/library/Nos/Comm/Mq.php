@@ -9,7 +9,7 @@
 
 namespace Nos\Comm;
 
-use Nos\Exception\OperateFailedException;
+use Nos\Exception\CoreException;
 
 class Mq{
 
@@ -18,12 +18,12 @@ class Mq{
      * @param $key
      * @param $data
      * @return bool
-     * @throws OperateFailedException
+     * @throws CoreException
      */
     public static function enQueue($key, $data){
         if (empty($key) ||!is_string($key) || empty($data)){
             Log::fatal('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
-            throw new OperateFailedException('队列写入失败');
+            throw new CoreException();
         }
         $key = strtolower(trim($key));
         if (!is_string($data)){
@@ -37,7 +37,7 @@ class Mq{
             }
         } catch (\Exception $e){
             Log::fatal('mq|push_mq_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key . '|data:' . json_encode($data));
-            throw new OperateFailedException('入队失败');
+            throw new CoreException();
         }
         return false;
     }
@@ -47,12 +47,12 @@ class Mq{
      * 出队
      * @param $key
      * @return bool
-     * @throws OperateFailedException
+     * @throws CoreException
      */
     public static function deQueue($key){
         if (empty($key)){
             Log::fatal('mq|empty_key|key:' . $key);
-            throw new OperateFailedException('队列数据有误');
+            throw new CoreException();
         }
         try{
             $data = Redis::rpop($key);
@@ -61,8 +61,8 @@ class Mq{
                 return $data;
             }
         } catch (\Exception $e){
-            Log::notice('mq|rpop_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key);
-            throw new OperateFailedException('获取数据失败');
+            Log::fatal('mq|rpop_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key);
+            throw new CoreException();
         }
         return false;
     }

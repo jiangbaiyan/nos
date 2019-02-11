@@ -11,48 +11,45 @@ namespace Nos\Comm;
 use Nos\Exception\CoreException;
 use Yaf\Config\Ini;
 
-
 class Redis
 {
+
     private static $redis;
 
     private static $config;
 
     public static function connect()
     {
-        try {
-            if (empty(self::$config)){
-                $config = new Ini(APP_PATH . '/config/redis.ini', ini_get('yaf.environ'));
-                self::$config = $config->toArray();
-            }
-            $host = self::$config['host'];
-            $port = self::$config['port'];
-            $password = self::$config['password'];
-            $timeout = self::$config['timeout'];
-            $database = self::$config['database'];
-            $redis = new \Redis();
-            $result = $redis->connect($host, $port, $timeout);
-            if ($result === false) {
-                throw new CoreException(json_encode($redis->errorInfo()));
-            }
-            if (!empty($password)) {
-                $result = $redis->auth($password);
-                if ($result === false) {
-                    throw new CoreException(json_encode($redis->errorInfo()));
-                }
-            }
-            if (!empty($database)) {
-                $result = $redis->select($database);
-
-                if ($result === false) {
-                    throw new CoreException(json_encode($redis->errorInfo()));
-                }
-            }
-            self::$redis = $redis;
-        } catch (\Exception $e) {
-            Log::fatal('redis|connect_failed|msg:' . $e->getMessage());
-            throw new CoreException('redis connect failed');
+        if (empty(self::$config)) {
+            $config = new Ini(APP_PATH . '/config/redis.ini', ini_get('yaf.environ'));
+            self::$config = $config->toArray();
         }
+        $host = self::$config['host'];
+        $port = self::$config['port'];
+        $password = self::$config['password'];
+        $timeout = self::$config['timeout'];
+        $database = self::$config['database'];
+        $redis = new \Redis();
+        $result = $redis->connect($host, $port, $timeout);
+        if ($result === false) {
+            Log::fatal('redis|connect_failed|errorInfo:' . json_encode($redis->errorInfo()));
+            throw new CoreException();
+        }
+        if (!empty($password)) {
+            $result = $redis->auth($password);
+            if ($result === false) {
+                Log::fatal('redis|auth_failed|errorInfo:' . json_encode($redis->errorInfo()));
+                throw new CoreException();
+            }
+        }
+        if (!empty($database)) {
+            $result = $redis->select($database);
+            if ($result === false) {
+                Log::fatal('redis|select_db_failed|errorInfo:' . json_encode($redis->errorInfo()));
+                throw new CoreException();
+            }
+        }
+        self::$redis = $redis;
     }
 
     public static function getRedis()
@@ -65,7 +62,7 @@ class Redis
      */
     public static function set($key, $value, $expire = 0)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         if ($expire == 0) {
@@ -81,8 +78,8 @@ class Redis
      */
     public static function get($key)
     {
-        if(!isset(self::$redis)){
-           self::connect();
+        if (!isset(self::$redis)) {
+            self::connect();
         }
         $func = is_array($key) ? 'mGet' : 'get';
         return self::$redis->{$func}($key);
@@ -93,7 +90,7 @@ class Redis
      */
     public static function setnx($key, $value)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         return self::$redis->setnx($key, $value);
@@ -105,7 +102,7 @@ class Redis
      */
     public static function del($key)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         return self::$redis->delete($key);
@@ -120,7 +117,7 @@ class Redis
      */
     public static function incr($key, $default = 1)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         if ($default == 1) {
@@ -139,7 +136,7 @@ class Redis
      */
     public static function decr($key, $default = 1)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         if ($default == 1) {
@@ -154,8 +151,8 @@ class Redis
      */
     public static function lpush($key, $value)
     {
-        if(!isset(self::$redis)){
-           self::connect();
+        if (!isset(self::$redis)) {
+            self::connect();
         }
         return self::$redis->lpush($key, $value);
     }
@@ -165,7 +162,7 @@ class Redis
      */
     public static function rpush($key, $value)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         return self::$redis->rpush($key, $value);
@@ -176,7 +173,7 @@ class Redis
      */
     public static function rpop($key)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         return self::$redis->rpop($key);
@@ -187,7 +184,7 @@ class Redis
      */
     public static function lpop($key)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         return self::$redis->lpop($key);
@@ -198,7 +195,7 @@ class Redis
      */
     public static function lrange($key, $start, $end)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         return self::$redis->lrange($key, $start, $end);
@@ -206,7 +203,7 @@ class Redis
 
     public static function hset($name, $key, $value)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         if (is_array($value)) {
@@ -220,7 +217,7 @@ class Redis
      */
     public static function hget($name, $key = null)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         if ($key) {
@@ -239,7 +236,7 @@ class Redis
      */
     public static function hdel($name, $key = null)
     {
-        if(!isset(self::$redis)){
+        if (!isset(self::$redis)) {
             self::connect();
         }
         if ($key) {
