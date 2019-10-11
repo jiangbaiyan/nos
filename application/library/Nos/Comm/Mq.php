@@ -30,7 +30,7 @@ class Mq{
             $data = json_encode($data);
         }
         try{
-            $res = Redis::lpush($key, $data);
+            $res = Redis::getInstance()->lPush($key, $data);
             if ($res){
                 Log::notice('mq|push_mq_succ|data:' . json_encode($data) . '|key:' . $key);
                 return true;
@@ -55,7 +55,7 @@ class Mq{
             throw new CoreException();
         }
         try{
-            $data = Redis::rpop($key);
+            $data = Redis::getInstance()->rPop($key);
             if (!empty($data)){
                 Log::notice('mq|mq_pop_succ|data:' . json_encode($data) . '|key:' . $key);
                 return $data;
