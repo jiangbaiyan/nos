@@ -22,13 +22,12 @@ class BaseModel{
 
     /**
      * 创建记录
-     * @param $data
+     * @param array $data
      * @return mixed
      * @throws OperateFailedException
      * @throws \Nos\Exception\CoreException
      */
-    public function create($data){
-        !is_array($data) && $bind = array($data);
+    public function create(array $data){
         $keys = array_keys($data);
         $vals = array_values($data);
         $paras = array_fill(0, count($keys),'?');
@@ -43,16 +42,15 @@ class BaseModel{
 
     /**
      * 删除记录
-     * @param bool $isSoft
      * @param string $ext
      * @param array $bind
+     * @param bool $isSoft
      * @param string $deleteColumn
      * @return mixed
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public function delete($isSoft = false, $ext = '', $bind = array(), $deleteColumn = 'deleted_at'){
-        !is_array($bind) && $bind = array($bind);
+    public function delete(string $ext = '', array $bind = [], bool $isSoft = false, string $deleteColumn = 'deleted_at'){
         if ($isSoft){
             $time = date('Y-m-d H:i:s');
             $this->update(array(
@@ -71,14 +69,13 @@ class BaseModel{
 
     /**
      * 获取记录列表
-     * @param array $select
+     * @param $select
      * @param string $ext
      * @param array $bind
      * @return mixed
      * @throws CoreException
      */
-    public function getList($select = array(), $ext = '', $bind = array()){
-        !is_array($bind) && $bind = array($bind);
+    public function getList($select = [], string $ext = '', array $bind = []){
         if (!is_array($select)){
             $fields = $select;
         } else if (empty($select)){
@@ -103,8 +100,7 @@ class BaseModel{
      * @throws CoreException
      *
      */
-    public function getListAndCount($select = array(), $ext = '', $bind = array()){
-        !is_array($bind) && $bind = array($bind);
+    public function getListAndCount(array $select = [], string $ext = '', array $bind = []){
         if (!is_array($select)){
             $fields = $select;
         } else if (empty($select)){
@@ -133,28 +129,27 @@ class BaseModel{
      * @return array
      * @throws CoreException
      */
-    public function getTotal($ext = '', $bind = array()){
-        !is_array($bind) && $bind = array($bind);
+    public function getTotal(string $ext = '', array $bind = []){
         $sql = "select count(*) as count from {$this->table} " . $ext;
         $data = Db::fetchAll($sql, $bind);
-        return isset($data[0]['count']) ? $data[0]['count'] : array();
+        return $data[0]['count'] ?? [];
     }
 
     /**
      * 通过id获取记录
-     * @param $id
+     * @param int $id
      * @param array $select
      * @return array
      * @throws CoreException
      */
-    public function getById($id, $select = array()){
-        $data = $this->getList($select, 'where id = ?', array($id));
-        return isset($data[0]) ? $data[0] : array();
+    public function getById(int $id, array $select = []){
+        $data = $this->getList($select, 'where id = ?', [$id]);
+        return $data[0] ?? [];
     }
 
     /**
      * 更新记录
-     * @param $data
+     * @param array $data
      * @param string $ext
      * @param array $bind
      * @param bool $autoTime
@@ -163,9 +158,7 @@ class BaseModel{
      * @throws CoreException
      * @throws OperateFailedException
      */
-    public function update($data, $ext = '', $bind = array(), $autoTime = false, $updateColumn = 'updated_at'){
-        !is_array($bind) && $bind = array($bind);
-        !is_array($data) && $data = array($data);
+    public function update(array $data, string $ext = '', array $bind = [], bool $autoTime = false, string $updateColumn = 'updated_at'){
         if ($autoTime){
             $now = date('Y-m-d H:i:s');
             $data = array_merge($data, array(
