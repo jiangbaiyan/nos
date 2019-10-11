@@ -69,7 +69,7 @@ class Redis
      * @return \Redis
      * @throws CoreException
      */
-    public static function getRedisInstance() {
+    public static function getInstance() {
         return self::connect();
     }
 
