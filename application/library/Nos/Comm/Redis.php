@@ -19,11 +19,11 @@ class Redis
     private static $config;
 
     /**
-     * 连接redis
+     * 获取redis实例
      * @return \Redis
      * @throws CoreException
      */
-    public static function connect() {
+    public static function getInstance() {
         // 之前有redis实例
         if (empty(self::$redis)){ // 没有redis实例
             if (empty(self::$config)) {
@@ -62,15 +62,6 @@ class Redis
             }
         }
         return self::$redis;
-    }
-
-    /**
-     * 单例获取redis实例
-     * @return \Redis
-     * @throws CoreException
-     */
-    public static function getInstance() {
-        return self::connect();
     }
 
 }
