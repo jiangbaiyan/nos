@@ -24,8 +24,9 @@ class Log{
      * 写日志
      * @param $level
      * @param $msg
+     * @return bool
      */
-    private static function writeLog($level, $msg){
+    private static function writeLog(string $level, string $msg){
         $fileName = self::PREFIX . date('Y-m-d') . '.log';//按天划分
         $path = APP_PATH . '/logs/' . $fileName;
         $time = date('Y-m-d H:i:s');
@@ -38,30 +39,34 @@ class Log{
         fwrite($handle, $str);
         flock($handle, LOCK_UN);
         fclose($handle);
+        return true;
     }
 
     /**
      * 严重错误日志
-     * @param $msg
+     * @param string $msg
+     * @return bool
      */
-    public static function fatal($msg){
-        self::writeLog(self::LEVEL_FATAL, $msg);
+    public static function fatal(string $msg){
+        return self::writeLog(self::LEVEL_FATAL, $msg);
     }
 
     /**
      * 一般错误日志
-     * @param $msg
+     * @param string $msg
+     * @return bool
      */
-    public static function notice($msg){
-        self::writeLog(self::LEVEL_NOTICE, $msg);
+    public static function notice(string $msg){
+        return self::writeLog(self::LEVEL_NOTICE, $msg);
     }
 
     /**
      * 调试日志
-     * @param $msg
+     * @param string $msg
+     * @return bool
      */
-    public static function debug($msg){
-        self::writeLog(self::LEVEL_DEBUG, $msg);
+    public static function debug(string $msg){
+        return self::writeLog(self::LEVEL_DEBUG, $msg);
     }
 
 }

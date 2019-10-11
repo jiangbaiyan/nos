@@ -16,15 +16,11 @@ class Validator{
 
     /**
      * 请求参数校验入口方法
-     * @param $params
-     * @param $rules
+     * @param array $params
+     * @param array $rules
      * @throws CoreException
      */
-    public static function make($params, $rules){
-        if (!is_array($params) || !is_array($rules)){
-            Log::fatal('validator|illegal_params_or_rules|params:' . json_encode($params) . '|rules:' . json_encode($rules));
-            throw new CoreException();
-        }
+    public static function make(array $params, array $rules){
         foreach ($rules as $k => $v){
             if (!isset($params[$k]) && strpos($v, 'required') === false){
                 continue;
@@ -91,22 +87,22 @@ class Validator{
 
     /**
      * 判断日期时间格式是否合法
-     * @param $dateString
+     * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function dateTime($dateString) {
-        if (strtotime( date('Y-m-d H:i:s', strtotime($dateString)) ) != strtotime( $dateString )){
+    private static function dateTime($v) {
+        if (strtotime(date('Y-m-d H:i:s', strtotime($v))) != strtotime($v)){
             throw new ParamValidateFailedException();
         }
     }
 
     /**
      * 判断日期格式是否合法
-     * @param $dateString
+     * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function date($dateString){
-        if (strtotime( date('Y-m-d', strtotime($dateString)) ) != strtotime( $dateString )){
+    private static function date($v){
+        if (strtotime(date('Y-m-d H:i:s', strtotime($v))) != strtotime($v)){
             throw new ParamValidateFailedException();
         }
     }

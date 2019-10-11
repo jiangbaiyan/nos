@@ -54,7 +54,7 @@ class Db{
      * @return mixed
      * @throws CoreException
      */
-    public static function fetchAll($sql, $bind = array()){
+    public static function fetchAll(string $sql, $bind = []){
         return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bind);
     }
 
@@ -65,22 +65,19 @@ class Db{
      * @return mixed
      * @throws CoreException
      */
-    public static function update($sql, $bind = array()){
+    public static function update(string $sql, array $bind = []){
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }
 
     /**
      * 执行sql语句
-     * @param $node
-     * @param $sql
+     * @param string $node
+     * @param string $sql
      * @param array $bind
      * @return mixed
      * @throws CoreException
      */
-    private static function doSql($node, $sql, $bind = array()){
-        if (!is_array($bind)){
-            $bind = array($bind);
-        }
+    private static function doSql(string $node, string $sql, array $bind = []){
         try{
             $oldNode  = self::$node;//获取上次连接节点
             self::$node = $node;    //赋值此次连接节点

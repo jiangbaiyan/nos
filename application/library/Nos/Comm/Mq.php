@@ -15,13 +15,13 @@ class Mq{
 
     /**
      * 入队
-     * @param $key
-     * @param $data
+     * @param string $key
+     * @param mixed $data
      * @return bool
      * @throws CoreException
      */
-    public static function enQueue($key, $data){
-        if (empty($key) ||!is_string($key) || empty($data)){
+    public static function enQueue(string $key, $data){
+        if (empty($key) || empty($data)){
             Log::fatal('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
             throw new CoreException();
         }
@@ -45,11 +45,11 @@ class Mq{
 
     /**
      * 出队
-     * @param $key
+     * @param string $key
      * @return bool
      * @throws CoreException
      */
-    public static function deQueue($key){
+    public static function deQueue(string $key){
         if (empty($key)){
             Log::fatal('mq|empty_key|key:' . $key);
             throw new CoreException();

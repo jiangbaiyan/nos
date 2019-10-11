@@ -15,15 +15,12 @@ class Page{
 
     /**
      * 生成分页数据
-     * @param $count
-     * @param $curPage
-     * @param $pageSize
+     * @param int $count
+     * @param int $curPage
+     * @param int $pageSize
      * @return array
      */
-    public static function paginate($count, $curPage, $pageSize){
-        !is_int($count) && $count = intval($count);
-        !is_int($curPage) && $curPage = intval($curPage);
-        !is_int($pageSize) && $pageSize = intval($pageSize);
+    public static function paginate(int $count, int $curPage, int $pageSize){
         $baseUrl = Request::getFullUrl();
         if (strpos($baseUrl, 'page=') === false){
             if (strpos($baseUrl, '?') === false){
@@ -58,13 +55,11 @@ class Page{
 
     /**
      * 获取分页查询偏移量
-     * @param $curPage
-     * @param $pageSize
+     * @param int $curPage
+     * @param int $pageSize
      * @return float|int
      */
-    public static function getLimitData($curPage, $pageSize){
-        !is_int($curPage) && $curPage = intval($curPage);
-        !is_int($pageSize) && $pageSize = intval($pageSize);
+    public static function getLimitData(int $curPage, int $pageSize){
         $offset = empty($curPage) ? 0 : ($curPage - 1) * $pageSize;
         return $offset;
     }

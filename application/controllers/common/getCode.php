@@ -7,36 +7,20 @@
  * Time: 15:37
  */
 
+use Nos\Exception\CoreException;
 use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
+use Common\TestModel;
 
 class Common_GetCodeController extends BaseController {
 
-    /**
-     * 是否需要登录授权
-     * @var bool
-     */
-    public $needAuth = true;
-
-    /*
-     * 当前登录用户
-     */
-    public $user;
-
-    /*
-     * 模型
-     */
-    private $testModel;
 
     /*
      * 参数校验
      */
     public function checkParam(){
-        Validator::make($this->params = Request::all(), array(
-            'id'    => 'required',
-            'phone' => 'phone|required',
-        ));
+
         $this->params['phone'] = Request::get('phone');//获取get参数
         $this->params['name']  = Request::post('name');//获取post参数
     }
@@ -51,11 +35,17 @@ class Common_GetCodeController extends BaseController {
 
     /**
      * 业务逻辑
+     * @throws CoreException
      */
     public function indexAction()
     {
-        $this->output['data'] = $this->testModel->getData();
-        Response::apiSuccess($this->output);
+        Validator::make($this->params = Request::all(), array(
+            'id'    => 'required',
+            'phone' => 'phone|required',
+        ));
+        $testModel = new TestModel();
+        $data = $testModel->getData();
+        Response::apiSuccess($data);
     }
 
 }

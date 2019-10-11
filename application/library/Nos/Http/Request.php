@@ -42,41 +42,40 @@ class Request{
 
     /**
      * 获取单个GET参数
-     * @param $key
+     * @param string $key
      * @param string $default
      * @return string
      */
-    public static function get($key, $default = null){
+    public static function get(string $key, string $default = ''){
         return self::getRequestInstance()->getQuery($key, $default);
     }
 
     /**
      * 获取单个POST参数
-     * @param $key
+     * @param string $key
      * @param string $default
      * @return mixed|string
      */
-    public static function post($key, $default = null){
+    public static function post(string $key, string $default = ''){
         return self::getRequestInstance()->getPost($key, $default);
     }
 
     /**
      * 获取文件
      * @param $key
-     * @param null $default
      * @return array|mixed
      */
-    public static function file($key, $default = null){
-        return self::getRequestInstance()->getFiles($key, $default);
+    public static function file(string $key){
+        return self::getRequestInstance()->getFiles($key);
     }
 
     /**
      * 获取请求头
-     * @param $key
-     * @param null $default
+     * @param string $key
+     * @param string $default
      * @return array|false|mixed|null
      */
-    public static function header($key = null, $default = null){
+    public static function header(string $key = '', string $default = ''){
         $headers = array();
         if (!function_exists('getallheaders')) {
             function getallheaders() {
@@ -139,8 +138,8 @@ class Request{
 
     /**
      * 发送Http请求
-     * @param $type
-     * @param $url
+     * @param string $type
+     * @param string $url
      * @param array $postData
      * @param array $options
      * @param int $retry
@@ -148,7 +147,7 @@ class Request{
      * @return bool|string
      * @throws CoreException
      */
-    public static function send($type, $url, $postData = array(), $options = array(), $retry = 3, $timeout = 20){
+    public static function send(string $type, string $url, array $postData = [], array $options = [], int $retry = 3, int $timeout = 20){
         try {
             $ch = curl_init($url);
             curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);

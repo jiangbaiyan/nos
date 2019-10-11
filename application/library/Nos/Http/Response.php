@@ -51,11 +51,11 @@ class Response{
 
     /**
      * 接口返回
-     * @param $status
-     * @param $msg
-     * @param $data
+     * @param int $status
+     * @param string $msg
+     * @param array $data
      */
-    public static function apiResponse($status, $msg, $data = array()){
+    public static function apiResponse(int $status, string $msg, array $data = []){
         ob_clean();
         header('Content-Type:application/json; charset=utf-8');
         echo json_encode(array(
@@ -72,7 +72,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiSuccess($data = array() ,$msg = ''){
+    public static function apiSuccess(array $data = array() , string $msg = ''){
         self::apiResponse(self::CODE_SUCCESS,$msg ? $msg :self::MSG_SUCCESS,$data);
     }
 
@@ -81,7 +81,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiResourceNotFound($msg = ''){
+    public static function apiResourceNotFound(string $msg = ''){
         self::apiResponse(self::CODE_RESOURCE_NOT_FOUND,$msg ? $msg : self::MSG_RESOURCE_NOT_FOUND);
     }
 
@@ -90,7 +90,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiParamValidateFailed($msg = ''){
+    public static function apiParamValidateFailed(string $msg = ''){
         self::apiResponse(self::CODE_PARAM_ERROR,$msg ? $msg :self::MSG_PARAM_ERROR);
     }
 
@@ -99,7 +99,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiOperateFailed($msg = ''){
+    public static function apiOperateFailed(string $msg = ''){
         self::apiResponse(self::CODE_OPERATE_FAILED,$msg ? $msg :self::MSG_OPERATE_FAILED);
     }
 
@@ -108,7 +108,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiUnauthorized($msg = ''){
+    public static function apiUnauthorized(string $msg = ''){
         self::apiResponse(self::CODE_UNAUTHORIZED,$msg ? $msg :self::MSG_UNAUTHORIZED);
     }
 
@@ -117,7 +117,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiPermissionDenied($msg = ''){
+    public static function apiPermissionDenied(string $msg = ''){
         self::apiResponse(self::CODE_PERMISSION_DENIED,$msg ? $msg :self::MSG_PERMISSION_DENIED);
     }
 
