@@ -20,9 +20,18 @@ class TestModel extends \BaseModel {
      * @throws \Nos\Exception\CoreException
      */
     public function getData(){
-        $select = array('id', 'name');
-        $ext = 'where id = ?';
-        $bind = array(2);
+        $params = [
+            'name' => 'grapes'
+        ];
+
+        $wheres = [
+            'id'   => 222
+        ];
+        $condition = $this->prepareWhere($wheres);
+
+        $row = $this->update($params, $condition['where'], $condition['bind']);
+        //$data = $this->select(['id','name'],$condition['where'],$condition['bind']);
+        var_dump($row);die;
         $data = $this->getList($select, $ext, $bind);
         return $data;
     }

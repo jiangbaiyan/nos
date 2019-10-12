@@ -13,17 +13,21 @@ use Nos\Exception\CoreException;
 use PDO;
 use Yaf\Config\Ini;
 
-class Db{
+class Db
+{
 
     private static $db;
 
     private static $node;
 
+    private static $table;
+
     private static $config;
 
     const DB_NODE_MASTER_KEY = 'write';//主库
 
-    const DB_NODE_SLAVE_KEY  = 'read';//从库
+    const DB_NODE_SLAVE_KEY = 'read';//从库
+
 
 
     /**
@@ -31,16 +35,17 @@ class Db{
      * Db constructor.
      * @throws CoreException
      */
-    private static function connect(){
-        try{
-            if (empty(self::$config)){
+    public  function connect()
+    {
+        try {
+            if (empty(self::$config)) {
                 $config = new Ini(APP_PATH . '/config/db.ini', ini_get('yaf.environ'));
                 self::$config = $config->toArray();
             }
             $config = self::$config[self::$node];
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
             self::$db = new PDO($dsn, $config['user'], $config['password']);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::fatal('db|connect_failed|msg:' . $e->getMessage());
             throw new CoreException();
         }
@@ -54,7 +59,8 @@ class Db{
      * @return mixed
      * @throws CoreException
      */
-    public static function fetchAll(string $sql, $bind = []){
+    public  function fetchAll($sql, $bind = array())
+    {
         return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bind);
     }
 
@@ -65,6 +71,8 @@ class Db{
      * @return mixed
      * @throws CoreException
      */
+
+
     public static function update(string $sql, array $bind = []){
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }
@@ -77,7 +85,10 @@ class Db{
      * @return mixed
      * @throws CoreException
      */
-    private static function doSql(string $node, string $sql, array $bind = []){
+    public  function doSql($node, $sql, $bind = array()){
+        if (!is_array($bind)){
+            $bind = array($bind);
+        }
         try{
             $oldNode  = self::$node;//获取上次连接节点
             self::$node = $node;    //赋值此次连接节点
