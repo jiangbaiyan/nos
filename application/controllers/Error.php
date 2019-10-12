@@ -19,10 +19,15 @@ class ErrorController extends Controller_Abstract {
      * @param $exception
      */
     public function errorAction($exception){
+        // 获取异常代码
         $code = $exception->getCode();
+        // 获取异常信息
         $msg = $exception->getMessage();
+        // 获取异常文件
         $file = $exception->getFile();
+        // 获取异常文件行数
         $line = $exception->getLine();
+        // 记录异常日志
         Log::fatal(array(
             'status' => $code,
             'msg'    => $msg,
@@ -32,7 +37,7 @@ class ErrorController extends Controller_Abstract {
             'method' => $_SERVER['REQUEST_METHOD'],
             'params' => Request::all()
         ));
+        // 输出异常响应
         Response::apiResponse($code, $msg);
     }
-
 }

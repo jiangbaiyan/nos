@@ -71,15 +71,16 @@ class Db
      * @return mixed
      * @throws CoreException
      */
-    public static function update($sql, $bind = array())
-    {
+
+
+    public static function update(string $sql, array $bind = []){
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }
 
     /**
      * 执行sql语句
-     * @param $node
-     * @param $sql
+     * @param string $node
+     * @param string $sql
      * @param array $bind
      * @return mixed
      * @throws CoreException
