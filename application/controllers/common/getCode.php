@@ -13,7 +13,8 @@ use Nos\Http\Response;
 use Nos\Comm\Validator;
 use Common\TestModel;
 
-class Common_GetCodeController extends BaseController {
+class Common_GetCodeController extends BaseController
+{
 
     /**
      * 业务逻辑

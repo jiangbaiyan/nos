@@ -118,7 +118,7 @@ class BaseModel{
      * @return array
      * @throws \Exception
      */
-    public function select(array $fields = [], string $where = '', array $bind_params = [], $other_option = '')
+    public function select(array $fields = [], string $where = '', array $bind_params = [], string $other_option = '')
     {
         if (empty($fields)) {
             $fields = ['*'];
@@ -270,12 +270,12 @@ class BaseModel{
     }
 
     /**
-     * @param $sql
+     * @param string $sql
      * @param array $bind
      * @return mixed
      * @throws CoreException
      */
-    public function selectForJoin($sql, $bind = [])
+    public function selectForJoin(string $sql, array $bind = [])
     {
         return Db::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }

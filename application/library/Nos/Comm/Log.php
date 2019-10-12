@@ -18,8 +18,6 @@ class Log{
     const LEVEL_NOTICE = 'NOTICE';
     const LEVEL_DEBUG  = 'DEBUG';
 
-    const PREFIX = 'nos_';
-
     /**
      * 写日志
      * @param $level
@@ -28,12 +26,9 @@ class Log{
      */
     private static function writeLog(string $level, string $msg)
     {
-        $fileName = self::PREFIX . date('Y-m-d') . '.log';//按天划分
+        $fileName = date('Y-m-d') . '.log';//按天划分
         $path = APP_PATH . '/logs/' . $fileName;
         $time = date('Y-m-d H:i:s');
-        if (!is_string($msg)){
-            $msg = json_encode($msg);
-        }
         $str = '[' . $time . ']' . "[{$level}]". $msg . PHP_EOL;
         $handle = fopen($path, 'a');
         flock($handle, LOCK_EX|LOCK_NB);
