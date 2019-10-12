@@ -21,19 +21,31 @@ class BaseModel{
      */
     protected $table;
 
-    private $operations = array(
-        '>', '<', '>=', '<=', '!=', 'like',
-    );
+    private $operations = [
+        '>', '<', '>=', '<=', '!=', 'like'
+    ];
 
+    /**
+     * 是否开启事务
+     * @var bool
+     */
     private static $is_transacting = false;
 
-    public function begin()
+    /**
+     * 事务开始
+     * @throws CoreException
+     */
+    public function beginTransaction()
     {
         $connection = Db::connect();
         $connection->begin();
         self::$is_transacting = true;
     }
 
+    /**
+     * 事务提交
+     * @throws CoreException
+     */
     public function commit()
     {
         $connection = Db::connect();
@@ -41,6 +53,10 @@ class BaseModel{
         self::$is_transacting = false;
     }
 
+    /**
+     * 回滚
+     * @throws CoreException
+     */
     public function rollback()
     {
         $connection = Db::connect();
@@ -71,12 +87,13 @@ class BaseModel{
 
 
     /**
+     * 删除数据
      * @param string $where
      * @param array  $bind_params 如:['id'=>12]
      * @return int
      * @throws \Exception
      */
-    public function delete($where, $bind_params)
+    public function delete(string $where, array $bind_params)
     {
         $sql        = 'delete from `' . $this->table . '`';
 
@@ -94,14 +111,14 @@ class BaseModel{
 
     /**
      * 查询数据
-     * @param array  $fields       需要查询的字段,默认查询所有的字段
+     * @param array  $fields 需要查询的字段,默认查询所有的字段
      * @param string $where
      * @param array  $bind_params
      * @param string $other_option limit | group by | order by 等操作
      * @return array
      * @throws \Exception
      */
-    public function select(array $fields = array(), $where = '', $bind_params = array(), $other_option = '')
+    public function select(array $fields = [], string $where = '', array $bind_params = [], $other_option = '')
     {
         if (empty($fields)) {
             $fields = ['*'];
@@ -134,7 +151,7 @@ class BaseModel{
      * @return int
      * @throws \Exception
      */
-    public function update($params, $where, $where_binds)
+    public function update(array $params, string $where, array $where_binds)
     {
         $start_time = microtime(true);
         if (empty($where)) {
@@ -152,8 +169,12 @@ class BaseModel{
         }
     }
 
-    //处理where条件
-    public function prepareWhere($condition)
+    /**
+     * 处理where条件
+     * @param array $condition 条件数组
+     * @return array
+     */
+    public function prepareWhere(array $condition)
     {
         $where_arr = [];
         $bind = [];
@@ -183,8 +204,8 @@ class BaseModel{
                     $params = array_unique($val);
 
                     $i = 0;
-                    $where_no = array();
-                    $bind_no = array();
+                    $where_no = [];
+                    $bind_no = [];
                     foreach ($params as $key => $param) {
                         $where_no[] = sprintf(':%s%d', $key, $i);
                         $bind_no[sprintf('%s%d', $key, $i)] = $param;
@@ -207,6 +228,10 @@ class BaseModel{
         }
     }
 
+    /**
+     * @param array $options
+     * @return string
+     */
     public function prepareOption(array $options)
     {
         $option_arr = [];
@@ -244,7 +269,13 @@ class BaseModel{
         return implode(' ', $option_arr);
     }
 
-    public  function selectForJoin($sql, $bind = array())
+    /**
+     * @param $sql
+     * @param array $bind
+     * @return mixed
+     * @throws CoreException
+     */
+    public function selectForJoin($sql, $bind = [])
     {
         return Db::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }

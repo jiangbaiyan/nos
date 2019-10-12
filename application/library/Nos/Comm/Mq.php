@@ -20,7 +20,8 @@ class Mq{
      * @return bool
      * @throws CoreException
      */
-    public static function enQueue(string $key, $data){
+    public static function enQueue(string $key, $data)
+    {
         if (empty($key) || empty($data)){
             Log::fatal('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
             throw new CoreException();
@@ -49,7 +50,8 @@ class Mq{
      * @return bool
      * @throws CoreException
      */
-    public static function deQueue(string $key){
+    public static function deQueue(string $key)
+    {
         if (empty($key)){
             Log::fatal('mq|empty_key|key:' . $key);
             throw new CoreException();

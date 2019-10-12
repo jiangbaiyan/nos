@@ -20,7 +20,8 @@ class Page{
      * @param int $pageSize
      * @return array
      */
-    public static function paginate(int $count, int $curPage, int $pageSize){
+    public static function paginate(int $count, int $curPage, int $pageSize)
+    {
         $baseUrl = Request::getFullUrl();
         if (strpos($baseUrl, 'page=') === false){
             if (strpos($baseUrl, '?') === false){
@@ -30,7 +31,7 @@ class Page{
             }
         }
         if ($count <= 0 || $curPage <= 0 || $pageSize <= 0 || empty($baseUrl)){
-            return array();
+            return [];
         }
         $totalPage =  ceil($count / $pageSize);
         if ($totalPage <= 0){
@@ -59,14 +60,15 @@ class Page{
      * @param int $pageSize
      * @return float|int
      */
-    public static function getLimitData(int $curPage, int $pageSize){
+    public static function getLimitData(int $curPage, int $pageSize)
+    {
         $offset = empty($curPage) ? 0 : ($curPage - 1) * $pageSize;
         return $offset;
     }
 
     public static function getPaging($page, $page_size, $as_string = true)
     {
-        $data           = array();
+        $data           = [];
         if($page < 1){
             $page = 1;
         }

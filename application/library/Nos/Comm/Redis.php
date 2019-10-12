@@ -23,7 +23,8 @@ class Redis
      * @return \Redis
      * @throws CoreException
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         // 之前有redis实例
         if (empty(self::$redis)){ // 没有redis实例
             if (empty(self::$config)) {

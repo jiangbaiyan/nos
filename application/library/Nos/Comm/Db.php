@@ -59,7 +59,7 @@ class Db
      * @return mixed
      * @throws CoreException
      */
-    public  function fetchAll($sql, $bind = array())
+    public  function fetchAll($sql, $bind = [])
     {
         return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bind);
     }
@@ -85,7 +85,7 @@ class Db
      * @return mixed
      * @throws CoreException
      */
-    public  function doSql($node, $sql, $bind = array()){
+    public  function doSql($node, $sql, $bind = []){
         if (!is_array($bind)){
             $bind = array($bind);
         }
@@ -105,7 +105,7 @@ class Db
                 return $count;
             }
             if (!$count){
-                return array();
+                return [];
             }
             return $handle->fetchAll(PDO::FETCH_ASSOC);
         } catch (\Exception $e){

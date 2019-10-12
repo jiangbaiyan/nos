@@ -76,7 +76,7 @@ class Request{
      * @return array|false|mixed|null
      */
     public static function header(string $key = '', string $default = ''){
-        $headers = array();
+        $headers = [];
         if (!function_exists('getallheaders')) {
             function getallheaders() {
                 foreach ($_SERVER as $name => $value) {

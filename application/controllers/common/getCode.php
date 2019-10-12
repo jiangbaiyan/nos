@@ -19,7 +19,8 @@ class Common_GetCodeController extends BaseController {
      * 业务逻辑
      * @throws CoreException
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         Validator::make($this->params = Request::all(), array(
             'id'    => 'required',
             'phone' => 'phone|required',

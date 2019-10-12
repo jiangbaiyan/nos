@@ -18,7 +18,8 @@ class ErrorController extends Controller_Abstract {
      * 异常处理入口
      * @param $exception
      */
-    public function errorAction($exception){
+    public function errorAction($exception)
+    {
         // 获取异常代码
         $code = $exception->getCode();
         // 获取异常信息

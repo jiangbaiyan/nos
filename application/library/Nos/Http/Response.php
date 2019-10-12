@@ -72,7 +72,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiSuccess(array $data = array() , string $msg = ''){
+    public static function apiSuccess(array $data = [] , string $msg = ''){
         self::apiResponse(self::CODE_SUCCESS,$msg ? $msg :self::MSG_SUCCESS,$data);
     }
 

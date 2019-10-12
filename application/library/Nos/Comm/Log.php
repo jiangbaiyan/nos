@@ -26,7 +26,8 @@ class Log{
      * @param $msg
      * @return bool
      */
-    private static function writeLog(string $level, string $msg){
+    private static function writeLog(string $level, string $msg)
+    {
         $fileName = self::PREFIX . date('Y-m-d') . '.log';//按天划分
         $path = APP_PATH . '/logs/' . $fileName;
         $time = date('Y-m-d H:i:s');
@@ -47,7 +48,8 @@ class Log{
      * @param string $msg
      * @return bool
      */
-    public static function fatal(string $msg){
+    public static function fatal(string $msg)
+    {
         return self::writeLog(self::LEVEL_FATAL, $msg);
     }
 
@@ -56,7 +58,8 @@ class Log{
      * @param string $msg
      * @return bool
      */
-    public static function notice(string $msg){
+    public static function notice(string $msg)
+    {
         return self::writeLog(self::LEVEL_NOTICE, $msg);
     }
 
@@ -65,7 +68,8 @@ class Log{
      * @param string $msg
      * @return bool
      */
-    public static function debug(string $msg){
+    public static function debug(string $msg)
+    {
         return self::writeLog(self::LEVEL_DEBUG, $msg);
     }
 

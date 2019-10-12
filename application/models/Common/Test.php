@@ -16,10 +16,12 @@ class TestModel extends \BaseModel {
     public $table = 'test';
 
     /**
+     * 模型层查询示例
      * @return mixed
-     * @throws \Nos\Exception\CoreException
+     * @throws \Exception
      */
-    public function getData(){
+    public function getData()
+    {
         $params = [
             'name' => 'grapes'
         ];
@@ -30,9 +32,10 @@ class TestModel extends \BaseModel {
         $condition = $this->prepareWhere($wheres);
 
         $row = $this->update($params, $condition['where'], $condition['bind']);
-        //$data = $this->select(['id','name'],$condition['where'],$condition['bind']);
+        $data = $this->select(['id','name'], $condition['where'], $condition['bind']);
         var_dump($row);die;
-        $data = $this->getList($select, $ext, $bind);
+        // 老调用
+        //$data = $this->getList($select, $ext, $bind);
         return $data;
     }
 

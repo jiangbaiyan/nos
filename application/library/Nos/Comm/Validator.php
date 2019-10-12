@@ -20,7 +20,8 @@ class Validator{
      * @param array $rules
      * @throws CoreException
      */
-    public static function make(array $params, array $rules){
+    public static function make(array $params, array $rules)
+    {
         foreach ($rules as $k => $v){
             if (!isset($params[$k]) && strpos($v, 'required') === false){
                 continue;
@@ -45,7 +46,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function phone($v){
+    private static function phone($v)
+    {
         if (strlen($v) != 11 || !preg_match('/^[1][3,4,5,7,8][0-9]{9}$/
 ', $v)){
             throw new ParamValidateFailedException();
@@ -57,7 +59,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function email($v){
+    private static function email($v)
+    {
         if (!preg_match('/^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,4}$/', $v)){
             throw new ParamValidateFailedException();
         }
@@ -68,7 +71,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function idCard($v){
+    private static function idCard($v)
+    {
         if (!preg_match('/(^([\d]{15}|[\d]{18}|[\d]{17}x)$)/', $v)){
             throw new ParamValidateFailedException();
         }
@@ -79,7 +83,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function required($v){
+    private static function required($v)
+    {
         if (!isset($v)){
             throw new ParamValidateFailedException();
         }
@@ -90,7 +95,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function dateTime($v) {
+    private static function dateTime($v)
+    {
         if (strtotime(date('Y-m-d H:i:s', strtotime($v))) != strtotime($v)){
             throw new ParamValidateFailedException();
         }
@@ -101,7 +107,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function date($v){
+    private static function date($v)
+    {
         if (strtotime(date('Y-m-d H:i:s', strtotime($v))) != strtotime($v)){
             throw new ParamValidateFailedException();
         }
