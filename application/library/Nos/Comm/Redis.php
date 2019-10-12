@@ -14,9 +14,12 @@ use Yaf\Config\Ini;
 class Redis
 {
 
+    /**
+     * redis实例
+     * @var \Redis $redis
+     */
     private static $redis;
 
-    private static $config;
 
     /**
      * 获取redis实例
@@ -25,29 +28,30 @@ class Redis
      */
     public static function getInstance()
     {
-        // 之前有redis实例
-        if (empty(self::$redis)){ // 没有redis实例
-            if (empty(self::$config)) {
-                $config = new Ini(APP_PATH . '/config/redis.ini', ini_get('yaf.environ'));
-                self::$config = $config->toArray();
-            }
+        // 之前无redis实例，需要重新实例化
+        if (!empty(self::$redis)) { // 没有redis实例
+            return self::$redis;
+        } else { // 有缓存实例，直接拿
+            // 读取redis配置
+            $configInstance = new Ini(APP_PATH . '/config/redis.ini', ini_get('yaf.environ'));
+            $config = $configInstance->toArray();
             // 加载redis配置
-            $host = self::$config['host'];
-            $port = self::$config['port'];
-            $password = self::$config['password'];
-            $timeout = self::$config['timeout'];
-            $database = self::$config['database'];
+            $host     = $config['host'];
+            $port     = $config['port'];
+            $password = $config['password'];
+            $timeout  = $config['timeout'];
+            $database = $config['database'];
             // 创建redis实例
-            self::$redis = new \Redis();
+            $redis = new \Redis();
             // 连接
-            $result = self::$redis->connect($host, $port, $timeout);
+            $result = $redis->connect($host, $port, $timeout);
             if ($result === false) {
                 Log::fatal('redis|connect_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                 throw new CoreException();
             }
             // 密码配置
             if (!empty($password)) {
-                $result = self::$redis->auth($password);
+                $result = $redis->auth($password);
                 if ($result === false) {
                     Log::fatal('redis|auth_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                     throw new CoreException();
@@ -55,14 +59,15 @@ class Redis
             }
             // 数据库选择
             if (!empty($database)) {
-                $result = self::$redis->select($database);
+                $result = $redis->select($database);
                 if ($result === false) {
                     Log::fatal('redis|select_db_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                     throw new CoreException();
                 }
             }
+            // 缓存redis实例等待下次调用
+            self::$redis = $redis;
+            return $redis;
         }
-        return self::$redis;
     }
-
 }

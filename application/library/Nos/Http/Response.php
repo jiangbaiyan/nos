@@ -58,11 +58,11 @@ class Response{
     public static function apiResponse(int $status, string $msg, array $data = []){
         ob_clean();
         header('Content-Type:application/json; charset=utf-8');
-        echo json_encode(array(
+        echo json_encode([
             'status' => $status,
             'msg'    => $msg,
             'data'   => $data
-        ));
+        ]);
         exit;
     }
 

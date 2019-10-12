@@ -22,10 +22,10 @@ class Common_GetCodeController extends BaseController
      */
     public function indexAction()
     {
-        Validator::make($this->params = Request::all(), array(
+        Validator::make($this->params = Request::all(), [
             'id'    => 'required',
             'phone' => 'phone|required',
-        ));
+        ]);
         $testModel = new TestModel();
         $data = $testModel->getData();
         Response::apiSuccess($data);

@@ -20,16 +20,13 @@ class Mq{
      * @return bool
      * @throws CoreException
      */
-    public static function enQueue(string $key, $data)
+    public static function enQueue(string $key, string $data)
     {
         if (empty($key) || empty($data)){
             Log::fatal('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
             throw new CoreException();
         }
         $key = strtolower(trim($key));
-        if (!is_string($data)){
-            $data = json_encode($data);
-        }
         try{
             $res = Redis::getInstance()->lPush($key, $data);
             if ($res){

@@ -43,7 +43,7 @@ class Page{
         $nextPageUrl =  $curPage == $totalPage ? '' : preg_replace($pattern, 'page=' .($curPage + 1), $baseUrl);
         $prevPageUrl =  $curPage ==  1 ? '' : preg_replace($pattern, 'page=' .($curPage - 1), $baseUrl);
 
-        return array(
+        return [
             'first_page_url' => $firstPageUrl,
             'last_page_url' => $lastPageUrl,
             'current_page' => $curPage,
@@ -51,7 +51,7 @@ class Page{
             'prev_page_url' => $prevPageUrl,
             'data_count' => $count,
             'total_page' => $totalPage
-        );
+        ];
     }
 
     /**

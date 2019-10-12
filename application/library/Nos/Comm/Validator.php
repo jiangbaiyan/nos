@@ -36,7 +36,7 @@ class Validator{
                     Log::fatal('validator|rule_not_defined|rule:' . $item);
                     throw new CoreException();
                 }
-                @call_user_func(array(__CLASS__, $item), $params[$k]);
+                @call_user_func([__CLASS__, $item], $params[$k]);
             }
         }
     }

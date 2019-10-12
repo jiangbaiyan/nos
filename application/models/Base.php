@@ -221,10 +221,10 @@ class BaseModel{
             }
 
             $where_arr = array_filter($where_arr);
-            return array(
+            return [
                 'where' => implode(' AND ', $where_arr),
                 'bind' => $bind,
-            );
+            ];
         }
     }
 
