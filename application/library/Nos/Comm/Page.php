@@ -68,4 +68,31 @@ class Page{
         $offset = empty($curPage) ? 0 : ($curPage - 1) * $pageSize;
         return $offset;
     }
+
+    public static function getPaging($page, $page_size, $as_string = true)
+    {
+        $data           = array();
+        if($page < 1){
+            $page = 1;
+        }
+        $data['offset'] = ($page - 1) * $page_size;
+        $data['rows']   = $page_size;
+        if ($as_string) {
+            return ' limit ' . implode(',', $data) . ' ';
+        }
+        return $data;
+    }
+
+    /**
+     * 获取分页字符串表示
+     * @param array $page_info 如: ['page' => 1, 'page_size' => 10]
+     * @return array|string
+     */
+    public static function getLimitString($page_info)
+    {
+        if(isset($page_info['page']) && isset($page_info['page_size'])){
+            return self::getPaging($page_info['page'], $page_info['page_size']);
+        }
+        return '';
+    }
 }
