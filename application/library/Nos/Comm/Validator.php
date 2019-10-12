@@ -12,7 +12,8 @@ namespace Nos\Comm;
 use Nos\Exception\CoreException;
 use Nos\Exception\ParamValidateFailedException;
 
-class Validator{
+class Validator
+{
 
     /**
      * 请求参数校验入口方法
@@ -29,11 +30,11 @@ class Validator{
             $arr = explode('|', $v);
             foreach ($arr as $item){
                 if (empty($item)){
-                    Log::fatal('validator|rule_is_empty');
+                    Log::error('validator|rule_is_empty');
                     throw new CoreException();
                 }
                 if (!method_exists(__CLASS__, $item)){
-                    Log::fatal('validator|rule_not_defined|rule:' . $item);
+                    Log::error('validator|rule_not_defined|rule:' . $item);
                     throw new CoreException();
                 }
                 @call_user_func([__CLASS__, $item], $params[$k]);

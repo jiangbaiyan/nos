@@ -9,7 +9,8 @@
 
 namespace Nos\Http;
 
-class Response{
+class Response
+{
 
     /**
      * @var string 成功状态码

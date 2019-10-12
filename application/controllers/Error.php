@@ -30,7 +30,7 @@ class ErrorController extends Controller_Abstract
         // 获取异常文件行数
         $line = $exception->getLine();
         // 记录异常日志
-        Log::fatal(json_encode([
+        Log::error(json_encode([
             'status' => $code,
             'msg'    => $msg,
             'file'   => $file,

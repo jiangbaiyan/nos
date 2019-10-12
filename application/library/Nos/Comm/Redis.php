@@ -46,14 +46,14 @@ class Redis
             // 连接
             $result = $redis->connect($host, $port, $timeout);
             if ($result === false) {
-                Log::fatal('redis|connect_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
+                Log::error('redis|connect_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                 throw new CoreException();
             }
             // 密码配置
             if (!empty($password)) {
                 $result = $redis->auth($password);
                 if ($result === false) {
-                    Log::fatal('redis|auth_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
+                    Log::error('redis|auth_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                     throw new CoreException();
                 }
             }
@@ -61,7 +61,7 @@ class Redis
             if (!empty($database)) {
                 $result = $redis->select($database);
                 if ($result === false) {
-                    Log::fatal('redis|select_db_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
+                    Log::error('redis|select_db_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                     throw new CoreException();
                 }
             }

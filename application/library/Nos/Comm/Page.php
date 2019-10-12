@@ -11,7 +11,8 @@ namespace Nos\Comm;
 
 use Nos\Http\Request;
 
-class Page{
+class Page
+{
 
     /**
      * 生成分页数据

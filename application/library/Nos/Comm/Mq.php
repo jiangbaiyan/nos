@@ -11,7 +11,8 @@ namespace Nos\Comm;
 
 use Nos\Exception\CoreException;
 
-class Mq{
+class Mq
+{
 
     /**
      * 入队
@@ -23,7 +24,7 @@ class Mq{
     public static function enQueue(string $key, string $data)
     {
         if (empty($key) || empty($data)){
-            Log::fatal('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
+            Log::error('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
             throw new CoreException();
         }
         $key = strtolower(trim($key));
@@ -34,7 +35,7 @@ class Mq{
                 return true;
             }
         } catch (\Exception $e){
-            Log::fatal('mq|push_mq_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key . '|data:' . json_encode($data));
+            Log::error('mq|push_mq_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key . '|data:' . json_encode($data));
             throw new CoreException();
         }
         return false;
@@ -50,7 +51,7 @@ class Mq{
     public static function deQueue(string $key)
     {
         if (empty($key)){
-            Log::fatal('mq|empty_key|key:' . $key);
+            Log::error('mq|empty_key|key:' . $key);
             throw new CoreException();
         }
         try{
@@ -60,7 +61,7 @@ class Mq{
                 return $data;
             }
         } catch (\Exception $e){
-            Log::fatal('mq|rpop_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key);
+            Log::error('mq|rpop_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key);
             throw new CoreException();
         }
         return false;
