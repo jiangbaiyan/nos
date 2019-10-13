@@ -11,21 +11,22 @@ use Nos\Comm\Db;
 use Nos\Comm\Page;
 use Nos\Exception\CoreException;
 
-class BaseModel{
+class BaseModel extends Db{
 
     /**
-     * 表名
-     * @var
+     * @var string $table 表名
      */
     protected static $table;
 
+    /**
+     * @var array 操作符
+     */
     private static $operations = [
         '>', '<', '>=', '<=', '!=', 'like'
     ];
 
     /**
-     * 是否开启事务
-     * @var bool
+     * @var bool $isTransacting 是否开启事务
      */
     private static $isTransacting = false;
 
@@ -33,10 +34,10 @@ class BaseModel{
      * 事务开始
      * @throws CoreException
      */
-    public function beginTransaction()
+    public static function beginTransaction()
     {
-        $connection = Db::connect();
-        $connection->begin();
+        $dbInstance = self::getInstance();
+        $dbInstance->begin();
         self::$isTransacting = true;
     }
 
@@ -44,29 +45,29 @@ class BaseModel{
      * 事务提交
      * @throws CoreException
      */
-    public function commit()
+    public static function commit()
     {
-        $connection = Db::connect();
-        $connection->commit();
+        $dbInstance = self::getInstance();
+        $dbInstance->commit();
         self::$isTransacting = false;
     }
 
     /**
-     * 回滚
+     * 事务回滚
      * @throws CoreException
      */
-    public function rollback()
+    public static function rollback()
     {
-        $connection = Db::connect();
-        $connection->rollback();
+        $dbInstance = self::getInstance();
+        $dbInstance->rollback();
         self::$isTransacting = false;
     }
 
     /**
      * 插入数据
      * @param array $row 如:['name'=>'苍老师', 'age'=>10]
-     * @return int
-     * @throws \Exception $e
+     * @return int 影响行数
+     * @throws CoreException
      */
     public static function insert(array $row)
     {
@@ -76,22 +77,18 @@ class BaseModel{
         }, $fields);
 
         $sql        = 'insert into `' . self::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bindFields) . ')';
-        try {
-            return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql, $row);
-        } catch (\Exception $e) {
-            throw new CoreException();
-        }
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $row);
     }
 
 
     /**
      * 删除数据
      * @param string $where
-     * @param array  $bind_params 如:['id'=>12]
-     * @return int
-     * @throws \Exception
+     * @param array $bindParams 如:['id'=>12]
+     * @return int 影响行数
+     * @throws CoreException
      */
-    public static function delete(string $where, array $bind_params)
+    public static function delete(string $where, array $bindParams)
     {
         $sql        = 'delete from `' . self::$table . '`';
 
@@ -100,23 +97,19 @@ class BaseModel{
         } else {
             throw new CoreException();
         }
-        try {
-            return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql,$bind_params);
-        } catch (\Exception $e) {
-            throw new CoreException();
-        }
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bindParams);
     }
 
     /**
      * 查询数据
-     * @param array  $fields 需要查询的字段,默认查询所有的字段
-     * @param string $where
-     * @param array  $bind_params
+     * @param array $fields 需要查询的字段,默认查询所有的字段
+     * @param string $where 查询条件
+     * @param array $bindParams 参数绑定
      * @param string $otherOption limit | group by | order by 等操作
-     * @return array
-     * @throws \Exception
+     * @return array 数据
+     * @throws CoreException
      */
-    public static function select(array $fields = [], string $where = '', array $bindparams = [], string $otherOption = '')
+    public static function select(array $fields = [], string $where = '', array $bindParams = [], string $otherOption = '')
     {
         if (empty($fields)) {
             $fields = ['*'];
@@ -134,19 +127,15 @@ class BaseModel{
         if ($otherOption) {
             $sql .= ' ' . $otherOption;
         }
-        try {
-            return Db::doSql(Db::DB_NODE_SLAVE_KEY,$sql,$bindparams);
-        } catch (\Exception $e) {
-            throw new CoreException();
-        }
+        return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bindParams);
     }
 
     /**
      * 更新数据
-     * @param array $params
-     * @param string $where
-     * @param array $whereBinds
-     * @return int
+     * @param array $params 更新的数据
+     * @param string $where 被更新的记录
+     * @param array $whereBinds 参数绑定
+     * @return int 影响行数
      * @throws CoreException
      */
     public static function update(array $params, string $where, array $whereBinds)
@@ -159,17 +148,17 @@ class BaseModel{
             return '`' . $k . '`=:' . $k;
         }, array_keys($params));
         $sql           = 'update `' . self::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
-        try {
-            return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql,array_merge($params, $whereBinds));
-        } catch (\Exception $e) {
-            throw new CoreException();
-        }
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $whereBinds));
     }
 
     /**
      * 处理where条件
      * @param array $condition 条件数组
      * @return array
+     * [
+     *     'where' => '...'
+     *     'bind' => []
+     * ]
      */
     public static function prepareWhere(array $condition)
     {
@@ -227,6 +216,7 @@ class BaseModel{
 
 
     /**
+     * 特殊选项处理
      * @param array $options
      * @return string
      */
@@ -267,14 +257,4 @@ class BaseModel{
         return implode(' ', $optionArr);
     }
 
-    /**
-     * @param string $sql
-     * @param array $bind
-     * @return mixed
-     * @throws CoreException
-     */
-    public static function selectForJoin(string $sql, array $bind = [])
-    {
-        return Db::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
-    }
 }
