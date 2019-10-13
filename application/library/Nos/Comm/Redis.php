@@ -28,10 +28,10 @@ class Redis
      */
     public static function getInstance()
     {
-        // 之前无redis实例，需要重新实例化
-        if (!empty(self::$redis)) { // 没有redis实例
+        // 有redis缓存实例，直接取
+        if (self::$redis instanceof \Redis) { // 没有redis实例
             return self::$redis;
-        } else { // 有缓存实例，直接拿
+        } else { // 之前无redis实例，需要重新实例化
             // 读取redis配置
             $configInstance = new Ini(APP_PATH . '/config/redis.ini', ini_get('yaf.environ'));
             $config = $configInstance->toArray();
