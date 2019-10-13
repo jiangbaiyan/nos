@@ -85,7 +85,7 @@ class Db
      * @return mixed
      * @throws CoreException
      */
-    public  function doSql(string $node, string $sql, array $bind = []){
+    public  static function doSql(string $node, string $sql, array $bind = []){
         try{
             $oldNode  = self::$node;//获取上次连接节点
             self::$node = $node;    //赋值此次连接节点

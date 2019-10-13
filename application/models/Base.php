@@ -8,10 +8,8 @@
  */
 
 use Nos\Comm\Db;
-use Nos\Comm\Log;
 use Nos\Comm\Page;
-use Nos\Exception\CoreException;
-use Nos\Exception\OperateFailedException;
+use Nos\Exception\DbException;
 
 class BaseModel{
 
@@ -19,9 +17,9 @@ class BaseModel{
      * 表名
      * @var
      */
-    protected $table;
+    protected static $table;
 
-    private $operations = [
+    private static $operations = [
         '>', '<', '>=', '<=', '!=', 'like'
     ];
 
@@ -29,7 +27,7 @@ class BaseModel{
      * 是否开启事务
      * @var bool
      */
-    private static $is_transacting = false;
+    private static $isTransacting = false;
 
     /**
      * 事务开始
@@ -39,7 +37,7 @@ class BaseModel{
     {
         $connection = Db::connect();
         $connection->begin();
-        self::$is_transacting = true;
+        self::$isTransacting = true;
     }
 
     /**
@@ -50,7 +48,7 @@ class BaseModel{
     {
         $connection = Db::connect();
         $connection->commit();
-        self::$is_transacting = false;
+        self::$isTransacting = false;
     }
 
     /**
@@ -61,7 +59,7 @@ class BaseModel{
     {
         $connection = Db::connect();
         $connection->rollback();
-        self::$is_transacting = false;
+        self::$isTransacting = false;
     }
 
     /**
@@ -70,18 +68,18 @@ class BaseModel{
      * @return int
      * @throws \Exception $e
      */
-    public function insert(array $row)
+    public static function insert(array $row)
     {
         $fields      = array_keys($row);
         $bind_fields = array_map(function ($v) {
             return ':' . $v;
         }, $fields);
 
-        $sql        = 'insert into `' . $this->table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bind_fields) . ')';
+        $sql        = 'insert into `' . self::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bind_fields) . ')';
         try {
             return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql, $row);
         } catch (\Exception $e) {
-            throw new CoreException();
+            throw new DbException();
         }
     }
 
@@ -93,9 +91,9 @@ class BaseModel{
      * @return int
      * @throws \Exception
      */
-    public function delete(string $where, array $bind_params)
+    public static function delete(string $where, array $bind_params)
     {
-        $sql        = 'delete from `' . $this->table . '`';
+        $sql        = 'delete from `' . self::$table . '`';
 
         if ($where) {
             $sql .= ' where ' . $where;
@@ -105,7 +103,7 @@ class BaseModel{
         try {
             return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql,$bind_params);
         } catch (\Exception $e) {
-            throw new CoreException();
+            throw new DbException();
         }
     }
 
@@ -114,11 +112,11 @@ class BaseModel{
      * @param array  $fields 需要查询的字段,默认查询所有的字段
      * @param string $where
      * @param array  $bind_params
-     * @param string $other_option limit | group by | order by 等操作
+     * @param string $otherOption limit | group by | order by 等操作
      * @return array
      * @throws \Exception
      */
-    public function select(array $fields = [], string $where = '', array $bind_params = [], string $other_option = '')
+    public static function select(array $fields = [], string $where = '', array $bind_params = [], string $otherOption = '')
     {
         if (empty($fields)) {
             $fields = ['*'];
@@ -126,46 +124,46 @@ class BaseModel{
             $fields = array_unique($fields);
         }
         if (empty($fields)) {
-            throw new CoreException();
+            throw new DbException();
         }
-        $field_str = '`' . implode('`,`', $fields) . '`';
-        $sql = 'select ' . $field_str . ' from `' . $this->table . '`';
+        $fieldStr = '`' . implode('`,`', $fields) . '`';
+        $sql = 'select ' . $fieldStr . ' from `' . self::$table . '`';
         if (!empty($where)) {
             $sql .= ' where ' . $where;
         }
-        if ($other_option) {
-            $sql .= ' ' . $other_option;
+        if ($otherOption) {
+            $sql .= ' ' . $otherOption;
         }
         try {
             return Db::doSql(Db::DB_NODE_SLAVE_KEY,$sql,$bind_params);
         } catch (\Exception $e) {
-            throw new CoreException();
+            throw new DbException();
         }
     }
 
     /**
      * 更新数据
-     * @param array  $params
+     * @param array $params
      * @param string $where
-     * @param array  $where_binds
+     * @param array $whereBinds
      * @return int
-     * @throws \Exception
+     * @throws DbException
      */
-    public function update(array $params, string $where, array $where_binds)
+    public static function update(array $params, string $where, array $whereBinds)
     {
         $start_time = microtime(true);
         if (empty($where)) {
-            throw new CoreException();
+            throw new DbException();
         }
         $params = array_unique($params);
         $setting_binds = array_map(function ($k) {
             return '`' . $k . '`=:' . $k;
         }, array_keys($params));
-        $sql           = 'update `' . $this->table . '` set ' . implode(',', $setting_binds) . ' where ' . $where;
+        $sql           = 'update `' . self::$table . '` set ' . implode(',', $setting_binds) . ' where ' . $where;
         try {
-            return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql,array_merge($params, $where_binds));
+            return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql,array_merge($params, $whereBinds));
         } catch (\Exception $e) {
-            throw new CoreException();
+            throw new DbException();
         }
     }
 
@@ -174,9 +172,9 @@ class BaseModel{
      * @param array $condition 条件数组
      * @return array
      */
-    public function prepareWhere(array $condition)
+    public static function prepareWhere(array $condition)
     {
-        $where_arr = [];
+        $whereArr = [];
         $bind = [];
         if (empty($condition) || !is_array($condition)) {
             return [
@@ -187,16 +185,16 @@ class BaseModel{
         foreach ($condition as $field => $val) {
             // 当$field为数字的时候支持 a=1 or b=1 这种自定义查询
             if (is_int($field) && !empty($val)) {
-                $where_arr[] = '(' . $val . ')';
+                $whereArr[] = '(' . $val . ')';
                 continue;
             }
 
             if (is_array($val)) {
                 // 检测是否为有操作符行为
-                if (in_array(key($val), $this->operations, true)) {
+                if (in_array(key($val), self::$operations, true)) {
                     $i = 0;
                     foreach ($val as $operation => $item_val) {
-                        $where_arr[] = sprintf('`%s` ' . $operation . ' :%s%d', $field, $field, $i);
+                        $whereArr[] = sprintf('`%s` ' . $operation . ' :%s%d', $field, $field, $i);
                         $bind[$field . $i] = $item_val;
                         $i++;
                     }
@@ -204,69 +202,70 @@ class BaseModel{
                     $params = array_unique($val);
 
                     $i = 0;
-                    $where_no = [];
-                    $bind_no = [];
+                    $whereNo = [];
+                    $bindNo = [];
                     foreach ($params as $key => $param) {
-                        $where_no[] = sprintf(':%s%d', $key, $i);
-                        $bind_no[sprintf('%s%d', $key, $i)] = $param;
+                        $whereNo[] = sprintf(':%s%d', $key, $i);
+                        $bindNo[sprintf('%s%d', $key, $i)] = $param;
                         $i++;
                     }
 
-                    $where_arr = sprintf('`%s` %s (%s)', $key, 'in', implode(', ', $where_arr));
-                    $bind = array_merge($bind, $where_no['bind']);
+                    $whereArr = sprintf('`%s` %s (%s)', $key, 'in', implode(', ', $whereNo));
+                    $bind = array_merge($bind, $bindNo);
                 }
             } else {
-                $where_arr[] = sprintf('`%s` = :%s', $field, $field);
+                $whereArr[] = sprintf('`%s` = :%s', $field, $field);
                 $bind[$field] = $val;
             }
-
-            $where_arr = array_filter($where_arr);
-            return [
-                'where' => implode(' AND ', $where_arr),
-                'bind' => $bind,
-            ];
         }
+
+        $whereArr = array_filter($whereArr);
+        return [
+            'where' => implode(' AND ', $whereArr),
+            'bind' => $bind,
+        ];
     }
+
 
     /**
      * @param array $options
      * @return string
      */
-    public function prepareOption(array $options)
+    public static function prepareOption(array $options)
     {
-        $option_arr = [];
+        $optionArr = [];
         if (!empty($options['group'])) {
             if (is_array($options['group'])) {
                 $group = implode(', ', $options['group']);
             } else {
                 $group = $options['group'];
             }
-            $option_arr[] = 'group by ' . $group;
+            $optionArr[] = 'group by ' . $group;
         }
         if (!empty($options['order'])) {
             if (is_array($options['order'])) {
                 $orders = [];
-                foreach ($options['order'] as $sort_field => $sort_type) {
-                    if ($sort_field && $sort_type) {
-                        $orders[] = ' ' . $sort_field . ' ' . $sort_type . ' ';
+                foreach ($options['order'] as $sortField => $sort_type) {
+                    if ($sortField && $sort_type) {
+                        $orders[] = ' ' . $sortField . ' ' . $sort_type . ' ';
                     }
                 }
                 if ($orders) {
-                    $option_arr[] = 'order by ' . implode(', ', $orders);
+                    $optionArr[] = 'order by ' . implode(', ', $orders);
                 }
             } else {
-                $option_arr[] = $options['order'];
+                $optionArr[] = $options['order'];
             }
         }
         if (!empty($options['limit'])) {
             if (is_array($options['limit'])) {
-                $option_arr[] = Page::getLimitString($options['limit']);
+                $optionArr[] = Page::getLimitString($options['limit']);
             } else {
-                $option_arr[] = $options['limit'];
+                $optionArr[] = $options['limit'];
             }
         }
 
-        return implode(' ', $option_arr);
+        return implode(' ', $optionArr);
     }
 
     /**
@@ -275,7 +274,7 @@ class BaseModel{
      * @return mixed
      * @throws CoreException
      */
-    public function selectForJoin(string $sql, array $bind = [])
+    public static function selectForJoin(string $sql, array $bind = [])
     {
         return Db::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }
