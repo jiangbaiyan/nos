@@ -15,12 +15,8 @@ use Yaf\Config\Ini;
 
 class Db
 {
-
-    /**
-     * @var string 数据库节点
-     */
-    private static $node = '';
-
+    const DB_NODE_MASTER_KEY = 'write'; //主库
+    const DB_NODE_SLAVE_KEY  = 'read';  //从库
 
     /**
      * @var array $config 数据库配置
@@ -31,9 +27,6 @@ class Db
      * @var array $connPool 数据库连接池
      */
     private static $connPool = [];
-
-    const DB_NODE_MASTER_KEY = 'write'; //主库
-    const DB_NODE_SLAVE_KEY = 'read'; //从库
 
 
     /**
@@ -71,7 +64,7 @@ class Db
     {
         try{
             // 从连接池拿出数据库实例
-            $dbInstance = self::getInstance();
+            $dbInstance = self::getInstance($node);
             $handle = $dbInstance->prepare($sql);
             $res = $handle->execute($bind);
             if (!$res){
@@ -80,7 +73,7 @@ class Db
             // 获取影响行数
             $count = $handle->rowcount();
             // 主库增删改操作，直接返回影响的行数
-            if (self::$node == self::DB_NODE_MASTER_KEY){
+            if ($node == self::DB_NODE_MASTER_KEY){
                 return $count;
             }
             // 以下是查询操作
@@ -90,16 +83,18 @@ class Db
                 return $handle->fetchAll(PDO::FETCH_ASSOC); // 结果集不为空，取出数据
             }
         } catch (\Exception $e){
-            Log::error('db|pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . self::$node . '|bind:' . json_encode($bind));
+            Log::error('db|pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . $node . '|bind:' . json_encode($bind));
             throw new CoreException();
         }
     }
 
     /**
      * 从连接池获取数据库连接实例
+     * @param string $node 节点类型
+     * @return mixed
      * @throws CoreException
      */
-    public static function getInstance()
+    public static function getInstance(string $node)
     {
         try {
             // 获取数据库配置
@@ -108,7 +103,7 @@ class Db
                 self::$config = $config->toArray();
             }
             // 获取当前节点下的配置
-            $config = self::$config[self::$node];
+            $config = self::$config[$node];
             // PDO连接
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
             // 这几个参数唯一决定连接池的key

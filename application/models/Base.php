@@ -36,7 +36,7 @@ class BaseModel extends Db{
      */
     public static function beginTransaction()
     {
-        $dbInstance = self::getInstance();
+        $dbInstance = self::getInstance(self::DB_NODE_MASTER_KEY);
         $dbInstance->begin();
         self::$isTransacting = true;
     }
@@ -47,7 +47,7 @@ class BaseModel extends Db{
      */
     public static function commit()
     {
-        $dbInstance = self::getInstance();
+        $dbInstance = self::getInstance(self::DB_NODE_MASTER_KEY);
         $dbInstance->commit();
         self::$isTransacting = false;
     }
@@ -58,7 +58,7 @@ class BaseModel extends Db{
      */
     public static function rollback()
     {
-        $dbInstance = self::getInstance();
+        $dbInstance = self::getInstance(self::DB_NODE_MASTER_KEY);
         $dbInstance->rollback();
         self::$isTransacting = false;
     }
