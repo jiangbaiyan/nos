@@ -15,7 +15,6 @@ use Common\TestModel;
 
 class Common_GetCodeController extends BaseController
 {
-
     /**
      * 业务逻辑
      * @throws CoreException
