@@ -9,7 +9,8 @@
 
 namespace Nos\Http;
 
-class Response{
+class Response
+{
 
     /**
      * @var string 成功状态码
@@ -58,11 +59,11 @@ class Response{
     public static function apiResponse(int $status, string $msg, array $data = []){
         ob_clean();
         header('Content-Type:application/json; charset=utf-8');
-        echo json_encode(array(
+        echo json_encode([
             'status' => $status,
             'msg'    => $msg,
             'data'   => $data
-        ));
+        ]);
         exit;
     }
 
@@ -72,7 +73,7 @@ class Response{
      * @param string $msg
      * @return string
      */
-    public static function apiSuccess(array $data = array() , string $msg = ''){
+    public static function apiSuccess(array $data = [] , string $msg = ''){
         self::apiResponse(self::CODE_SUCCESS,$msg ? $msg :self::MSG_SUCCESS,$data);
     }
 

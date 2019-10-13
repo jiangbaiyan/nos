@@ -12,7 +12,8 @@ namespace Nos\Comm;
 use Nos\Exception\CoreException;
 use Nos\Exception\ParamValidateFailedException;
 
-class Validator{
+class Validator
+{
 
     /**
      * 请求参数校验入口方法
@@ -20,7 +21,8 @@ class Validator{
      * @param array $rules
      * @throws CoreException
      */
-    public static function make(array $params, array $rules){
+    public static function make(array $params, array $rules)
+    {
         foreach ($rules as $k => $v){
             if (!isset($params[$k]) && strpos($v, 'required') === false){
                 continue;
@@ -28,14 +30,14 @@ class Validator{
             $arr = explode('|', $v);
             foreach ($arr as $item){
                 if (empty($item)){
-                    Log::fatal('validator|rule_is_empty');
+                    Log::error('validator|rule_is_empty');
                     throw new CoreException();
                 }
                 if (!method_exists(__CLASS__, $item)){
-                    Log::fatal('validator|rule_not_defined|rule:' . $item);
+                    Log::error('validator|rule_not_defined|rule:' . $item);
                     throw new CoreException();
                 }
-                @call_user_func(array(__CLASS__, $item), $params[$k]);
+                @call_user_func([__CLASS__, $item], $params[$k]);
             }
         }
     }
@@ -45,7 +47,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function phone($v){
+    private static function phone($v)
+    {
         if (strlen($v) != 11 || !preg_match('/^[1][3,4,5,7,8][0-9]{9}$/
 ', $v)){
             throw new ParamValidateFailedException();
@@ -57,7 +60,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function email($v){
+    private static function email($v)
+    {
         if (!preg_match('/^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,4}$/', $v)){
             throw new ParamValidateFailedException();
         }
@@ -68,7 +72,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function idCard($v){
+    private static function idCard($v)
+    {
         if (!preg_match('/(^([\d]{15}|[\d]{18}|[\d]{17}x)$)/', $v)){
             throw new ParamValidateFailedException();
         }
@@ -79,7 +84,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function required($v){
+    private static function required($v)
+    {
         if (!isset($v)){
             throw new ParamValidateFailedException();
         }
@@ -90,7 +96,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function dateTime($v) {
+    private static function dateTime($v)
+    {
         if (strtotime(date('Y-m-d H:i:s', strtotime($v))) != strtotime($v)){
             throw new ParamValidateFailedException();
         }
@@ -101,7 +108,8 @@ class Validator{
      * @param $v
      * @throws ParamValidateFailedException
      */
-    private static function date($v){
+    private static function date($v)
+    {
         if (strtotime(date('Y-m-d H:i:s', strtotime($v))) != strtotime($v)){
             throw new ParamValidateFailedException();
         }

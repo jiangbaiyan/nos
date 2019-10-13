@@ -16,14 +16,26 @@ class TestModel extends \BaseModel {
     public $table = 'test';
 
     /**
+     * 模型层查询示例
      * @return mixed
-     * @throws \Nos\Exception\CoreException
+     * @throws \Exception
      */
-    public function getData(){
-        $select = array('id', 'name');
-        $ext = 'where id = ?';
-        $bind = array(2);
-        $data = $this->getList($select, $ext, $bind);
+    public function getData()
+    {
+        $params = [
+            'name' => 'grapes'
+        ];
+
+        $wheres = [
+            'id'   => 222
+        ];
+        $condition = $this->prepareWhere($wheres);
+
+        $row = $this->update($params, $condition['where'], $condition['bind']);
+        $data = $this->select(['id','name'], $condition['where'], $condition['bind']);
+        var_dump($row);die;
+        // 老调用
+        //$data = $this->getList($select, $ext, $bind);
         return $data;
     }
 

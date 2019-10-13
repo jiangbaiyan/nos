@@ -9,7 +9,8 @@
 
 namespace Nos\Comm;
 
-class Log{
+class Log
+{
 
     /*
      * 日志级别由高到低
@@ -18,21 +19,17 @@ class Log{
     const LEVEL_NOTICE = 'NOTICE';
     const LEVEL_DEBUG  = 'DEBUG';
 
-    const PREFIX = 'nos_';
-
     /**
      * 写日志
      * @param $level
      * @param $msg
      * @return bool
      */
-    private static function writeLog(string $level, string $msg){
-        $fileName = self::PREFIX . date('Y-m-d') . '.log';//按天划分
+    public static function write(string $level, string $msg)
+    {
+        $fileName = date('Y-m-d') . '.log';//按天划分
         $path = APP_PATH . '/logs/' . $fileName;
         $time = date('Y-m-d H:i:s');
-        if (!is_string($msg)){
-            $msg = json_encode($msg);
-        }
         $str = '[' . $time . ']' . "[{$level}]". $msg . PHP_EOL;
         $handle = fopen($path, 'a');
         flock($handle, LOCK_EX|LOCK_NB);
@@ -47,8 +44,9 @@ class Log{
      * @param string $msg
      * @return bool
      */
-    public static function fatal(string $msg){
-        return self::writeLog(self::LEVEL_FATAL, $msg);
+    public static function error(string $msg)
+    {
+        return self::write(self::LEVEL_FATAL, $msg);
     }
 
     /**
@@ -56,8 +54,9 @@ class Log{
      * @param string $msg
      * @return bool
      */
-    public static function notice(string $msg){
-        return self::writeLog(self::LEVEL_NOTICE, $msg);
+    public static function notice(string $msg)
+    {
+        return self::write(self::LEVEL_NOTICE, $msg);
     }
 
     /**
@@ -65,8 +64,9 @@ class Log{
      * @param string $msg
      * @return bool
      */
-    public static function debug(string $msg){
-        return self::writeLog(self::LEVEL_DEBUG, $msg);
+    public static function debug(string $msg)
+    {
+        return self::write(self::LEVEL_DEBUG, $msg);
     }
 
 }

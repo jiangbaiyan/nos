@@ -11,7 +11,8 @@ namespace Nos\Comm;
 
 use Nos\Exception\CoreException;
 
-class Mq{
+class Mq
+{
 
     /**
      * 入队
@@ -20,15 +21,13 @@ class Mq{
      * @return bool
      * @throws CoreException
      */
-    public static function enQueue(string $key, $data){
+    public static function enQueue(string $key, string $data)
+    {
         if (empty($key) || empty($data)){
-            Log::fatal('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
+            Log::error('mq|empty_key_or_data|key' . $key . '|data:' . json_encode($data));
             throw new CoreException();
         }
         $key = strtolower(trim($key));
-        if (!is_string($data)){
-            $data = json_encode($data);
-        }
         try{
             $res = Redis::getInstance()->lPush($key, $data);
             if ($res){
@@ -36,7 +35,7 @@ class Mq{
                 return true;
             }
         } catch (\Exception $e){
-            Log::fatal('mq|push_mq_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key . '|data:' . json_encode($data));
+            Log::error('mq|push_mq_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key . '|data:' . json_encode($data));
             throw new CoreException();
         }
         return false;
@@ -49,9 +48,10 @@ class Mq{
      * @return bool
      * @throws CoreException
      */
-    public static function deQueue(string $key){
+    public static function deQueue(string $key)
+    {
         if (empty($key)){
-            Log::fatal('mq|empty_key|key:' . $key);
+            Log::error('mq|empty_key|key:' . $key);
             throw new CoreException();
         }
         try{
@@ -61,7 +61,7 @@ class Mq{
                 return $data;
             }
         } catch (\Exception $e){
-            Log::fatal('mq|rpop_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key);
+            Log::error('mq|rpop_failed|msg:' . json_encode($e->getMessage()) . '|key:' . $key);
             throw new CoreException();
         }
         return false;
