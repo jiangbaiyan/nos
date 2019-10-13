@@ -98,19 +98,18 @@ class Db
     {
         try {
             // 获取数据库配置
-            if (empty(self::$config)) {
+            if (empty(self::$config[$node])) {
                 $config = new Ini(APP_PATH . '/config/db.ini', ini_get('yaf.environ'));
-                self::$config = $config->toArray();
+                self::$config[$node] = $config->toArray();
             }
             // 获取当前节点下的配置
             $config = self::$config[$node];
             // PDO连接
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
-            // 这几个参数唯一决定连接池的key
+            // 这几个参数唯一确定连接池的key
             $connPoolKey = $dsn . $config['user'] . $config['password'];
             // 连接池中不存在，需要重新往连接池中添加
             if (!self::$connPool[$connPoolKey]) {
-                // 三个参数唯一确定一个连接池key
                 $dbInstance = new PDO($dsn, $config['user'], $config['password']);
                 self::$connPool[$connPoolKey] = $dbInstance;
             }
