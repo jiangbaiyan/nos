@@ -9,7 +9,7 @@
 
 use Nos\Comm\Db;
 use Nos\Comm\Page;
-use Nos\Exception\DbException;
+use Nos\Exception\CoreException;
 
 class BaseModel{
 
@@ -71,15 +71,15 @@ class BaseModel{
     public static function insert(array $row)
     {
         $fields      = array_keys($row);
-        $bind_fields = array_map(function ($v) {
+        $bindFields = array_map(function ($v) {
             return ':' . $v;
         }, $fields);
 
-        $sql        = 'insert into `' . self::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bind_fields) . ')';
+        $sql        = 'insert into `' . self::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bindFields) . ')';
         try {
             return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql, $row);
         } catch (\Exception $e) {
-            throw new DbException();
+            throw new CoreException();
         }
     }
 
@@ -103,7 +103,7 @@ class BaseModel{
         try {
             return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql,$bind_params);
         } catch (\Exception $e) {
-            throw new DbException();
+            throw new CoreException();
         }
     }
 
@@ -116,7 +116,7 @@ class BaseModel{
      * @return array
      * @throws \Exception
      */
-    public static function select(array $fields = [], string $where = '', array $bind_params = [], string $otherOption = '')
+    public static function select(array $fields = [], string $where = '', array $bindparams = [], string $otherOption = '')
     {
         if (empty($fields)) {
             $fields = ['*'];
@@ -124,7 +124,7 @@ class BaseModel{
             $fields = array_unique($fields);
         }
         if (empty($fields)) {
-            throw new DbException();
+            throw new CoreException();
         }
         $fieldStr = '`' . implode('`,`', $fields) . '`';
         $sql = 'select ' . $fieldStr . ' from `' . self::$table . '`';
@@ -135,9 +135,9 @@ class BaseModel{
             $sql .= ' ' . $otherOption;
         }
         try {
-            return Db::doSql(Db::DB_NODE_SLAVE_KEY,$sql,$bind_params);
+            return Db::doSql(Db::DB_NODE_SLAVE_KEY,$sql,$bindparams);
         } catch (\Exception $e) {
-            throw new DbException();
+            throw new CoreException();
         }
     }
 
@@ -147,23 +147,22 @@ class BaseModel{
      * @param string $where
      * @param array $whereBinds
      * @return int
-     * @throws DbException
+     * @throws CoreException
      */
     public static function update(array $params, string $where, array $whereBinds)
     {
-        $start_time = microtime(true);
         if (empty($where)) {
-            throw new DbException();
+            throw new CoreException();
         }
         $params = array_unique($params);
-        $setting_binds = array_map(function ($k) {
+        $settingBinds = array_map(function ($k) {
             return '`' . $k . '`=:' . $k;
         }, array_keys($params));
-        $sql           = 'update `' . self::$table . '` set ' . implode(',', $setting_binds) . ' where ' . $where;
+        $sql           = 'update `' . self::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
         try {
             return Db::doSql(Db::DB_NODE_MASTER_KEY,$sql,array_merge($params, $whereBinds));
         } catch (\Exception $e) {
-            throw new DbException();
+            throw new CoreException();
         }
     }
 

@@ -32,9 +32,6 @@ class Response
 
     const CODE_CORE_ERROR         = 500; //框架底层错误
 
-    const CODE_Db_ERROR           = 100001; //框架底层错误
-
-
     /**
      * @var string 提示信息
      */
@@ -51,9 +48,6 @@ class Response
     const MSG_PERMISSION_DENIED  = '您没有该操作的权限';
 
     const MSG_CORE_ERROR         = '框架底层错误';
-
-    const MSG_Db_ERROR         = '框架底层错误';
-
 
 
     /**
