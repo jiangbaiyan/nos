@@ -97,19 +97,25 @@ class Db
     public static function getInstance(string $node)
     {
         try {
-            // 获取数据库配置
-            if (empty(self::$config[$node])) {
+            /* 获取数据库配置，返回的配置格式如下:
+             * [
+             *     write => [],
+             *     read => []
+             * ]
+             *  若配置为空，需要重新加载
+             */
+            if (empty(self::$config)) {
                 $config = new Ini(APP_PATH . '/config/db.ini', ini_get('yaf.environ'));
-                self::$config[$node] = $config->toArray();
+                self::$config[] = $config->toArray();
             }
             // 获取当前节点下的配置
-            $config = self::$config[$node];
+            $config = self::$config[0][$node];
             // PDO连接
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
             // 这几个参数唯一确定连接池的key
             $connPoolKey = $dsn . $config['user'] . $config['password'];
             // 连接池中不存在，需要重新往连接池中添加
-            if (!self::$connPool[$connPoolKey]) {
+            if (!isset(self::$connPool[$connPoolKey])) {
                 $dbInstance = new PDO($dsn, $config['user'], $config['password']);
                 self::$connPool[$connPoolKey] = $dbInstance;
             }
