@@ -71,7 +71,7 @@ class BaseModel extends Db{
      */
     public static function insert(array $row)
     {
-        $fields      = array_keys($row);
+        $fields     = array_keys($row);
         $bindFields = array_map(function ($v) {
             return ':' . $v;
         }, $fields);
@@ -90,12 +90,12 @@ class BaseModel extends Db{
      */
     public static function delete(string $where, array $bindParams)
     {
-        $sql        = 'delete from `' . static::$table . '`';
+        $sql = 'delete from `' . static::$table . '`';
 
         if ($where) {
             $sql .= ' where ' . $where;
         } else {
-            throw new CoreException();
+            throw new CoreException('baseModel|empty_delete_where');
         }
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bindParams);
     }
@@ -115,9 +115,6 @@ class BaseModel extends Db{
             $fields = ['*'];
         } else {
             $fields = array_unique($fields);
-        }
-        if (empty($fields)) {
-            throw new CoreException();
         }
         $fieldStr = '`' . implode('`,`', $fields) . '`';
         $sql = 'select ' . $fieldStr . ' from `' . static::$table . '`';
@@ -141,13 +138,13 @@ class BaseModel extends Db{
     public static function update(array $params, string $where, array $whereBinds)
     {
         if (empty($where)) {
-            throw new CoreException();
+            throw new CoreException('baseModel|empty_update_where');
         }
         $params = array_unique($params);
         $settingBinds = array_map(function ($k) {
             return '`' . $k . '`=:' . $k;
         }, array_keys($params));
-        $sql           = 'update `' . static::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
+        $sql = 'update `' . static::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $whereBinds));
     }
 
@@ -162,14 +159,14 @@ class BaseModel extends Db{
      */
     public static function prepareWhere(array $condition)
     {
-        $whereArr = [];
-        $bind = [];
-        if (empty($condition) || !is_array($condition)) {
+        if (empty($condition)) {
             return [
                 'where' => '',
                 'bind' => []
             ];
         }
+        $whereArr = [];
+        $bind = [];
         foreach ($condition as $field => $val) {
             // 当$field为数字的时候支持 a=1 or b=1 这种自定义查询
             if (is_int($field) && !empty($val)) {
