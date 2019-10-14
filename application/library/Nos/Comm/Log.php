@@ -15,7 +15,7 @@ class Log
     /*
      * 日志级别由高到低
      */
-    const LEVEL_FATAL  = 'FATAL';
+    const LEVEL_ERROR  = 'ERROR';
     const LEVEL_NOTICE = 'NOTICE';
     const LEVEL_DEBUG  = 'DEBUG';
 
@@ -46,7 +46,7 @@ class Log
      */
     public static function error(string $msg)
     {
-        return self::write(self::LEVEL_FATAL, $msg);
+        return self::write(self::LEVEL_ERROR, $msg);
     }
 
     /**
