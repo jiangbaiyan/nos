@@ -9,37 +9,23 @@
 
 namespace Nos\Http;
 
-use Nos\Comm\Log;
 use Nos\Exception\CoreException;
 use Yaf\Config\Ini;
-use Yaf\Request\Http;
 
 class Request
 {
-
-
-    /**
-     * 请求实例
-     * @var Http
-     */
-    private static $request;
-
     /**
      * 请求协议
-     * @var
+     * @var static $schema
      */
-    private static $schema;
+    private static $schema = '';
 
     /**
-     * 单例获取请求实例，避免请求期间重复实例化
-     * @return Http
+     * 请求参数
+     * @var array $params
      */
-    private static function getRequestInstance(){
-        if (!self::$request instanceof Http){
-            self::$request = new Http();
-        }
-        return self::$request;
-    }
+    private static $params = [];
+
 
     /**
      * 获取单个GET参数
@@ -48,7 +34,12 @@ class Request
      * @return string
      */
     public static function get(string $key, string $default = ''){
-        return self::getRequestInstance()->getQuery($key, $default);
+        // 如果有参数缓存则从缓存中取，否则从$_GET中取
+        if (empty(self::$params)) {
+            return $_GET[$key] ?? $default;
+        } else {
+            return self::$params[$key];
+        }
     }
 
     /**
@@ -58,16 +49,44 @@ class Request
      * @return mixed|string
      */
     public static function post(string $key, string $default = ''){
-        return self::getRequestInstance()->getPost($key, $default);
+        // 如果有参数缓存则从缓存中取，否则从$_POST中取
+        if (empty(self::$params)) {
+            return $_POST[$key] ?? $default;
+        } else {
+            return self::$params[$key];
+        }
     }
 
     /**
-     * 获取文件
+     * 获取文件信息
+     * 返回数据示例：
+     * [
+     *     "name": "WechatIMG9.jpeg",
+     *     "type": "image/jpeg",
+     *     "tmp_name": "/tmp/phpSMXprN",
+     *     "error": 0,
+     *     "size": 25569
+     * ]
      * @param $key
      * @return array|mixed
      */
     public static function file(string $key){
-        return self::getRequestInstance()->getFiles($key);
+        return $_FILES[$key] ?? [];
+    }
+
+    /**
+     * 获取所有请求参数
+     * @return mixed
+     */
+    public static function all(){
+        // 如果有参数缓存则从缓存中取，否则从输入流获取
+        if (empty(self::$params)) {
+            // 从输入流中获取所有参数（包括PUT/DELETE）
+            $data = json_decode(file_get_contents('php://input'), true);
+            // 缓存此次请求参数
+            self::$params = array_merge($_GET, $_POST, $data);
+        }
+        return self::$params;
     }
 
     /**
@@ -95,28 +114,14 @@ class Request
         return isset($headers[$key]) ? $headers[$key] : $default;
     }
 
-    /**
-     * 获取所有请求参数，自动判断请求类型
-     * @return mixed
-     */
-    public static function all(){
-        $obj = self::getRequestInstance();
-        if ($obj->isGet()){
-            return self::getRequestInstance()->getQuery();
-        } else if ($obj->isPost()){
-            return self::getRequestInstance()->getPost();
-        } else{
-            return false;
-        }
-    }
 
     /**
      * 获取完整URL
      * @return string
      */
     public static function getFullUrl(){
-        $schema = self::$schema;
-        if (!isset($schema)){
+        // 缓存协议为空，需要重新从配置文件获取
+        if (empty(self::$schema)){
             $config = new Ini(APP_PATH . '/config/application.ini', ini_get('yaf.environ'));
             $config = $config->toArray();
             self::$schema = $config['schema'];
