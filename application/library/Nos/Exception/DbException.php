@@ -13,8 +13,8 @@ namespace Nos\Exception;
 use Nos\Http\Response;
 use Throwable;
 
-class DbException extends \Exception{
-
+class DbException extends \Exception
+{
     public function __construct($message = Response::MSG_Db_ERROR, $code = Response::CODE_Db_ERROR, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);

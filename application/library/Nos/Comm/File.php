@@ -48,7 +48,8 @@ class File
      * 获取文件路径
      * @return mixed|string
      */
-    public function getPath() {
+    public function getPath()
+    {
         return $this->path;
     }
 
@@ -56,7 +57,8 @@ class File
      * 获取文件名
      * @return mixed|string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->fileName;
     }
 
@@ -64,7 +66,8 @@ class File
      * 获取扩展名
      * @return mixed
      */
-    public function getExtension() {
+    public function getExtension()
+    {
         $nameArr = explode('.', $this->getName());
         return end($nameArr);
     }
@@ -73,7 +76,8 @@ class File
      * 获取文件类型
      * @return mixed
      */
-    public function getType() {
+    public function getType()
+    {
         return $this->getType();
     }
 
@@ -81,7 +85,8 @@ class File
      * 获取文件大小
      * @return int|mixed
      */
-    public function getSize() {
+    public function getSize()
+    {
         return $this->size;
     }
 }

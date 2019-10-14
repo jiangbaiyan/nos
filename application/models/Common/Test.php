@@ -8,7 +8,8 @@
 
 namespace Common;
 
-class TestModel extends \BaseModel {
+class TestModel extends \BaseModel
+{
 
     /*
      * 表名

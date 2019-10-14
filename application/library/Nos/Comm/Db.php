@@ -48,7 +48,8 @@ class Db
      * @return mixed
      * @throws CoreException
      */
-    public static function modify(string $sql, array $bind = []){
+    public static function modify(string $sql, array $bind = [])
+    {
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
     }
 

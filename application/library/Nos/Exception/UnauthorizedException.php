@@ -12,11 +12,10 @@ namespace Nos\Exception;
 use Nos\Http\Response;
 use Throwable;
 
-class UnauthorizedException extends \Exception {
-
+class UnauthorizedException extends \Exception
+{
     public function __construct($message = Response::MSG_UNAUTHORIZED, $code = Response::CODE_UNAUTHORIZED, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }
-
 }

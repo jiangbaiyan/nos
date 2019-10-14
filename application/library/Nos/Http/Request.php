@@ -34,7 +34,8 @@ class Request
      * @param string $default
      * @return string
      */
-    public static function get(string $key, string $default = ''){
+    public static function get(string $key, string $default = '')
+    {
         // 如果有参数缓存则从缓存中取，否则从$_GET中取
         if (empty(self::$params)) {
             return $_GET[$key] ?? $default;
@@ -49,7 +50,8 @@ class Request
      * @param string $default
      * @return mixed|string
      */
-    public static function post(string $key, string $default = ''){
+    public static function post(string $key, string $default = '')
+    {
         // 如果有参数缓存则从缓存中取，否则从$_POST中取
         if (empty(self::$params)) {
             return $_POST[$key] ?? $default;
@@ -71,7 +73,8 @@ class Request
      * @param $key
      * @return File|bool
      */
-    public static function file(string $key){
+    public static function file(string $key)
+    {
         if (!isset($_FILES[$key]) || empty($_FILES[$key])) {
             return false;
         }
@@ -82,7 +85,8 @@ class Request
      * 获取所有请求参数
      * @return mixed
      */
-    public static function all(){
+    public static function all()
+    {
         // 如果有参数缓存则从缓存中取，否则从输入流获取
         if (empty(self::$params)) {
             // 从输入流中获取所有参数（包括PUT/DELETE）
@@ -99,7 +103,8 @@ class Request
      * @param string $default
      * @return array|false|mixed|null
      */
-    public static function header(string $key = '', string $default = ''){
+    public static function header(string $key = '', string $default = '')
+    {
         $headers = [];
         if (!function_exists('getallheaders')) {
             function getallheaders() {
@@ -123,7 +128,8 @@ class Request
      * 获取完整URL
      * @return string
      */
-    public static function getFullUrl(){
+    public static function getFullUrl()
+    {
         // 缓存协议为空，需要重新从配置文件获取
         if (empty(self::$schema)){
             $config = new Ini(APP_PATH . '/config/application.ini', ini_get('yaf.environ'));
@@ -137,7 +143,8 @@ class Request
      * 获取不带参数的url
      * @return string
      */
-    public static function getBaseUrl(){
+    public static function getBaseUrl()
+    {
         $fullUrl = self::getFullUrl();
         if (strpos($fullUrl, '?') === false){
             return $fullUrl;
@@ -157,7 +164,8 @@ class Request
      * @return bool|string
      * @throws CoreException
      */
-    public static function send(string $type, string $url, array $postData = [], array $options = [], int $retry = 3, int $timeout = 20){
+    public static function send(string $type, string $url, array $postData = [], array $options = [], int $retry = 3, int $timeout = 20)
+    {
         try {
             $ch = curl_init($url);
             curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
