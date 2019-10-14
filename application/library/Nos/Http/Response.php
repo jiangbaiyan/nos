@@ -20,17 +20,17 @@ class Response
     /**
      * @var string 失败状态码
      */
-    const CODE_PARAM_ERROR       = 400; //未授权
+    const CODE_PARAM_ERROR       = 400; // 未授权
 
-    const CODE_UNAUTHORIZED       = 401; //未授权（未登录）
+    const CODE_UNAUTHORIZED       = 401; // 未授权（未登录）
 
-    const CODE_OPERATE_FAILED     = 402; //操作失败
+    const CODE_OPERATE_FAILED     = 402; // 操作失败
 
-    const CODE_PERMISSION_DENIED  = 403; //无权限
+    const CODE_PERMISSION_DENIED  = 403; // 无权限
 
-    const CODE_RESOURCE_NOT_FOUND = 404; //资源未找到
+    const CODE_RESOURCE_NOT_FOUND = 404; // 资源未找到
 
-    const CODE_CORE_ERROR         = 500; //框架底层错误
+    const CODE_CORE_ERROR         = 500; // 框架底层错误
 
     /**
      * @var string 提示信息
@@ -51,12 +51,12 @@ class Response
 
 
     /**
-     * 接口返回
-     * @param int $status
-     * @param string $msg
-     * @param array $data
+     * 接口通用返回
+     * @param int $status 状态码
+     * @param string $msg 返回信息
+     * @param $data
      */
-    public static function apiResponse(int $status, string $msg, array $data = []){
+    public static function apiResponse(int $status, string $msg, $data = []){
         ob_clean();
         header('Content-Type:application/json; charset=utf-8');
         echo json_encode([
@@ -69,11 +69,11 @@ class Response
 
     /**
      * 请求成功
-     * @param array $data
+     * @param $data
      * @param string $msg
      * @return string
      */
-    public static function apiSuccess(array $data = [] , string $msg = ''){
+    public static function apiSuccess($data = [] , string $msg = ''){
         self::apiResponse(self::CODE_SUCCESS,$msg ? $msg :self::MSG_SUCCESS,$data);
     }
 
