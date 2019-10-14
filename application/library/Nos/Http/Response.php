@@ -56,7 +56,8 @@ class Response
      * @param string $msg 返回信息
      * @param $data
      */
-    public static function apiResponse(int $status, string $msg, $data = []){
+    public static function apiResponse(int $status, string $msg, $data = [])
+    {
         ob_clean();
         header('Content-Type:application/json; charset=utf-8');
         echo json_encode([
@@ -73,7 +74,8 @@ class Response
      * @param string $msg
      * @return string
      */
-    public static function apiSuccess($data = [] , string $msg = ''){
+    public static function apiSuccess($data = [] , string $msg = '')
+    {
         self::apiResponse(self::CODE_SUCCESS,$msg ? $msg :self::MSG_SUCCESS,$data);
     }
 
@@ -82,7 +84,8 @@ class Response
      * @param string $msg
      * @return string
      */
-    public static function apiResourceNotFound(string $msg = ''){
+    public static function apiResourceNotFound(string $msg = '')
+    {
         self::apiResponse(self::CODE_RESOURCE_NOT_FOUND,$msg ? $msg : self::MSG_RESOURCE_NOT_FOUND);
     }
 
@@ -91,7 +94,8 @@ class Response
      * @param string $msg
      * @return string
      */
-    public static function apiParamValidateFailed(string $msg = ''){
+    public static function apiParamValidateFailed(string $msg = '')
+    {
         self::apiResponse(self::CODE_PARAM_ERROR,$msg ? $msg :self::MSG_PARAM_ERROR);
     }
 
@@ -100,7 +104,8 @@ class Response
      * @param string $msg
      * @return string
      */
-    public static function apiOperateFailed(string $msg = ''){
+    public static function apiOperateFailed(string $msg = '')
+    {
         self::apiResponse(self::CODE_OPERATE_FAILED,$msg ? $msg :self::MSG_OPERATE_FAILED);
     }
 
@@ -109,7 +114,8 @@ class Response
      * @param string $msg
      * @return string
      */
-    public static function apiUnauthorized(string $msg = ''){
+    public static function apiUnauthorized(string $msg = '')
+    {
         self::apiResponse(self::CODE_UNAUTHORIZED,$msg ? $msg :self::MSG_UNAUTHORIZED);
     }
 
@@ -118,7 +124,8 @@ class Response
      * @param string $msg
      * @return string
      */
-    public static function apiPermissionDenied(string $msg = ''){
+    public static function apiPermissionDenied(string $msg = '')
+    {
         self::apiResponse(self::CODE_PERMISSION_DENIED,$msg ? $msg :self::MSG_PERMISSION_DENIED);
     }
 

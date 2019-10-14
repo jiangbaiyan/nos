@@ -11,8 +11,8 @@ use Nos\Comm\Db;
 use Nos\Comm\Page;
 use Nos\Exception\CoreException;
 
-class BaseModel extends Db{
-
+class BaseModel extends Db
+{
     /**
      * @var string $table 表名
      */
@@ -253,5 +253,4 @@ class BaseModel extends Db{
 
         return implode(' ', $optionArr);
     }
-
 }
