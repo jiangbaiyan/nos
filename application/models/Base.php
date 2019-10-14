@@ -76,7 +76,7 @@ class BaseModel extends Db{
             return ':' . $v;
         }, $fields);
 
-        $sql        = 'insert into `' . self::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bindFields) . ')';
+        $sql        = 'insert into `' . static::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bindFields) . ')';
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $row);
     }
 
@@ -90,7 +90,7 @@ class BaseModel extends Db{
      */
     public static function delete(string $where, array $bindParams)
     {
-        $sql        = 'delete from `' . self::$table . '`';
+        $sql        = 'delete from `' . static::$table . '`';
 
         if ($where) {
             $sql .= ' where ' . $where;
@@ -120,7 +120,7 @@ class BaseModel extends Db{
             throw new CoreException();
         }
         $fieldStr = '`' . implode('`,`', $fields) . '`';
-        $sql = 'select ' . $fieldStr . ' from `' . self::$table . '`';
+        $sql = 'select ' . $fieldStr . ' from `' . static::$table . '`';
         if (!empty($where)) {
             $sql .= ' where ' . $where;
         }
@@ -147,7 +147,7 @@ class BaseModel extends Db{
         $settingBinds = array_map(function ($k) {
             return '`' . $k . '`=:' . $k;
         }, array_keys($params));
-        $sql           = 'update `' . self::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
+        $sql           = 'update `' . static::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $whereBinds));
     }
 
