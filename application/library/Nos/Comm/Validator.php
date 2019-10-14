@@ -30,12 +30,10 @@ class Validator
             $arr = explode('|', $v);
             foreach ($arr as $item){
                 if (empty($item)){
-                    Log::error('validator|rule_is_empty');
-                    throw new CoreException();
+                    throw new CoreException('validator|rule_is_empty');
                 }
                 if (!method_exists(__CLASS__, $item)){
-                    Log::error('validator|rule_not_defined|rule:' . $item);
-                    throw new CoreException();
+                    throw new CoreException('validator|rule_not_defined|rule:' . $item);
                 }
                 @call_user_func([__CLASS__, $item], $params[$k]);
             }

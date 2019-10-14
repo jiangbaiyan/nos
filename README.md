@@ -46,7 +46,7 @@ class Common_GetCodeController extends BaseController
      */
     public function indexAction()
     {
-        Validator::make($this->params = Request::all(), [
+        Validator::make($params = Request::all(), [
             'id'    => 'required',
             'phone' => 'phone|required',
         ]);

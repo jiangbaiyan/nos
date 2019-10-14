@@ -13,7 +13,6 @@ use Nos\Http\Request;
 
 class Page
 {
-
     /**
      * 生成分页数据
      * @param int $count
@@ -67,15 +66,22 @@ class Page
         return $offset;
     }
 
-    public static function getPaging($page, $page_size, $as_string = true)
+    /**
+     * 获取分页参数
+     * @param int $page
+     * @param int $pageSize
+     * @param bool $asString
+     * @return array|string
+     */
+    public static function getPaging(int $page, int $pageSize, bool $asString = true)
     {
         $data           = [];
         if($page < 1){
             $page = 1;
         }
-        $data['offset'] = ($page - 1) * $page_size;
-        $data['rows']   = $page_size;
-        if ($as_string) {
+        $data['offset'] = ($page - 1) * $pageSize;
+        $data['rows']   = $pageSize;
+        if ($asString) {
             return ' limit ' . implode(',', $data) . ' ';
         }
         return $data;
@@ -83,13 +89,13 @@ class Page
 
     /**
      * 获取分页字符串表示
-     * @param array $page_info 如: ['page' => 1, 'page_size' => 10]
+     * @param array $pageInfo 如: ['page' => 1, 'page_size' => 10]
      * @return array|string
      */
-    public static function getLimitString($page_info)
+    public static function getLimitString(array $pageInfo)
     {
-        if(isset($page_info['page']) && isset($page_info['page_size'])){
-            return self::getPaging($page_info['page'], $page_info['page_size']);
+        if(isset($pageInfo['page']) && isset($pageInfo['page_size'])){
+            return self::getPaging($pageInfo['page'], $pageInfo['page_size']);
         }
         return '';
     }

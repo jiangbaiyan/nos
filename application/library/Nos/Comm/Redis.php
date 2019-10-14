@@ -46,23 +46,20 @@ class Redis
             // 连接
             $result = $redis->connect($host, $port, $timeout);
             if ($result === false) {
-                Log::error('redis|connect_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
-                throw new CoreException();
+                throw new CoreException('redis|connect_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
             }
             // 密码配置
             if (!empty($password)) {
                 $result = $redis->auth($password);
                 if ($result === false) {
-                    Log::error('redis|auth_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
-                    throw new CoreException();
+                    throw new CoreException('redis|auth_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                 }
             }
             // 数据库选择
             if (!empty($database)) {
                 $result = $redis->select($database);
                 if ($result === false) {
-                    Log::error('redis|select_db_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
-                    throw new CoreException();
+                    throw new CoreException('redis|select_db_failed|errorInfo:' . json_encode(self::$redis->errorInfo()));
                 }
             }
             // 缓存redis实例等待下次调用

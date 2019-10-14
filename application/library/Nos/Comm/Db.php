@@ -83,8 +83,7 @@ class Db
                 return $handle->fetchAll(PDO::FETCH_ASSOC); // 结果集不为空，取出数据
             }
         } catch (\Exception $e){
-            Log::error('db|pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . $node . '|bind:' . json_encode($bind));
-            throw new CoreException();
+            throw new CoreException('db|pdo_do_sql_failed|msg:' .  $e->getMessage() . '|sql:' . $sql . '|node:' . $node . '|bind:' . json_encode($bind));
         }
     }
 
@@ -106,10 +105,10 @@ class Db
              */
             if (empty(self::$config)) {
                 $config = new Ini(APP_PATH . '/config/db.ini', ini_get('yaf.environ'));
-                self::$config[] = $config->toArray();
+                self::$config = $config->toArray();
             }
             // 获取当前节点下的配置
-            $config = self::$config[0][$node];
+            $config = self::$config[$node];
             // PDO连接
             $dsn = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']}";
             // 这几个参数唯一确定连接池的key
@@ -121,8 +120,7 @@ class Db
             }
             return self::$connPool[$connPoolKey];
         } catch (\Exception $e) {
-            Log::error('db|connect_failed|msg:' . $e->getMessage());
-            throw new CoreException();
+            throw new CoreException('db|connect_failed|msg:' . $e->getMessage());
         }
     }
 }
