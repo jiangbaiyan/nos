@@ -9,6 +9,7 @@
 
 namespace Nos\Http;
 
+use Nos\Comm\File;
 use Nos\Exception\CoreException;
 use Yaf\Config\Ini;
 
@@ -68,10 +69,13 @@ class Request
      *     "size": 25569
      * ]
      * @param $key
-     * @return array|mixed
+     * @return File|bool
      */
     public static function file(string $key){
-        return $_FILES[$key] ?? [];
+        if (!isset($_FILES[$key]) || empty($_FILES[$key])) {
+            return false;
+        }
+        return new File($_FILES[$key]);
     }
 
     /**
