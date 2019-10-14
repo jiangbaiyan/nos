@@ -82,7 +82,7 @@ class Request
         // 如果有参数缓存则从缓存中取，否则从输入流获取
         if (empty(self::$params)) {
             // 从输入流中获取所有参数（包括PUT/DELETE）
-            $data = json_decode(file_get_contents('php://input'), true);
+            $data = json_decode(file_get_contents('php://input'), true) ?? [];
             // 缓存此次请求参数
             self::$params = array_merge($_GET, $_POST, $data);
         }
