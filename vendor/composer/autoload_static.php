@@ -6,9 +6,25 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit0a2343baf2a47a776d5eab0d8cda445d
 {
+    public static $prefixLengthsPsr4 = array (
+        'n' => 
+        array (
+            'nos\\' => 4,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'nos\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src',
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0a2343baf2a47a776d5eab0d8cda445d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0a2343baf2a47a776d5eab0d8cda445d::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }
