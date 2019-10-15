@@ -20,11 +20,16 @@
     }
   ],
   "config": {
-    "secure-http": false,
-    "preferred-install": "dist"
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
   },
   "require": {
-
+    "php": ">=7.0.0",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "jiangbaiyan/nos-framework": "dev-master"
   },
   "scripts": {
     "post-autoload-dump": [
