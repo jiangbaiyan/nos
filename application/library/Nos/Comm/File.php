@@ -11,7 +11,6 @@ namespace Nos\Comm;
 
 class File
 {
-
     /*
      * 文件名
      */
@@ -34,6 +33,7 @@ class File
 
     /**
      * 构造函数
+     * 传入参数为$_FILES[$key]数组
      * @param array $fileArr
      */
     public function __construct(array $fileArr)
@@ -78,7 +78,7 @@ class File
      */
     public function getType()
     {
-        return $this->getType();
+        return $this->mimeType;
     }
 
     /**
