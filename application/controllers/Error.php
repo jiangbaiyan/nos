@@ -12,13 +12,15 @@ use Nos\Http\Request;
 use Nos\Http\Response;
 use Yaf\Controller_Abstract;
 
-class ErrorController extends Controller_Abstract {
+class ErrorController extends Controller_Abstract
+{
 
     /**
      * 异常处理入口
      * @param $exception
      */
-    public function errorAction($exception){
+    public function errorAction($exception)
+    {
         // 获取异常代码
         $code = $exception->getCode();
         // 获取异常信息
@@ -28,7 +30,7 @@ class ErrorController extends Controller_Abstract {
         // 获取异常文件行数
         $line = $exception->getLine();
         // 记录异常日志
-        Log::fatal(array(
+        Log::error(json_encode([
             'status' => $code,
             'msg'    => $msg,
             'file'   => $file,
@@ -36,7 +38,7 @@ class ErrorController extends Controller_Abstract {
             'url'    => $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
             'method' => $_SERVER['REQUEST_METHOD'],
             'params' => Request::all()
-        ));
+        ]));
         // 输出异常响应
         Response::apiResponse($code, $msg);
     }

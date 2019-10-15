@@ -4,34 +4,14 @@
 <a href="https://packagist.org/packages/jiangbaiyan/nos"><img src="https://poser.pugx.org/jiangbaiyan/nos/v/unstable" alt="Latest Unstable Version"></a>
 <a href="https://packagist.org/packages/jiangbaiyan/nos"><img src="https://poser.pugx.org/jiangbaiyan/nos/license" alt="License"></a>
 ### 在yaf框架基础上为中小型接口开发业务场景做了适配
-### 示例项目：https://github.com/jiangbaiyan/bangnos
- - 基本类库
-   - 业务配置操作类
-   - Db操作类
-   - 日志处理类
-   - 简单队列类
-   - 分页操作类
-   - redis操作类
-   - 表单验证器类
- - 异常处理
-   - 框架底层异常
-   - 操作失败异常
-   - 参数校验异常
-   - 权限不足异常
-   - 资源不存在异常
-   - 未授权异常
- - 请求响应
-   - 发送请求
-   - 接收请求参数
-   - 返回json响应
 ## 安装
  - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
- - 确保PHP版本>=7.0，本框架全程在PHP7环境下测试通过
+ - PHP版本 >= 7.0
  - 安装yaf、pdo、redis、curl扩展
  - 在php.ini中添加配置项：yaf.use_namespace=1;
  - 赋予logs目录读写权限
- - 配置nginx等服务器rewrite到/public/index.php入口文件即可
-``` nginx
+ - 配置nginx等服务器rewrite到/public/index.php入口文件
+```nginx
 server {
   listen ****;
   server_name  domain.com;
@@ -44,11 +24,6 @@ server {
 }
 ```
 ## Controller层使用
-### 控制器执行流程
- - 若$needAuth，执行auth()：接口认证
- - 执行checkParam()：请求参数校验
- - 执行loadModel()：加载模型
- - 执行indexAction()：执行业务逻辑
 ### 命名规范
  - 路由：http://localhost/common/getCode
  - 目录：controllers/common/getCode.php
@@ -57,57 +32,29 @@ server {
 ```php
 <?php
 
+use Nos\Exception\CoreException;
 use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
+use Common\TestModel;
 
-class Common_GetCodeController extends BaseController {
-
-    /**
-     * 是否需要登录授权
-     * @var bool 
-     */
-    public $needAuth = true;
-
-    /*
-     * 当前登录用户
-     */
-    public $user;
-    
-    /*
-     * 模型
-     */
-    private $testModel;
-
-    /*
-     * 参数校验
-     */
-    public function checkParam(){
-        Validator::make($this->params = Request::all(), array(
-            'id'    => 'required',
-            'phone' => 'phone|required',
-        ));
-        $this->params['phone'] = Request::get('phone');//获取get参数
-        $this->params['name']  = Request::post('name');//获取post参数
-    }
-
-    /**
-     * 加载模型
-     */
-    public function loadModel()
-    {
-        $this->testModel = new \Common\TestModel();
-    }
-
+class Common_GetCodeController extends BaseController
+{
     /**
      * 业务逻辑
+     * @throws CoreException
      */
     public function indexAction()
     {
-        $this->output['data'] = $this->testModel->getData();
-        Response::apiSuccess($this->output);
+        Validator::make($params = Request::all(), [
+            'id'    => 'required',
+            'phone' => 'phone|required',
+        ]);
+        $testModel = new TestModel();
+        $data = $testModel->getData();
+        Response::apiSuccess($data);
     }
-
+    
 }
 ```
 ## Model层使用
@@ -124,16 +71,29 @@ class TestModel extends \BaseModel {
      * 表名
      */
     public $table = 'test';
-    
+
     /**
+     * 模型层查询示例
      * @return mixed
-     * @throws \Nos\Exception\CoreException
+     * @throws \Exception
      */
-    public function getData(){
-        $select = array('id', 'name');
-        $ext = 'where id = ?';
-        $bind = array(2);
-        $data = $this->getList($select, $ext, $bind);
+    public function getData()
+    {
+        // 要更新的数据
+        $params = [
+            'name' => 'grapes'
+        ];
+        // 条件过滤
+        $wheres = [
+            'id'   => 222
+        ];
+        // 解析过滤条件
+        $condition = self::prepareWhere($wheres);
+        // 更新操作
+        $row = self::update($params, $condition['where'], $condition['bind']);
+        // 查询操作
+        $data = self::select(['id','name'], $condition['where'], $condition['bind']);
+        // 返回数据
         return $data;
     }
 
@@ -144,21 +104,7 @@ class TestModel extends \BaseModel {
  - 抛出异常后，框架会自动路由到Error.php
  - Error.php会做两件事：写日志、返回json
  - 异常返回的json内容依赖抛异常时的状态码和提示信息
-## 业务配置
- - 所有和业务场景有关的配置均写在/application/config目录下
- - 调用Nos\Comm\Config::get($key)去获取配置信息
- - 注意参数名的格式：(文件名.key1.key2）目前只支持到二维数组
- - 全局配置请写到application.ini中即可
 ## 依赖引入
- - 如果需要引入库，请直接编辑composer.json
- - 然后执行composer update即可
-## 接下来的计划  
-  - 整合swoole部分优良特性
-  - 接口文档自动生成
-  - 添加连接池
-  - 数据库迁移
-  - 多进程离线脚本处理
-  - ...
-## 题外话
-  欢迎大家提出问题，也渴望大家能提出好的建议；新人初来驾到，望各位多多指教
+ - 如果需要引入库，请直接编辑composer.json并添加需要的库
+ - 然后执行composer install/update即可
     

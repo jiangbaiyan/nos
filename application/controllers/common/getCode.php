@@ -13,17 +13,18 @@ use Nos\Http\Response;
 use Nos\Comm\Validator;
 use Common\TestModel;
 
-class Common_GetCodeController extends BaseController {
-
+class Common_GetCodeController extends BaseController
+{
     /**
      * 业务逻辑
      * @throws CoreException
      */
-    public function indexAction() {
-        Validator::make($this->params = Request::all(), array(
+    public function indexAction()
+    {
+        Validator::make($params = Request::all(), [
             'id'    => 'required',
             'phone' => 'phone|required',
-        ));
+        ]);
         $testModel = new TestModel();
         $data = $testModel->getData();
         Response::apiSuccess($data);

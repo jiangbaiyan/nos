@@ -8,22 +8,36 @@
 
 namespace Common;
 
-class TestModel extends \BaseModel {
+class TestModel extends \BaseModel
+{
 
     /*
      * 表名
      */
-    public $table = 'test';
+    public static $table = 'test';
 
     /**
+     * 模型层查询示例
      * @return mixed
-     * @throws \Nos\Exception\CoreException
+     * @throws \Exception
      */
-    public function getData(){
-        $select = array('id', 'name');
-        $ext = 'where id = ?';
-        $bind = array(2);
-        $data = $this->getList($select, $ext, $bind);
+    public function getData()
+    {
+        // 要更新的数据
+        $params = [
+            'name' => 'grapes'
+        ];
+        // 条件过滤
+        $wheres = [
+            'id'   => 222
+        ];
+        // 解析过滤条件
+        $condition = self::prepareWhere($wheres);
+        // 更新操作
+        $row = self::update($params, $condition['where'], $condition['bind']);
+        // 查询操作
+        $data = self::select(['id','name'], $condition['where'], $condition['bind']);
+        // 返回数据
         return $data;
     }
 

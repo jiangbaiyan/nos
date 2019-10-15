@@ -4,16 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3ad69b3688ee9ac7290a811570faef2",
-    "packages": [],
+    "content-hash": "3f371878371e6fd3dc3504a4c4325b98",
+    "packages": [
+        {
+            "name": "jiangbaiyan/nos-framework",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "http://122.152.229.221:8606/nos/nos-framework.git",
+                "reference": "020aed892bd04e0f4385ef87c7f48615bf34191b"
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-pdo": "*",
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [],
+                "psr-4": {
+                    "nos\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "baiyan Jiang",
+                    "email": "987082332@qq.com",
+                    "homepage": "https://github.com/jiangbaiyan",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP framework focused on API development based on Yaf by jiangbaiyan && guobutao",
+            "homepage": "https://github.com/jiangbaiyan/nos",
+            "keywords": [
+                "NOS",
+                "api",
+                "yaf"
+            ],
+            "time": "2019-10-15T01:34:21+00:00"
+        }
+    ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "jiangbaiyan/nos-framework": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-curl": "*",
+        "php": ">=7.0.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-pdo": "*"
     },
     "platform-dev": []

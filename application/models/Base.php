@@ -8,175 +8,249 @@
  */
 
 use Nos\Comm\Db;
-use Nos\Comm\Log;
+use Nos\Comm\Page;
 use Nos\Exception\CoreException;
-use Nos\Exception\OperateFailedException;
 
-class BaseModel{
+class BaseModel extends Db
+{
+    /**
+     * @var string $table 表名
+     */
+    protected static $table;
 
     /**
-     * 表名
-     * @var
+     * @var array 操作符
      */
-    protected $table;
+    private static $operations = [
+        '>', '<', '>=', '<=', '!=', 'like'
+    ];
 
     /**
-     * 创建记录
-     * @param array $data
-     * @return mixed
-     * @throws OperateFailedException
-     * @throws \Nos\Exception\CoreException
+     * @var bool $isTransacting 是否开启事务
      */
-    public function create(array $data){
-        $keys = array_keys($data);
-        $vals = array_values($data);
-        $paras = array_fill(0, count($keys),'?');
-        $sql = "insert into {$this->table} (`" . join("`,`", $keys) . "`) values(" . join(",", $paras) . ")";
-        $rows = Db::update($sql, $vals);
-        if (!$rows){
-            Log::fatal('baseModel|create_failed|$data:' . json_encode($data) . '|sql:' . $sql);
-            throw new OperateFailedException('创建失败');
-        }
-        return $rows;
+    private static $isTransacting = false;
+
+    /**
+     * 事务开始
+     * @throws CoreException
+     */
+    public static function beginTransaction()
+    {
+        $dbInstance = self::getInstance(self::DB_NODE_MASTER_KEY);
+        $dbInstance->begin();
+        self::$isTransacting = true;
     }
 
     /**
-     * 删除记录
-     * @param string $ext
-     * @param array $bind
-     * @param bool $isSoft
-     * @param string $deleteColumn
-     * @return mixed
+     * 事务提交
      * @throws CoreException
-     * @throws OperateFailedException
      */
-    public function delete(string $ext = '', array $bind = [], bool $isSoft = false, string $deleteColumn = 'deleted_at'){
-        if ($isSoft){
-            $time = date('Y-m-d H:i:s');
-            $this->update(array(
-                $deleteColumn => $time,
-            ), $ext, $bind);
-        } else{
-            $sql = "delete from {$this->table} " . $ext;
-            $rows = Db::update($sql, $bind);
-            if (!$rows){
-                Log::fatal('baseModel|delete_failed|$data:'  . '|sql:' . $sql . '|bind:' . json_encode($bind));
-                throw new OperateFailedException('删除失败');
+    public static function commit()
+    {
+        $dbInstance = self::getInstance(self::DB_NODE_MASTER_KEY);
+        $dbInstance->commit();
+        self::$isTransacting = false;
+    }
+
+    /**
+     * 事务回滚
+     * @throws CoreException
+     */
+    public static function rollback()
+    {
+        $dbInstance = self::getInstance(self::DB_NODE_MASTER_KEY);
+        $dbInstance->rollback();
+        self::$isTransacting = false;
+    }
+
+    /**
+     * 插入数据
+     * @param array $row 如:['name'=>'苍老师', 'age'=>10]
+     * @return int 影响行数
+     * @throws CoreException
+     */
+    public static function insert(array $row)
+    {
+        $fields     = array_keys($row);
+        $bindFields = array_map(function ($v) {
+            return ':' . $v;
+        }, $fields);
+
+        $sql        = 'insert into `' . static::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bindFields) . ')';
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $row);
+    }
+
+
+    /**
+     * 删除数据
+     * @param string $where
+     * @param array $bindParams 如:['id'=>12]
+     * @return int 影响行数
+     * @throws CoreException
+     */
+    public static function delete(string $where, array $bindParams)
+    {
+        $sql = 'delete from `' . static::$table . '`';
+
+        if ($where) {
+            $sql .= ' where ' . $where;
+        } else {
+            throw new CoreException('baseModel|empty_delete_where');
+        }
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bindParams);
+    }
+
+    /**
+     * 查询数据
+     * @param array $fields 需要查询的字段,默认查询所有的字段
+     * @param string $where 查询条件
+     * @param array $bindParams 参数绑定
+     * @param string $otherOption limit | group by | order by 等操作
+     * @return array 数据
+     * @throws CoreException
+     */
+    public static function select(array $fields = [], string $where = '', array $bindParams = [], string $otherOption = '')
+    {
+        if (empty($fields)) {
+            $fields = ['*'];
+        } else {
+            $fields = array_unique($fields);
+        }
+        $fieldStr = '`' . implode('`,`', $fields) . '`';
+        $sql = 'select ' . $fieldStr . ' from `' . static::$table . '`';
+        if (!empty($where)) {
+            $sql .= ' where ' . $where;
+        }
+        if ($otherOption) {
+            $sql .= ' ' . $otherOption;
+        }
+        return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bindParams);
+    }
+
+    /**
+     * 更新数据
+     * @param array $params 更新的数据
+     * @param string $where 被更新的记录
+     * @param array $whereBinds 参数绑定
+     * @return int 影响行数
+     * @throws CoreException
+     */
+    public static function update(array $params, string $where, array $whereBinds)
+    {
+        if (empty($where)) {
+            throw new CoreException('baseModel|empty_update_where');
+        }
+        $params = array_unique($params);
+        $settingBinds = array_map(function ($k) {
+            return '`' . $k . '`=:' . $k;
+        }, array_keys($params));
+        $sql = 'update `' . static::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $whereBinds));
+    }
+
+    /**
+     * 处理where条件
+     * @param array $condition 条件数组
+     * @return array
+     * [
+     *     'where' => '...'
+     *     'bind' => []
+     * ]
+     */
+    public static function prepareWhere(array $condition)
+    {
+        if (empty($condition)) {
+            return [
+                'where' => '',
+                'bind' => []
+            ];
+        }
+        $whereArr = [];
+        $bind = [];
+        foreach ($condition as $field => $val) {
+            // 当$field为数字的时候支持 a=1 or b=1 这种自定义查询
+            if (is_int($field) && !empty($val)) {
+                $whereArr[] = '(' . $val . ')';
+                continue;
             }
-            return $rows;
+
+            if (is_array($val)) {
+                // 检测是否为有操作符行为
+                if (in_array(key($val), self::$operations, true)) {
+                    $i = 0;
+                    foreach ($val as $operation => $item_val) {
+                        $whereArr[] = sprintf('`%s` ' . $operation . ' :%s%d', $field, $field, $i);
+                        $bind[$field . $i] = $item_val;
+                        $i++;
+                    }
+                } elseif (!empty($val)) {
+                    $params = array_unique($val);
+
+                    $i = 0;
+                    $whereNo = [];
+                    $bindNo = [];
+                    foreach ($params as $key => $param) {
+                        $whereNo[] = sprintf(':%s%d', $key, $i);
+                        $bindNo[sprintf('%s%d', $key, $i)] = $param;
+                        $i++;
+                    }
+
+                    $whereArr = sprintf('`%s` %s (%s)', $key, 'in', implode(', ', $whereNo));
+                    $bind = array_merge($bind, $bindNo);
+                }
+            } else {
+                $whereArr[] = sprintf('`%s` = :%s', $field, $field);
+                $bind[$field] = $val;
+            }
         }
+
+        $whereArr = array_filter($whereArr);
+        return [
+            'where' => implode(' AND ', $whereArr),
+            'bind' => $bind,
+        ];
     }
 
-    /**
-     * 获取记录列表
-     * @param $select
-     * @param string $ext
-     * @param array $bind
-     * @return mixed
-     * @throws CoreException
-     */
-    public function getList($select = [], string $ext = '', array $bind = []){
-        if (!is_array($select)){
-            $fields = $select;
-        } else if (empty($select)){
-            $fields = '*';
-        } else{
-            $fields = implode('`, `', $select);
-        }
-        if ($fields == '*'){
-            $sql = "select * from {$this->table} " . $ext;
-        } else{
-            $sql = "select  `{$fields}` from {$this->table} " . $ext;
-        }
-        return Db::fetchAll($sql, $bind);
-    }
 
     /**
-     * 获取记录数据和分页总数
-     * @param array $select
-     * @param string $ext
-     * @param array $bind
-     * @return mixed
-     * @throws CoreException
-     *
+     * 特殊选项处理
+     * @param array $options
+     * @return string
      */
-    public function getListAndCount(array $select = [], string $ext = '', array $bind = []){
-        if (!is_array($select)){
-            $fields = $select;
-        } else if (empty($select)){
-            $fields = '*';
-        } else{
-            $fields = implode('`, `', $select);
+    public static function prepareOption(array $options)
+    {
+        $optionArr = [];
+        if (!empty($options['group'])) {
+            if (is_array($options['group'])) {
+                $group = implode(', ', $options['group']);
+            } else {
+                $group = $options['group'];
+            }
+            $optionArr[] = 'group by ' . $group;
         }
-        if ($fields == '*'){
-            $sql = "select SQL_CALC_FOUND_ROWS * from {$this->table} " . $ext;
-        } else{
-            $sql = "select SQL_CALC_FOUND_ROWS  `{$fields}` from {$this->table} " . $ext;
+        if (!empty($options['order'])) {
+            if (is_array($options['order'])) {
+                $orders = [];
+                foreach ($options['order'] as $sortField => $sort_type) {
+                    if ($sortField && $sort_type) {
+                        $orders[] = ' ' . $sortField . ' ' . $sort_type . ' ';
+                    }
+                }
+                if ($orders) {
+                    $optionArr[] = 'order by ' . implode(', ', $orders);
+                }
+            } else {
+                $optionArr[] = $options['order'];
+            }
         }
-        $data = Db::fetchAll($sql, $bind);
-        $count = Db::fetchAll("SELECT FOUND_ROWS()");
-        $count = $count[0]['FOUND_ROWS()'];
-        return array(
-            'data' => $data,
-            'count' => $count,
-        );
-    }
+        if (!empty($options['limit'])) {
+            if (is_array($options['limit'])) {
+                $optionArr[] = Page::getLimitString($options['limit']);
+            } else {
+                $optionArr[] = $options['limit'];
+            }
+        }
 
-    /**
-     * 获取记录总数
-     * @param string $ext
-     * @param array $bind
-     * @return array
-     * @throws CoreException
-     */
-    public function getTotal(string $ext = '', array $bind = []){
-        $sql = "select count(*) as count from {$this->table} " . $ext;
-        $data = Db::fetchAll($sql, $bind);
-        return $data[0]['count'] ?? [];
-    }
-
-    /**
-     * 通过id获取记录
-     * @param int $id
-     * @param array $select
-     * @return array
-     * @throws CoreException
-     */
-    public function getById(int $id, array $select = []){
-        $data = $this->getList($select, 'where id = ?', [$id]);
-        return $data[0] ?? [];
-    }
-
-    /**
-     * 更新记录
-     * @param array $data
-     * @param string $ext
-     * @param array $bind
-     * @param bool $autoTime
-     * @param string $updateColumn
-     * @return mixed
-     * @throws CoreException
-     * @throws OperateFailedException
-     */
-    public function update(array $data, string $ext = '', array $bind = [], bool $autoTime = false, string $updateColumn = 'updated_at'){
-        if ($autoTime){
-            $now = date('Y-m-d H:i:s');
-            $data = array_merge($data, array(
-                $updateColumn => $now
-            ));
-        }
-        $keys = array_keys($data);
-        $vals = array_values($data);
-        foreach ($keys as &$key){
-            $key .= '=?';
-        }
-        $keyStr = join(',', $keys);
-        $sql = "update {$this->table} set {$keyStr} " . $ext;
-        $rows = Db::update($sql, array_merge($vals, $bind));
-        if (!$rows){
-            Log::fatal('baseModel|update_failed|$data:'  . '|sql:' . $sql . '|bind:' . json_encode($bind));
-            throw new OperateFailedException('更新失败');
-        }
-        return $rows;
+        return implode(' ', $optionArr);
     }
 }
