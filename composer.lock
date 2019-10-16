@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "http://122.152.229.221:8606/nos/nos-framework.git",
-                "reference": "020aed892bd04e0f4385ef87c7f48615bf34191b"
+                "reference": "f6b62f4108d40ed555222ff9f5f466f1f627409f"
             },
             "require": {
                 "ext-json": "*",
@@ -22,9 +22,8 @@
             },
             "type": "library",
             "autoload": {
-                "files": [],
                 "psr-4": {
-                    "nos\\": "src/"
+                    "Nos\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -46,7 +45,7 @@
                 "api",
                 "yaf"
             ],
-            "time": "2019-10-15T01:34:21+00:00"
+            "time": "2019-10-16T04:53:05+00:00"
         }
     ],
     "packages-dev": [],
