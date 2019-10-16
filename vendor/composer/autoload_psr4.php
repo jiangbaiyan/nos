@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'nos\\' => array($vendorDir . '/jiangbaiyan/nos-framework/src'),
+    'Nos\\' => array($vendorDir . '/jiangbaiyan/nos-framework/src'),
 );

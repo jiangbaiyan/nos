@@ -6,4 +6,19 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Nos\\Comm\\Db' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Db.php',
+    'Nos\\Comm\\File' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/File.php',
+    'Nos\\Comm\\Log' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Log.php',
+    'Nos\\Comm\\Mq' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Mq.php',
+    'Nos\\Comm\\Page' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Page.php',
+    'Nos\\Comm\\Redis' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Redis.php',
+    'Nos\\Comm\\Validator' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Validator.php',
+    'Nos\\Exception\\CoreException' => $vendorDir . '/jiangbaiyan/nos-framework/src/Exception/CoreException.php',
+    'Nos\\Exception\\OperateFailedException' => $vendorDir . '/jiangbaiyan/nos-framework/src/Exception/OperateFailedException.php',
+    'Nos\\Exception\\ParamValidateFailedException' => $vendorDir . '/jiangbaiyan/nos-framework/src/Exception/ParamValidateFailedException.php',
+    'Nos\\Exception\\PermissionDeniedException' => $vendorDir . '/jiangbaiyan/nos-framework/src/Exception/PermissionDeniedException.php',
+    'Nos\\Exception\\ResourceNotFoundException' => $vendorDir . '/jiangbaiyan/nos-framework/src/Exception/ResourceNotFoundException.php',
+    'Nos\\Exception\\UnauthorizedException' => $vendorDir . '/jiangbaiyan/nos-framework/src/Exception/UnauthorizedException.php',
+    'Nos\\Http\\Request' => $vendorDir . '/jiangbaiyan/nos-framework/src/Http/Request.php',
+    'Nos\\Http\\Response' => $vendorDir . '/jiangbaiyan/nos-framework/src/Http/Response.php',
 );
