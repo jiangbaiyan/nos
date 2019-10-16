@@ -8,8 +8,10 @@
  - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
  - PHP版本 >= 7.0
  - 安装yaf、pdo、redis、curl扩展
- - 在php.ini中添加配置项：yaf.use_namespace=1;
- - 赋予logs目录读写权限
+ - 在php.ini中添加配置项
+   - yaf.use_namespace = 1;
+   - yaf.environ = product（默认为生产环境）或yaf.environ = dev（测试环境）
+ - 在项目根目录下创建logs目录并赋予读写权限
  - 配置nginx等服务器rewrite到/public/index.php入口文件
 ```nginx
 server {
@@ -107,4 +109,3 @@ class TestModel extends \BaseModel {
 ## 依赖引入
  - 如果需要引入库，请直接编辑composer.json并添加需要的库
  - 然后执行composer install/update即可
-    
