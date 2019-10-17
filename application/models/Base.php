@@ -158,11 +158,22 @@ class BaseModel extends Db
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $where['bind']));
     }
 
-    public static function doSql(string $sql, array $bind)
-    {
-        return self::doSql(self::DB_NODE_MASTER_KEY,$sql.$bind);
-    }
     /**
+     * 封装其他sql执行方法
+     * @param string $sql
+     * @param array $bind
+     * @return mixed
+     */
+    public static function executeSql(string $sql, array $bind)
+    {
+        if (stristr($sql,'select') !== false) {
+            return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bind);
+        }
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
+    }
+
+    /**
+     *
      * 处理where条件
      * @param array $condition 条件数组
      * @return array
