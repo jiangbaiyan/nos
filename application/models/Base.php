@@ -180,7 +180,7 @@ class BaseModel extends Db
         }
         $fieldStr = '`' . implode('`,`', $fields) . '`';
         $sql = 'select ' . $fieldStr . ' from `' . static::$table . '`';
-        if (!isset($where['where']) && !empty($where['where'])) {
+        if (!empty($where['where'])) {
             $sql .= ' where ' . $where['where'];
         }
         if (!empty($otherOption)) {
