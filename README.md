@@ -7,7 +7,7 @@
 ## 安装
  - 支持composer直接安装，命令行执行：composer create-project --prefer-dist jiangbaiyan/nos
  - PHP版本 >= 7.0
- - 安装yaf、pdo、redis、curl扩展
+ - 安装yaf、pdo、curl扩展
  - 在php.ini中添加配置项
    - yaf.use_namespace = 1;
    - yaf.environ = product（默认为生产环境）或yaf.environ = dev（测试环境）
@@ -27,24 +27,26 @@ server {
 ```
 ## Controller层使用
 ### 命名规范
- - 路由：http://localhost/common/getCode
- - 目录：controllers/common/getCode.php
- - 类名：Common_GetCodeController
- - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController并实现相应抽象方法
+ - 路由：http://localhost/article/query
+ - 目录：controllers/Article/Query.php
+ - 类名：Article_QueryController
+ - 注意路由和文件命名规则要相同，类名必须是一级目录_二级目录_...文件名Controller，必须继承BaseController并实现相应抽象方法indexAction()
 ```php
 <?php
 
 use Nos\Exception\CoreException;
+use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
 use Common\TestModel;
 
-class Common_GetCodeController extends BaseController
+class Article_QueryController extends BaseController
 {
     /**
      * 业务逻辑
      * @throws CoreException
+     * @throws ParamValidateFailedException
      */
     public function indexAction()
     {
@@ -56,7 +58,7 @@ class Common_GetCodeController extends BaseController
         $data = $testModel->getData();
         Response::apiSuccess($data);
     }
-    
+
 }
 ```
 ## Model层使用

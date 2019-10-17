@@ -8,16 +8,18 @@
  */
 
 use Nos\Exception\CoreException;
+use Nos\Exception\ParamValidateFailedException;
 use Nos\Http\Request;
 use Nos\Http\Response;
 use Nos\Comm\Validator;
 use Common\TestModel;
 
-class Common_GetCodeController extends BaseController
+class Article_QueryController extends BaseController
 {
     /**
      * 业务逻辑
      * @throws CoreException
+     * @throws ParamValidateFailedException
      */
     public function indexAction()
     {

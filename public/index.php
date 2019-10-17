@@ -19,8 +19,6 @@ $app = new Application(APP_PATH . '/config/application.ini');
 include_once APP_PATH . '/vendor/autoload.php';
 // 获取yaf请求分发器
 $dispatcher = $app->getDispatcher();
-// 注册路由插件
-$dispatcher->registerPlugin(new RoutePlugin());
 // 捕获异常
 $dispatcher->catchException('true');
 // 关闭视图
