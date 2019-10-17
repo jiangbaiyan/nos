@@ -88,16 +88,16 @@ class BaseModel extends Db
      * @return int 影响行数
      * @throws CoreException
      */
-    public static function delete(string $where, array $bindParams)
+    public static function delete(array $where)
     {
         $sql = 'delete from `' . static::$table . '`';
 
-        if ($where) {
+        if ($where['where']) {
             $sql .= ' where ' . $where;
         } else {
             throw new CoreException('baseModel|empty_delete_where');
         }
-        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bindParams);
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $where['bind']);
     }
 
     /**
@@ -109,8 +109,16 @@ class BaseModel extends Db
      * @return array 数据
      * @throws CoreException
      */
-    public static function select(array $fields = [], string $where = '', array $bindParams = [], string $otherOption = '')
+    public static function select(array $fields = [], array $where = [], array $otherOption = [])
     {
+        if (!empty($where)) {
+            $where = self::prepareWhere($where);
+        }
+
+        if (!empty($otherOption)) {
+            $otherOption = self::prepareOption($otherOption);
+        }
+
         if (empty($fields)) {
             $fields = ['*'];
         } else {
@@ -119,12 +127,12 @@ class BaseModel extends Db
         $fieldStr = '`' . implode('`,`', $fields) . '`';
         $sql = 'select ' . $fieldStr . ' from `' . static::$table . '`';
         if (!empty($where)) {
-            $sql .= ' where ' . $where;
+            $sql .= ' where ' . $where['where'];
         }
         if ($otherOption) {
             $sql .= ' ' . $otherOption;
         }
-        return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bindParams);
+        return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $where['bind']);
     }
 
     /**
@@ -135,19 +143,25 @@ class BaseModel extends Db
      * @return int 影响行数
      * @throws CoreException
      */
-    public static function update(array $params, string $where, array $whereBinds)
+    public static function update(array $params, array $where)
     {
         if (empty($where)) {
             throw new CoreException('baseModel|empty_update_where');
         }
+        $where = self::prepareWhere($where);
+
         $params = array_unique($params);
         $settingBinds = array_map(function ($k) {
             return '`' . $k . '`=:' . $k;
         }, array_keys($params));
-        $sql = 'update `' . static::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where;
-        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $whereBinds));
+        $sql = 'update `' . static::$table . '` set ' . implode(',', $settingBinds) . ' where ' . $where['where'];
+        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $where['bind']));
     }
 
+    public static function doSql(string $sql, array $bind)
+    {
+        return self::doSql(self::DB_NODE_MASTER_KEY,$sql.$bind);
+    }
     /**
      * 处理where条件
      * @param array $condition 条件数组
