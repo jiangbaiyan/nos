@@ -64,38 +64,95 @@ class BaseModel extends Db
     }
 
     /**
-     * 插入数据
-     * @param array $row 如:['name'=>'苍老师', 'age'=>10]
+     * 单条插入
+     * @param array $row 一维数组
+     * $row示例:
+     * [
+     *     'name' => '苍老师',
+     *     'age' => 10
+     * ]
      * @return int 影响行数
      * @throws CoreException
      */
     public static function insert(array $row)
     {
+        if (empty($row)) {
+            return true;
+        }
         $fields     = array_keys($row);
         $bindFields = array_map(function ($v) {
             return ':' . $v;
         }, $fields);
 
         $sql        = 'insert into `' . static::$table . '` (`' . implode('`,`', $fields) . '`) values (' . implode(',', $bindFields) . ')';
+
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $row);
+    }
+
+    /**
+     * 批量插入
+     * @param array $rows 二维数组
+     * $rows示例:
+     * [
+     *     [
+     *         'name' =>' 苍老师',
+     *         'age' => 10
+     *     ],
+     *     [
+     *         'name' => '苍老师',
+     *         'age' => 10
+     *     ]
+     * ]
+     * @return bool
+     * @throws CoreException
+     */
+    public static function insertBatch(array $rows)
+    {
+        if (empty($rows)) {
+            return true;
+        }
+        $firstData  = $rows[0];
+        $countFirstData = count($firstData);
+        $fields     = array_keys($firstData);
+        $bindFields = array_map(function () {
+            return '?';
+        }, $fields);
+        $sql = 'insert into `' . static::$table . '` (`' . implode('`,`', $fields) . '`) values ';
+        $bindArr = [];
+        // 拼接values
+        foreach ($rows as $row) {
+            if (count($row) != $countFirstData) {
+                throw new CoreException('baseModel|wrong_insert_data_number');
+            }
+            // 拼接sql
+            $sql .= '(' . implode(',', $bindFields) . '),';
+            // 按序获取绑定参数
+            $bindArr = array_merge(array_values($row), $bindArr);
+        }
+        // 去除多余逗号
+        $sql = rtrim($sql, ',');
+        return self::doSql(Db::DB_NODE_MASTER_KEY, $sql, $bindArr);
     }
 
 
     /**
      * 删除数据
-     * @param string $where
-     * @param array $bindParams 如:['id'=>12]
+     * @param array $where 查询条件
      * @return int 影响行数
      * @throws CoreException
      */
     public static function delete(array $where)
     {
+        if (empty($where)) {
+            throw new CoreException('baseModel|empty_delete_where');
+        }
+
         $sql = 'delete from `' . static::$table . '`';
 
-        if ($where['where']) {
-            $sql .= ' where ' . $where;
-        } else {
-            throw new CoreException('baseModel|empty_delete_where');
+        $where = self::prepareWhere($where);
+
+        if (!empty($where['where'])) {
+            $sql .= ' where ' . $where['where'];
         }
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $where['bind']);
     }
@@ -103,9 +160,8 @@ class BaseModel extends Db
     /**
      * 查询数据
      * @param array $fields 需要查询的字段,默认查询所有的字段
-     * @param string $where 查询条件
-     * @param array $bindParams 参数绑定
-     * @param string $otherOption limit | group by | order by 等操作
+     * @param array $where 查询条件
+     * @param array $otherOption limit | group by | order by 等操作
      * @return array 数据
      * @throws CoreException
      */
@@ -114,11 +170,9 @@ class BaseModel extends Db
         if (!empty($where)) {
             $where = self::prepareWhere($where);
         }
-
         if (!empty($otherOption)) {
             $otherOption = self::prepareOption($otherOption);
         }
-
         if (empty($fields)) {
             $fields = ['*'];
         } else {
@@ -126,10 +180,10 @@ class BaseModel extends Db
         }
         $fieldStr = '`' . implode('`,`', $fields) . '`';
         $sql = 'select ' . $fieldStr . ' from `' . static::$table . '`';
-        if (!empty($where)) {
+        if (!isset($where['where']) && !empty($where['where'])) {
             $sql .= ' where ' . $where['where'];
         }
-        if ($otherOption) {
+        if (!empty($otherOption)) {
             $sql .= ' ' . $otherOption;
         }
         return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $where['bind']);
@@ -138,8 +192,7 @@ class BaseModel extends Db
     /**
      * 更新数据
      * @param array $params 更新的数据
-     * @param string $where 被更新的记录
-     * @param array $whereBinds 参数绑定
+     * @param array $where 被更新的记录
      * @return int 影响行数
      * @throws CoreException
      */
@@ -149,7 +202,6 @@ class BaseModel extends Db
             throw new CoreException('baseModel|empty_update_where');
         }
         $where = self::prepareWhere($where);
-
         $params = array_unique($params);
         $settingBinds = array_map(function ($k) {
             return '`' . $k . '`=:' . $k;
@@ -158,19 +210,6 @@ class BaseModel extends Db
         return self::doSql(self::DB_NODE_MASTER_KEY, $sql, array_merge($params, $where['bind']));
     }
 
-    /**
-     * 封装其他sql执行方法
-     * @param string $sql
-     * @param array $bind
-     * @return mixed
-     */
-    public static function executeSql(string $sql, array $bind)
-    {
-        if (stristr($sql,'select') !== false) {
-            return self::doSql(self::DB_NODE_SLAVE_KEY, $sql, $bind);
-        }
-        return self::doSql(self::DB_NODE_MASTER_KEY, $sql, $bind);
-    }
 
     /**
      *
