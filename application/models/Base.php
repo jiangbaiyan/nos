@@ -106,7 +106,7 @@ class BaseModel extends Db
      * @return bool
      * @throws CoreException
      */
-    public static function insertBatch(array $rows)
+    public static function BatchInsert(array $rows)
     {
         if (empty($rows)) {
             return true;
@@ -137,6 +137,7 @@ class BaseModel extends Db
 
     /**
      * 删除数据
+     * 例子： where:  ['id' => 1,'name'=>'苍井空']
      * @param array $where 查询条件
      * @return int 影响行数
      * @throws CoreException
@@ -159,6 +160,10 @@ class BaseModel extends Db
 
     /**
      * 查询数据
+     * 实例：
+     *       where:  ['id' => 1,'name'=>'苍井空']
+     *       option: ['order' => ['id' => 'asc'],
+     *                'group' => 'id']
      * @param array $fields 需要查询的字段,默认查询所有的字段
      * @param array $where 查询条件
      * @param array $otherOption limit | group by | order by 等操作
@@ -191,6 +196,8 @@ class BaseModel extends Db
 
     /**
      * 更新数据
+     * 实例： where:  ['id' => 1,'name'=>'苍井空']
+     *       params: ['age' => 3]
      * @param array $params 更新的数据
      * @param array $where 被更新的记录
      * @return int 影响行数
@@ -214,6 +221,7 @@ class BaseModel extends Db
     /**
      *
      * 处理where条件
+     * 例子： where:  ['id' => 1,'name'=>'苍井空']
      * @param array $condition 条件数组
      * @return array
      * [
@@ -278,6 +286,9 @@ class BaseModel extends Db
 
     /**
      * 特殊选项处理
+     * 例子：
+     *       option: ['order' => ['id' => 'asc'],
+     *                'group' => 'id']
      * @param array $options
      * @return string
      */
