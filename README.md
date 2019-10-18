@@ -91,12 +91,14 @@ class TestModel extends \BaseModel {
         $wheres = [
             'id'   => 222
         ];
-        // 解析过滤条件
-        $condition = self::prepareWhere($wheres);
+        
+        $option = [
+             'id'  => 'asc'
+        ];       
         // 更新操作
-        $row = self::update($params, $condition['where'], $condition['bind']);
+        $row = self::update($params,$wheres);
         // 查询操作
-        $data = self::select(['id','name'], $condition['where'], $condition['bind']);
+        $data = self::select(['id','name'],$wheres,$option);
         // 返回数据
         return $data;
     }
