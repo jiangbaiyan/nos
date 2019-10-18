@@ -106,14 +106,16 @@ class BaseModel extends Db
      * @return bool
      * @throws CoreException
      */
-    public static function batchInsert(array $rows)
+    public static function insertBatch(array $rows)
     {
         if (empty($rows)) {
             return true;
         }
+        // 取出第一个索引下标作为键示例
         $firstData  = $rows[0];
         $countFirstData = count($firstData);
         $fields     = array_keys($firstData);
+        // 拼接PDO占位符
         $bindFields = array_map(function () {
             return '?';
         }, $fields);

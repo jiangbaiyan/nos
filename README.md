@@ -11,7 +11,8 @@
  - 在php.ini中添加配置项
    - yaf.use_namespace = 1;
    - yaf.environ = product（默认为生产环境）或yaf.environ = dev（测试环境）
- - 在项目根目录下创建logs目录并赋予读写权限
+ - 赋予logs目录读写权限
+ - 若要自行编写工具类库，可到application/library目录下编写
  - 配置nginx等服务器rewrite到/public/index.php入口文件
 ```nginx
 server {
@@ -91,14 +92,14 @@ class TestModel extends \BaseModel {
         $wheres = [
             'id'   => 222
         ];
-        
+        // 附加选项
         $option = [
              'id'  => 'asc'
         ];       
         // 更新操作
         $row = self::update($params,$wheres);
         // 查询操作
-        $data = self::select(['id','name'],$wheres,$option);
+        $data = self::select(['id','name'], $wheres, $option);
         // 返回数据
         return $data;
     }
