@@ -75,7 +75,7 @@ class TestModel extends \BaseModel {
     /*
      * 表名
      */
-    public $table = 'test';
+    public static $table = 'test';
 
     /**
      * 模型层查询示例
@@ -94,10 +94,10 @@ class TestModel extends \BaseModel {
         ];
         // 附加选项
         $option = [
-             'id'  => 'asc'
-        ];       
+            'id'  => 'asc'
+        ];
         // 更新操作
-        $row = self::update($params,$wheres);
+        $row = self::update($params, $wheres);
         // 查询操作
         $data = self::select(['id','name'], $wheres, $option);
         // 返回数据
