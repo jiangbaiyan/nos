@@ -106,7 +106,7 @@ class BaseModel extends Db
      * @return bool
      * @throws CoreException
      */
-    public static function BatchInsert(array $rows)
+    public static function batchInsert(array $rows)
     {
         if (empty($rows)) {
             return true;
