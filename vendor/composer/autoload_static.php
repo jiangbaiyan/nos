@@ -27,6 +27,7 @@ class ComposerStaticInit0a2343baf2a47a776d5eab0d8cda445d
         'Nos\\Comm\\Log' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Log.php',
         'Nos\\Comm\\Mq' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Mq.php',
         'Nos\\Comm\\Page' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Page.php',
+        'Nos\\Comm\\Pool' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Pool.php',
         'Nos\\Comm\\Redis' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Redis.php',
         'Nos\\Comm\\Validator' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Validator.php',
         'Nos\\Exception\\CoreException' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Exception/CoreException.php',
