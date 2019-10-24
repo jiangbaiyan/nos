@@ -12,6 +12,7 @@ return array(
     'Nos\\Comm\\Log' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Log.php',
     'Nos\\Comm\\Mq' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Mq.php',
     'Nos\\Comm\\Page' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Page.php',
+    'Nos\\Comm\\Pool' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Pool.php',
     'Nos\\Comm\\Redis' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Redis.php',
     'Nos\\Comm\\Validator' => $vendorDir . '/jiangbaiyan/nos-framework/src/Comm/Validator.php',
     'Nos\\Exception\\CoreException' => $vendorDir . '/jiangbaiyan/nos-framework/src/Exception/CoreException.php',
