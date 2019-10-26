@@ -83,7 +83,9 @@ class Article_QueryController extends BaseController
 
 namespace Common;
 
-class TestModel extends \BaseModel {
+use Nos\Base\BaseModel;
+
+class TestModel extends BaseModel {
 
     /*
      * 表名
@@ -110,7 +112,7 @@ class TestModel extends \BaseModel {
             'id'  => 'asc'
         ];
         // 更新操作
-        $row = self::update($params,$wheres);
+        $row = self::update($params, $wheres);
         // 查询操作
         $data = self::select(['id','name'], $wheres, $option);
         // 返回数据

@@ -6,7 +6,7 @@
         "source": {
             "type": "git",
             "url": "http://122.152.229.221:8606/nos/nos-framework.git",
-            "reference": "b7e7a0663905b96d3979145bd68de97f6dca14fa"
+            "reference": "a54094e398a870df0b1db399c8e877b92019696a"
         },
         "require": {
             "ext-curl": "*",
@@ -14,7 +14,7 @@
             "ext-pdo": "*",
             "php": ">=7.0.0"
         },
-        "time": "2019-10-20T10:44:07+00:00",
+        "time": "2019-10-22T09:45:45+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {

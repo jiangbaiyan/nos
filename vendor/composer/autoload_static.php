@@ -21,6 +21,7 @@ class ComposerStaticInit0a2343baf2a47a776d5eab0d8cda445d
     );
 
     public static $classMap = array (
+        'Nos\\Base\\BaseModel' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Base/BaseModel.php',
         'Nos\\Comm\\Config' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Config.php',
         'Nos\\Comm\\Db' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/Db.php',
         'Nos\\Comm\\File' => __DIR__ . '/..' . '/jiangbaiyan/nos-framework/src/Comm/File.php',
