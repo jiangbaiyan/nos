@@ -1,6 +1,4 @@
 /.idea
-/config
-/application/config
 /vendor
 *.log
 .env
