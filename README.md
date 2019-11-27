@@ -5,7 +5,7 @@
 <a href="https://packagist.org/packages/jiangbaiyan/nos"><img src="https://poser.pugx.org/jiangbaiyan/nos-framework/license" alt="License"></a>
 ### 在yaf框架基础上为中小型接口开发业务场景做了适配
 ## 安装
-### 安装框架依赖的扩展
+### 安装扩展
  - yaf扩展
  - pdo扩展
  - curl扩展
