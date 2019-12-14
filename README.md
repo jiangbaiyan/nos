@@ -9,15 +9,12 @@
  - yaf扩展
  - pdo扩展
  - curl扩展
-### 安装框架 
+### 安装框架主体
  - 执行命令：
  ```bash
  composer create-project --prefer-dist jiangbaiyan/nos
  ```
 ### 收尾工作
- - 在php.ini中添加配置项
-   - yaf.use_namespace = 1;
-   - yaf.environ = product/dev（生产环境/测试环境）
  - 赋予logs目录读写权限
  - 配置nginx等服务器rewrite到/public/index.php入口文件
 ```nginx
@@ -31,6 +28,7 @@ server {
     rewrite ^/(.*)  /index.php/$1 last;
   }
 }
+ - 生产/开发环境加载的配置文件类别可以到index.php中的yaf.environ配置项去修改
 ```
 ## 集成工具类
  - composer

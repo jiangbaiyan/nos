@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "http://122.152.229.221:8606/nos/nos-framework.git",
-                "reference": "a54094e398a870df0b1db399c8e877b92019696a"
+                "reference": "befd6f818908f5e9b0f92886906fb133ab6e3624"
             },
             "require": {
                 "ext-curl": "*",
@@ -45,7 +45,7 @@
                 "api",
                 "yaf"
             ],
-            "time": "2019-10-22T09:45:45+00:00"
+            "time": "2019-10-25T01:51:23+00:00"
         }
     ],
     "packages-dev": [],
