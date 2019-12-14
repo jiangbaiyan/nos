@@ -16,6 +16,7 @@
  ```
 ### 收尾工作
  - 赋予logs目录读写权限
+ - 生产/开发环境加载的配置文件类别可以到index.php中的yaf.environ配置项去修改
  - 配置nginx等服务器rewrite到/public/index.php入口文件
 ```nginx
 server {
@@ -28,7 +29,6 @@ server {
     rewrite ^/(.*)  /index.php/$1 last;
   }
 }
- - 生产/开发环境加载的配置文件类别可以到index.php中的yaf.environ配置项去修改
 ```
 ## 集成工具类
  - composer
