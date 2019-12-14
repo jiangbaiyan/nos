@@ -13,6 +13,10 @@ use Yaf\Application;
 define('APP_PATH', dirname(__DIR__));
 // 设置时区
 ini_set('date.timezone','Asia/Shanghai');
+// 设置运行环境
+ini_set('yaf_environ', 'dev');
+// 设置使用命名空间
+ini_set('yaf.use_namespace', 1);
 // 初始化yaf_application
 $app = new Application(APP_PATH . '/config/application.ini');
 // composer自动加载
