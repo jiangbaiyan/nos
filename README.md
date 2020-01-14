@@ -1,15 +1,14 @@
-# Nos—基于Yaf && 专注于接口开发的PHP框架
+# Nos—基于Yaf && 兼顾性能与开发效率的PHP框架
 <a href="https://packagist.org/packages/jiangbaiyan/nos"><img src="https://poser.pugx.org/jiangbaiyan/nos-framework/v/stable" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/jiangbaiyan/nos"><img src="https://poser.pugx.org/jiangbaiyan/nos-framework/downloads" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/jiangbaiyan/nos"><img src="https://poser.pugx.org/jiangbaiyan/nos-framework/v/unstable" alt="Latest Unstable Version"></a>
 <a href="https://packagist.org/packages/jiangbaiyan/nos"><img src="https://poser.pugx.org/jiangbaiyan/nos-framework/license" alt="License"></a>
-### 在yaf框架基础上为中小型接口开发业务场景做了适配
 ## 安装
-### 安装框架依赖的扩展
+### 依赖扩展
  - yaf扩展
  - pdo扩展
  - curl扩展
-### 安装框架主体
+### 框架主体
  - 执行命令：
  ```bash
  composer create-project --prefer-dist jiangbaiyan/nos
@@ -130,12 +129,6 @@ class TestModel extends BaseModel {
  - 抛出异常后，框架会自动路由到Error.php
  - Error.php会做两件事：写日志、返回json
  - 异常返回的json内容依赖抛异常时的状态码和提示信息
-## 配置信息
- - 自定义的配置需在config目录下建立xxx.ini文件编写
- - 获取配置可以通过Config::get('xxx.ini');来获取
-## 依赖引入
- - 如果需要引入库，请直接编辑composer.json并添加需要的库
- - 然后执行composer install/update即可
 ## 内置验证
  - required：必填项
  - phone：手机号
@@ -158,3 +151,9 @@ class TestModel extends BaseModel {
  - betweenLen：字符串长度在两个值之间。如betweenLen:2,4
  - in：是否在给定枚举值之内。如in:jiangbaiyan,grape
  - exist：是否包含某个子串。如exist:baiyan
+## 配置信息
+ - 自定义的配置需在config目录下建立xxx.ini文件编写
+ - 获取配置可以通过Config::get('xxx.ini');来获取
+## 依赖引入
+ - 如果需要引入库，请直接编辑composer.json并添加需要的库
+ - 然后执行composer install/update即可
